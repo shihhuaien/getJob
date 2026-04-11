@@ -26,7 +26,7 @@
 - [x] Stripe 整合設定
 - [x] Zustand store（auth, jobs）
 - [x] TypeScript 型別定義（database.ts）
-- [x] CLAUDE.md / PRD.md / TODO.md 文件建立
+- [x] CLAUDE.md / PRD.md / TODO.md / BRAND_GUIDELINES.md 文件建立
 
 ### Landing Page
 - [x] Navbar（響應式，含手機選單）
@@ -51,8 +51,14 @@
 - [x] 求職信管理頁（列表 + 空狀態）
 - [x] 設定頁（個人資料 + 訂閱狀態）
 
+### 品牌設計系統
+- [x] BRAND_GUIDELINES.md 品牌白皮書（Calm & Trustworthy 微擬物風）
+- [x] `src/lib/theme.ts` Theme 常數檔（色彩、間距、圓角、陰影）
+- [x] `globals.css` 品牌 CSS 變數 + 微擬物工具類（shadow-neu）
+
 ### 後端
 - [x] Supabase migration（5 資料表 + RLS + Triggers）
+- [x] Supabase migration（resume limit SECURITY DEFINER）
 - [x] Stripe Checkout API route
 - [x] Stripe Webhook API route（訂閱建立/取消）
 
@@ -63,7 +69,7 @@
 - [ ] 設定 Supabase 專案並執行 migration
 - [ ] 設定 Stripe 產品與價格（Pro 方案 NT$299/月）
 - [ ] 填入 `.env.local` 所有環境變數
-- [ ] SECURITY DEFINER：`check_resume_limit(user_id)` — 免費方案履歷上限 3 份
+- [x] SECURITY DEFINER：`check_resume_limit(user_id)` — 免費方案履歷上限 3 份（migration 已建立，待部署）
 - [ ] 設定頁「升級 Pro」按鈕串接 Stripe Checkout
 - [ ] 帳號刪除功能（隱私權要求）
 
@@ -113,6 +119,12 @@
 
 ## 🟢 低優先（上線前完成即可）
 
+- [ ] 品牌套用：所有現有頁面套用品牌色彩（替換 indigo-600 → 品牌主色 #5B6ABF）
+- [ ] 品牌套用：Dashboard 卡片套用微擬物陰影（shadow-neu）
+- [ ] 品牌套用：Landing Page 背景套用暖奶白（#FAF8F5）
+- [ ] 封裝 UI 元件：Button（主要/次要/文字/危險）
+- [ ] 封裝 UI 元件：Card（微擬物卡片）
+- [ ] 封裝 UI 元件：Input（微凹陷輸入框）
 - [ ] Landing Page SEO 優化（meta tags, OG image, sitemap.xml）
 - [ ] 404 / 500 錯誤頁面
 - [ ] Loading skeleton / spinner

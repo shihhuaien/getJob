@@ -1,26 +1,75 @@
 @import "tailwindcss";
 
+/*
+ * JobHunter 品牌設計系統
+ * 設計風格：Calm & Trustworthy（沈穩信賴與微擬物風）
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* 主色盤 */
+  --color-primary: #5B6ABF;
+  --color-primary-light: #7B8AD0;
+  --color-primary-dark: #4A579E;
+  --color-primary-50: #EBF0FA;
+
+  /* 背景 */
+  --color-bg: #FAF8F5;
+  --color-bg-card: #FFFFFF;
+
+  /* 強調 & 次要 */
+  --color-accent: #E8836B;
+  --color-secondary: #8E9AAF;
+
+  /* 文字 */
+  --color-text: #2D3142;
+  --color-text-light: #6B7280;
+  --color-text-placeholder: #9CA3AF;
+
+  /* 功能色 */
+  --color-success: #6BAE8A;
+  --color-warning: #E5A84B;
+  --color-error: #D96B6B;
+  --color-info: #5B9BD5;
+
+  /* 微擬物陰影 */
+  --shadow-neu: 6px 6px 16px rgba(174, 174, 192, 0.2),
+    -4px -4px 12px rgba(255, 255, 255, 0.7);
+  --shadow-neu-hover: 8px 8px 20px rgba(174, 174, 192, 0.25),
+    -6px -6px 16px rgba(255, 255, 255, 0.8);
+  --shadow-neu-inset: inset 2px 2px 5px rgba(174, 174, 192, 0.15),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.5);
+  --shadow-neu-pressed: inset 3px 3px 8px rgba(174, 174, 192, 0.25),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.6);
+
+  --background: var(--color-bg);
+  --foreground: var(--color-text);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-noto-sans-tc);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ─── 微擬物工具類 ─── */
+
+@layer utilities {
+  .shadow-neu {
+    box-shadow: var(--shadow-neu);
+  }
+  .shadow-neu-hover {
+    box-shadow: var(--shadow-neu-hover);
+  }
+  .shadow-neu-inset {
+    box-shadow: var(--shadow-neu-inset);
+  }
+  .shadow-neu-pressed {
+    box-shadow: var(--shadow-neu-pressed);
+  }
 }
