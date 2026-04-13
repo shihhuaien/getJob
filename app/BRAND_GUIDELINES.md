@@ -1,4 +1,4 @@
-# JobHunter — 品牌設計白皮書
+# Offery — 品牌設計白皮書
 
 **版本**：v1.0
 **日期**：2026-04-11
@@ -10,7 +10,7 @@
 
 ### 1.1 品牌名稱
 
-**JobHunter**（求職獵人）
+**Offery**（求職獵人）
 
 ### 1.2 品牌標語
 
@@ -343,7 +343,7 @@ Dashboard 佈局：
 
 ### 9.1 Logo 使用規範
 
-- Logo 由 Lucide `Briefcase` 圖示 + 「JobHunter」文字組成
+- Logo 由 Lucide `Briefcase` 圖示 + 「Offery」文字組成
 - 最小尺寸：圖示 20px + 文字 16px
 - 安全區域：Logo 四周至少留 Logo 高度的 50% 空白
 - 禁止行為：拉伸、旋轉、加邊框、改色（允許白色反轉版）

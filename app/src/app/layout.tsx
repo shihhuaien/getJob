@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JobHunter - 智慧求職平台",
+  title: "Offery - 智慧求職平台",
   description:
     "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 58%。",
   keywords: ["求職", "履歷", "面試", "職缺追蹤", "AI 履歷", "台灣求職"],

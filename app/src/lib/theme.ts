@@ -1,5 +1,5 @@
 /**
- * JobHunter 品牌設計系統 — Theme 常數
+ * Offery 品牌設計系統 — Theme 常數
  * 設計風格：Calm & Trustworthy（沈穩信賴與微擬物風）
  *
  * 所有品牌色彩、間距、圓角、陰影均在此檔案常數化。

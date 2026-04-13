@@ -55,7 +55,7 @@ export default function FeaturesSection() {
             所有求職工具，一個平台搞定
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
-            不再在多個工具之間切換，JobHunter
+            不再在多個工具之間切換，Offery
             整合了你需要的所有求職功能。
           </p>
         </div>

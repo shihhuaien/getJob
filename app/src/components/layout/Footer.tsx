@@ -10,7 +10,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2">
               <Briefcase className="h-5 w-5 text-indigo-600" />
               <span className="text-lg font-bold text-gray-900">
-                JobHunter
+                Offery
               </span>
             </Link>
             <p className="mt-3 text-sm text-gray-500">
@@ -95,7 +95,7 @@ export default function Footer() {
 
         <div className="mt-8 border-t border-gray-200 pt-8">
           <p className="text-center text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} JobHunter. All rights reserved.
+            &copy; {new Date().getFullYear()} Offery. All rights reserved.
           </p>
         </div>
       </div>

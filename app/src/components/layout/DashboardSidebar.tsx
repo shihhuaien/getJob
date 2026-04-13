@@ -36,7 +36,7 @@ export default function DashboardSidebar() {
     <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
       <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-6">
         <Logo className="h-5 w-5 text-indigo-600" />
-        <span className="text-lg font-bold text-gray-900">JobHunter</span>
+        <span className="text-lg font-bold text-gray-900">Offery</span>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">

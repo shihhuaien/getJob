@@ -1,4 +1,4 @@
-# TODO：JobHunter 待辦事項
+# TODO：Offery 待辦事項
 
 **最後更新**：2026-04-11
 **收費模式**：免費 + 訂閱制（Stripe，NT$299/月）

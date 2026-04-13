@@ -49,7 +49,7 @@ export default function LoginPage() {
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
             <Briefcase className="h-8 w-8 text-indigo-600" />
-            <span className="text-2xl font-bold text-gray-900">JobHunter</span>
+            <span className="text-2xl font-bold text-gray-900">Offery</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
             登入你的帳號

@@ -10,7 +10,7 @@ export default function CTASection() {
             準備好開始你的求職之旅了嗎？
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-indigo-100">
-            加入超過 10,000 位使用 JobHunter 成功找到理想工作的求職者。
+            加入超過 10,000 位使用 Offery 成功找到理想工作的求職者。
           </p>
           <Link
             href="/register"

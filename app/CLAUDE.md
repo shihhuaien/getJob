@@ -1,6 +1,6 @@
 @AGENTS.md
 
-# JobHunter - 智慧求職平台
+# Offery - 智慧求職平台
 
 ## AI 角色定義
 
