@@ -43,6 +43,18 @@ export async function POST(request: Request) {
       break;
     }
 
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
+      if (subscription.customer) {
+        const isActive = subscription.status === "active" || subscription.status === "trialing";
+        await supabaseAdmin
+          .from("profiles")
+          .update({ subscription_tier: isActive ? "pro" : "free" })
+          .eq("stripe_customer_id", subscription.customer as string);
+      }
+      break;
+    }
+
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
       if (subscription.customer) {

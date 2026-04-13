@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-11
+**最後更新**：2026-04-13
 **收費模式**：免費 + 訂閱制（Stripe，NT$299/月）
 
 ---
@@ -64,8 +64,39 @@
 
 ---
 
+## 🔍 程式碼審查結果（2026-04-13）
+
+> 以下為靜態程式碼審查發現的問題，依嚴重程度分類。
+
+### 🔴 必須修復（影響安全/功能）
+
+- [x] **Middleware 路由保護漏洞** — 已修復，`protectedPaths` 現在涵蓋 `/dashboard`、`/jobs`、`/resume`、`/cover-letter`、`/settings`
+- [x] **Stripe webhook 缺少 `customer.subscription.updated` 處理** — 已新增，`active`/`trialing` → pro，其餘狀態 → free
+
+### 🟡 建議改善
+
+- [ ] Dashboard 快速操作使用原生 `<a>` 而非 Next.js `<Link>`，導致全頁重新載入 — `src/app/(dashboard)/dashboard/page.tsx:104-119`
+- [ ] 設定頁「升級 Pro」按鈕無 onClick handler，未串接 Stripe Checkout — `src/app/(dashboard)/settings/page.tsx:64`
+- [ ] Google OAuth 的 `signInWithOAuth` 沒有 error handling — `src/app/(auth)/login/page.tsx:37-44`
+- [ ] Stripe Webhook 未檢查 Supabase 更新結果，失敗時仍回傳 200 — `src/app/api/stripe/webhook/route.ts:39-41`
+- [ ] Stripe Checkout route 缺少 try-catch，Stripe API 錯誤直接 500 — `src/app/api/stripe/checkout/route.ts:37-48`
+
+### ✅ 審查通過項目
+
+- Landing Page 6 區塊全部正確引用，響應式 class 完整
+- 資料表結構 5 張表與 TypeScript 型別（`database.ts`）完全一致
+- RLS 政策覆蓋完整（5 張表皆啟用，CRUD policy 齊全）
+- `check_resume_limit` SECURITY DEFINER 邏輯正確（Pro 無限、Free < 3）
+- Auth callback、登入/註冊流程邏輯正確
+- JobsBoard 5 欄看板 + 新增/切換狀態正確
+- Trigger 正確（`handle_new_user` 自動建立 profile、`handle_updated_at` 5 張表皆掛載）
+
+---
+
 ## 🔴 高優先（阻擋上線）
 
+- [x] **修復 Middleware 路由保護漏洞**（見審查結果）
+- [x] **補充 Stripe webhook `subscription.updated` 處理**（見審查結果）
 - [ ] 設定 Supabase 專案並執行 migration
 - [ ] 設定 Stripe 產品與價格（Pro 方案 NT$299/月）
 - [ ] 填入 `.env.local` 所有環境變數
@@ -84,6 +115,10 @@
 - [ ] 職缺搜尋與篩選功能
 - [ ] 個人資料編輯表單
 - [ ] 履歷預覽 / PDF 匯出
+- [ ] Dashboard 快速操作 `<a>` 改為 `<Link>`（見審查結果）
+- [ ] Google OAuth error handling（見審查結果）
+- [ ] Stripe Checkout route 加入 try-catch（見審查結果）
+- [ ] Stripe Webhook 檢查 Supabase 更新結果（見審查結果）
 
 ---
 
