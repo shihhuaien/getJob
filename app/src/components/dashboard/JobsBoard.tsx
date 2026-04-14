@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, Building2, ExternalLink } from "lucide-react";
+import { Plus, Building2, ExternalLink, Search, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database";
 
@@ -33,6 +33,18 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "all">("all");
+
+  const filteredJobs = jobs.filter((job) => {
+    const matchesSearch =
+      !searchQuery ||
+      job.job_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.company_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus =
+      statusFilter === "all" || job.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const handleAddJob = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +100,42 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
           <Plus className="h-4 w-4" />
           新增職缺
         </button>
+      </div>
+
+      {/* 搜尋與篩選 */}
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full rounded-lg border border-gray-300 py-2 pl-9 pr-9 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            placeholder="搜尋公司名稱或職位..."
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) =>
+            setStatusFilter(e.target.value as ApplicationStatus | "all")
+          }
+          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+        >
+          <option value="all">所有狀態</option>
+          {statusColumns.map((s) => (
+            <option key={s.key} value={s.key}>
+              {s.label}
+            </option>
+          ))}
+        </select>
       </div>
 
       {showAddForm && (
@@ -165,7 +213,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
         {statusColumns.map((col) => {
-          const columnJobs = jobs.filter((job) => job.status === col.key);
+          const columnJobs = filteredJobs.filter((job) => job.status === col.key);
           return (
             <div key={col.key} className="rounded-xl bg-gray-100/50 p-3">
               <div className="mb-3 flex items-center justify-between">
