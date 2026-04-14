@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import UpgradeButton from "@/components/dashboard/UpgradeButton";
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {
@@ -61,9 +62,7 @@ export default async function SettingsPage() {
                 </p>
               </div>
               {profile?.subscription_tier !== "pro" && (
-                <button className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
-                  升級 Pro
-                </button>
+                <UpgradeButton />
               )}
             </div>
           </div>

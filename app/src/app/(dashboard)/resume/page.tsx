@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { FileText, Plus } from "lucide-react";
+import { FileText } from "lucide-react";
+import CreateResumeButton from "@/components/dashboard/CreateResumeButton";
 export default async function ResumePage() {
   const supabase = await createClient();
   const {
@@ -24,10 +25,7 @@ export default async function ResumePage() {
             建立和管理多份履歷，針對不同職缺客製化
           </p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
-          <Plus className="h-4 w-4" />
-          新增履歷
-        </button>
+        <CreateResumeButton userId={user.id} />
       </div>
 
       {resumes && resumes.length > 0 ? (
@@ -68,10 +66,9 @@ export default async function ResumePage() {
           <p className="mt-1 text-sm text-gray-500">
             建立你的第一份履歷，開始求職之旅
           </p>
-          <button className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
-            <Plus className="h-4 w-4" />
-            建立履歷
-          </button>
+          <div className="mt-4">
+            <CreateResumeButton userId={user.id} />
+          </div>
         </div>
       )}
     </div>

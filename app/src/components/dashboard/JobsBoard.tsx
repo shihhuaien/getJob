@@ -30,27 +30,36 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
     job_url: "",
     status: "saved" as ApplicationStatus,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const handleAddJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    const supabase = createClient();
+    setIsSubmitting(true);
+    setFormError(null);
+    try {
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from("job_applications")
+        .insert({
+          user_id: userId,
+          company_name: newJob.company_name,
+          job_title: newJob.job_title,
+          job_url: newJob.job_url || null,
+          status: newJob.status,
+        })
+        .select()
+        .single();
 
-    const { data, error } = await supabase
-      .from("job_applications")
-      .insert({
-        user_id: userId,
-        company_name: newJob.company_name,
-        job_title: newJob.job_title,
-        job_url: newJob.job_url || null,
-        status: newJob.status,
-      })
-      .select()
-      .single();
+      if (error) throw error;
 
-    if (!error && data) {
       setJobs((prev) => [data, ...prev]);
       setNewJob({ company_name: "", job_title: "", job_url: "", status: "saved" });
       setShowAddForm(false);
+    } catch {
+      setFormError("儲存失敗，請稍後再試");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -131,12 +140,16 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
               />
             </div>
           </div>
+          {formError && (
+            <p className="mt-3 text-sm text-red-600">{formError}</p>
+          )}
           <div className="mt-4 flex gap-3">
             <button
               type="submit"
-              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
+              disabled={isSubmitting}
+              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
             >
-              儲存
+              {isSubmitting ? "儲存中..." : "儲存"}
             </button>
             <button
               type="button"

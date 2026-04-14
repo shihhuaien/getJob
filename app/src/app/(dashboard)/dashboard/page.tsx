@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import {
   Briefcase,
   FileText,
@@ -101,7 +102,7 @@ export default async function DashboardPage() {
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">快速操作</h2>
           <div className="mt-4 grid grid-cols-2 gap-3">
-            <a
+            <Link
               href="/jobs"
               className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
             >
@@ -109,8 +110,8 @@ export default async function DashboardPage() {
               <span className="text-sm font-medium text-gray-700">
                 新增職缺
               </span>
-            </a>
-            <a
+            </Link>
+            <Link
               href="/resume"
               className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
             >
@@ -118,7 +119,7 @@ export default async function DashboardPage() {
               <span className="text-sm font-medium text-gray-700">
                 建立履歷
               </span>
-            </a>
+            </Link>
           </div>
         </div>
 
