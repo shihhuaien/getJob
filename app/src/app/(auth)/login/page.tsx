@@ -48,7 +48,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Briefcase className="h-8 w-8 text-indigo-600" />
+            <Briefcase className="h-8 w-8 text-brand-600" />
             <span className="text-2xl font-bold text-gray-900">Offery</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
@@ -58,7 +58,7 @@ export default function LoginPage() {
             還沒有帳號？{" "}
             <Link
               href="/register"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-brand-600 hover:text-brand-500"
             >
               免費註冊
             </Link>
@@ -120,7 +120,7 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="you@example.com"
               />
             </div>
@@ -138,7 +138,7 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="••••••••"
               />
             </div>
@@ -146,7 +146,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
             >
               {loading ? "登入中..." : "登入"}
             </button>

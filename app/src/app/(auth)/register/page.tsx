@@ -54,7 +54,7 @@ export default function RegisterPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
         <div className="w-full max-w-md text-center">
-          <Briefcase className="mx-auto h-12 w-12 text-indigo-600" />
+          <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">
             請確認你的電子郵件
           </h1>
@@ -64,7 +64,7 @@ export default function RegisterPage() {
           </p>
           <Link
             href="/login"
-            className="mt-6 inline-block text-sm font-medium text-indigo-600 hover:text-indigo-500"
+            className="mt-6 inline-block text-sm font-medium text-brand-600 hover:text-brand-500"
           >
             返回登入頁面
           </Link>
@@ -78,7 +78,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <Briefcase className="h-8 w-8 text-indigo-600" />
+            <Briefcase className="h-8 w-8 text-brand-600" />
             <span className="text-2xl font-bold text-gray-900">Offery</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
@@ -88,7 +88,7 @@ export default function RegisterPage() {
             已有帳號？{" "}
             <Link
               href="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
+              className="font-medium text-brand-600 hover:text-brand-500"
             >
               登入
             </Link>
@@ -150,7 +150,7 @@ export default function RegisterPage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="王小明"
               />
             </div>
@@ -168,7 +168,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="you@example.com"
               />
             </div>
@@ -187,7 +187,7 @@ export default function RegisterPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="至少 6 個字元"
               />
             </div>
@@ -195,7 +195,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
             >
               {loading ? "註冊中..." : "建立帳號"}
             </button>

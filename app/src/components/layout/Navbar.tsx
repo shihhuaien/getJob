@@ -11,7 +11,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2">
-          <Briefcase className="h-6 w-6 text-indigo-600" />
+          <Briefcase className="h-6 w-6 text-brand-600" />
           <span className="text-xl font-bold text-gray-900">Offery</span>
         </Link>
 
@@ -37,7 +37,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/register"
-            className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
+            className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
             免費註冊
           </Link>
@@ -84,7 +84,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/register"
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-center text-sm font-medium text-white"
+              className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-medium text-white"
               onClick={() => setMobileOpen(false)}
             >
               免費註冊

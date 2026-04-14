@@ -61,7 +61,7 @@ export default async function SettingsPage() {
                 </p>
               </div>
               {profile?.subscription_tier !== "pro" && (
-                <button className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+                <button className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
                   升級 Pro
                 </button>
               )}

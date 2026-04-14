@@ -24,7 +24,7 @@ export default async function ResumePage() {
             建立和管理多份履歷，針對不同職缺客製化
           </p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+        <button className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
           <Plus className="h-4 w-4" />
           新增履歷
         </button>
@@ -38,7 +38,7 @@ export default async function ResumePage() {
               className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 text-brand-600">
                   <FileText className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
@@ -68,7 +68,7 @@ export default async function ResumePage() {
           <p className="mt-1 text-sm text-gray-500">
             建立你的第一份履歷，開始求職之旅
           </p>
-          <button className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+          <button className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
             <Plus className="h-4 w-4" />
             建立履歷
           </button>

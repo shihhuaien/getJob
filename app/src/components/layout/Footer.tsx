@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div>
             <Link href="/" className="flex items-center gap-2">
-              <Briefcase className="h-5 w-5 text-indigo-600" />
+              <Briefcase className="h-5 w-5 text-brand-600" />
               <span className="text-lg font-bold text-gray-900">
                 Offery
               </span>

@@ -73,7 +73,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
       <div className="mb-6">
         <button
           onClick={() => setShowAddForm(!showAddForm)}
-          className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
         >
           <Plus className="h-4 w-4" />
           新增職缺
@@ -97,7 +97,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                 onChange={(e) =>
                   setNewJob({ ...newJob, company_name: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="例：台積電"
               />
             </div>
@@ -112,7 +112,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                 onChange={(e) =>
                   setNewJob({ ...newJob, job_title: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="例：前端工程師"
               />
             </div>
@@ -126,7 +126,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                 onChange={(e) =>
                   setNewJob({ ...newJob, job_url: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="https://..."
               />
             </div>
@@ -134,7 +134,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
           <div className="mt-4 flex gap-3">
             <button
               type="submit"
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
+              className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
             >
               儲存
             </button>
@@ -200,7 +200,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                             e.target.value as ApplicationStatus
                           )
                         }
-                        className="w-full rounded border border-gray-200 px-2 py-1 text-xs text-gray-600 focus:border-indigo-500 focus:outline-none"
+                        className="w-full rounded border border-gray-200 px-2 py-1 text-xs text-gray-600 focus:border-brand-500 focus:outline-none"
                       >
                         {statusColumns.map((s) => (
                           <option key={s.key} value={s.key}>

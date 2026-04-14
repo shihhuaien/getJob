@@ -25,7 +25,7 @@ export default async function CoverLetterPage() {
             使用 AI 產生針對每個職缺客製化的求職信
           </p>
         </div>
-        <button className="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+        <button className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
           <Plus className="h-4 w-4" />
           新增求職信
         </button>
@@ -64,7 +64,7 @@ export default async function CoverLetterPage() {
           <p className="mt-1 text-sm text-gray-500">
             建立你的第一封求職信
           </p>
-          <button className="mt-4 inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 transition-colors">
+          <button className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors">
             <Plus className="h-4 w-4" />
             建立求職信
           </button>

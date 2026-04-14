@@ -59,25 +59,25 @@ export default function PricingSection() {
               key={plan.name}
               className={`rounded-2xl p-8 ${
                 plan.highlighted
-                  ? "bg-indigo-600 text-white ring-2 ring-indigo-600 shadow-xl"
+                  ? "bg-brand-600 text-white ring-2 ring-brand-600 shadow-xl"
                   : "bg-white text-gray-900 ring-1 ring-gray-200"
               }`}
             >
               <h3
-                className={`text-lg font-semibold ${plan.highlighted ? "text-indigo-100" : "text-indigo-600"}`}
+                className={`text-lg font-semibold ${plan.highlighted ? "text-brand-100" : "text-brand-600"}`}
               >
                 {plan.name}
               </h3>
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="text-4xl font-bold">{plan.price}</span>
                 <span
-                  className={`text-sm ${plan.highlighted ? "text-indigo-200" : "text-gray-500"}`}
+                  className={`text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
                 >
                   {plan.period}
                 </span>
               </div>
               <p
-                className={`mt-2 text-sm ${plan.highlighted ? "text-indigo-200" : "text-gray-500"}`}
+                className={`mt-2 text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
               >
                 {plan.description}
               </p>
@@ -86,7 +86,7 @@ export default function PricingSection() {
                 {plan.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3">
                     <Check
-                      className={`mt-0.5 h-5 w-5 flex-shrink-0 ${plan.highlighted ? "text-indigo-200" : "text-indigo-600"}`}
+                      className={`mt-0.5 h-5 w-5 flex-shrink-0 ${plan.highlighted ? "text-brand-200" : "text-brand-600"}`}
                     />
                     <span className="text-sm">{feature}</span>
                   </li>
@@ -97,8 +97,8 @@ export default function PricingSection() {
                 href={plan.href}
                 className={`mt-8 block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors ${
                   plan.highlighted
-                    ? "bg-white text-indigo-600 hover:bg-indigo-50"
-                    : "bg-indigo-600 text-white hover:bg-indigo-700"
+                    ? "bg-white text-brand-600 hover:bg-brand-50"
+                    : "bg-brand-600 text-white hover:bg-brand-700"
                 }`}
               >
                 {plan.cta}

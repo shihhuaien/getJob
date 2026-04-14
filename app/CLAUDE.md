@@ -157,7 +157,7 @@ supabase/
 ## 品牌設計
 
 - **設計風格**：Calm & Trustworthy（沈穩信賴與微擬物風），詳見 `BRAND_GUIDELINES.md`
-- **主色**：靜謐靛藍 `#5B6ABF`，背景：暖奶白 `#FAF8F5`，強調：柔珊瑚 `#E8836B`
+- **主色**：靜謐鼠尾草綠 `#688F79`，背景：暖燕麥白 `#FCFBF9`，強調：柔赤陶 `#D97D54`
 - **微擬物陰影**：使用 `shadow-neu`、`shadow-neu-hover`、`shadow-neu-inset` 工具類
 - **品牌常數**：所有色彩、間距、陰影引用 `src/lib/theme.ts`，禁止硬編碼色票值
 - **文案語氣**：專業但溫暖，用「你」不用「您」，鼓勵但不空洞，去焦慮化

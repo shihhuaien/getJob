@@ -105,7 +105,7 @@ export default async function DashboardPage() {
               href="/jobs"
               className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
             >
-              <Briefcase className="h-5 w-5 text-indigo-600" />
+              <Briefcase className="h-5 w-5 text-brand-600" />
               <span className="text-sm font-medium text-gray-700">
                 新增職缺
               </span>
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
               href="/resume"
               className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
             >
-              <FileText className="h-5 w-5 text-indigo-600" />
+              <FileText className="h-5 w-5 text-brand-600" />
               <span className="text-sm font-medium text-gray-700">
                 建立履歷
               </span>

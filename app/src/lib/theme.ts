@@ -11,22 +11,24 @@
 export const colors = {
   // 主色盤
   primary: {
-    DEFAULT: "#5B6ABF", // 靜謐靛藍
-    light: "#7B8AD0",
-    dark: "#4A579E",
-    50: "#EBF0FA",
-    100: "#D6DFEF",
-    600: "#5B6ABF",
-    700: "#4A579E",
+    DEFAULT: "#688F79", // 靜謐鼠尾草綠
+    light: "#7A9D89",
+    dark: "#567862",
+    50: "#F0F4F1",
+    100: "#DCE8E1",
+    200: "#B8CFC1",
+    500: "#7A9D89",
+    600: "#688F79",
+    700: "#567862",
   },
   background: {
-    DEFAULT: "#FAF8F5", // 暖奶白
+    DEFAULT: "#FCFBF9", // 暖燕麥白
     card: "#FFFFFF", // 雲瓷白
   },
-  accent: "#E8836B", // 柔珊瑚
+  accent: "#D97D54", // 柔赤陶
   secondary: "#8E9AAF", // 霧灰藍
   text: {
-    DEFAULT: "#2D3142", // 墨灰
+    DEFAULT: "#3A3A3A", // 柔墨黑
     light: "#6B7280", // 霧灰
     placeholder: "#9CA3AF",
   },
@@ -40,7 +42,7 @@ export const colors = {
   // Kanban 狀態色
   status: {
     saved: { bg: "#F3F0ED", text: "#6B7280" },
-    applied: { bg: "#EBF0FA", text: "#5B6ABF" },
+    applied: { bg: "#F0F4F1", text: "#688F79" },
     interview: { bg: "#FDF3E3", text: "#C48B2C" },
     offer: { bg: "#E8F5EE", text: "#4A8A6A" },
     rejected: { bg: "#FCEAEA", text: "#B85C5C" },
