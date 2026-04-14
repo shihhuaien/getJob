@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { FileText } from "lucide-react";
 import CreateResumeButton from "@/components/dashboard/CreateResumeButton";
 export default async function ResumePage() {
@@ -31,9 +32,10 @@ export default async function ResumePage() {
       {resumes && resumes.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {resumes.map((resume) => (
-            <div
+            <Link
+              href={`/resume/${resume.id}`}
               key={resume.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
+              className="block rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-100 text-brand-600">
@@ -54,7 +56,7 @@ export default async function ResumePage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (

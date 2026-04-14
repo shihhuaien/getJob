@@ -18,15 +18,19 @@ export default function CreateResumeButton({ userId }: { userId: string }) {
     setError(null);
     try {
       const supabase = createClient();
-      const { error: dbError } = await supabase.from("resumes").insert({
-        user_id: userId,
-        title,
-        content: {},
-      });
+      const { data, error: dbError } = await supabase
+        .from("resumes")
+        .insert({
+          user_id: userId,
+          title,
+          content: {},
+        })
+        .select("id")
+        .single();
       if (dbError) throw dbError;
       setTitle("");
       setShowForm(false);
-      router.refresh();
+      router.push(`/resume/${data.id}`);
     } catch {
       setError("建立失敗，請稍後再試");
     } finally {
