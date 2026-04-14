@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { getStripe } from "@/lib/stripe";
 import UpgradeButton from "@/components/dashboard/UpgradeButton";
 import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
+import ResumeSubscriptionButton from "@/components/dashboard/ResumeSubscriptionButton";
 import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
+import ProfileForm from "@/components/dashboard/ProfileForm";
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {
@@ -54,21 +56,11 @@ export default async function SettingsPage() {
         {/* Profile section */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">個人資料</h2>
-          <div className="mt-4 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                電子郵件
-              </label>
-              <p className="mt-1 text-sm text-gray-900">{user.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                姓名
-              </label>
-              <p className="mt-1 text-sm text-gray-900">
-                {profile?.full_name || "未設定"}
-              </p>
-            </div>
+          <div className="mt-4">
+            <ProfileForm
+              email={user.email || ""}
+              fullName={profile?.full_name ?? null}
+            />
           </div>
         </div>
 
@@ -92,7 +84,11 @@ export default async function SettingsPage() {
                 </p>
               </div>
               {profile?.subscription_tier === "pro" ? (
-                !cancelAtPeriodEnd && <CancelSubscriptionButton />
+                cancelAtPeriodEnd ? (
+                  <ResumeSubscriptionButton />
+                ) : (
+                  <CancelSubscriptionButton />
+                )
               ) : (
                 <UpgradeButton />
               )}
