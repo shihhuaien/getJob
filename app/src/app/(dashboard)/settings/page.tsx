@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getStripe } from "@/lib/stripe";
 import UpgradeButton from "@/components/dashboard/UpgradeButton";
 import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
 import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
@@ -16,6 +17,31 @@ export default async function SettingsPage() {
     .select("*")
     .eq("id", user.id)
     .single();
+
+  // 查詢 Stripe 訂閱狀態（是否已排定取消）
+  let cancelAtPeriodEnd = false;
+  let periodEndDate: string | null = null;
+
+  if (profile?.stripe_customer_id && profile.subscription_tier === "pro") {
+    try {
+      const subscriptions = await getStripe().subscriptions.list({
+        customer: profile.stripe_customer_id,
+        status: "active",
+        limit: 1,
+      });
+      if (subscriptions.data.length > 0) {
+        const sub = subscriptions.data[0];
+        cancelAtPeriodEnd = sub.cancel_at_period_end;
+        if (sub.cancel_at_period_end && sub.cancel_at) {
+          periodEndDate = new Date(
+            sub.cancel_at * 1000
+          ).toLocaleDateString("zh-TW");
+        }
+      }
+    } catch {
+      // Stripe 查詢失敗不影響頁面顯示
+    }
+  }
 
   return (
     <div>
@@ -58,13 +84,15 @@ export default async function SettingsPage() {
                     : "免費方案"}
                 </p>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  {profile?.subscription_tier === "pro"
-                    ? "你正在使用 Pro 方案的所有功能"
-                    : "升級 Pro 解鎖 AI 完整功能"}
+                  {cancelAtPeriodEnd && periodEndDate
+                    ? `你的 Pro 方案已排定取消，將於 ${periodEndDate} 到期後降為免費方案`
+                    : profile?.subscription_tier === "pro"
+                      ? "你正在使用 Pro 方案的所有功能"
+                      : "升級 Pro 解鎖 AI 完整功能"}
                 </p>
               </div>
               {profile?.subscription_tier === "pro" ? (
-                <CancelSubscriptionButton />
+                !cancelAtPeriodEnd && <CancelSubscriptionButton />
               ) : (
                 <UpgradeButton />
               )}
