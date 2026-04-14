@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Plus, Building2, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database";
@@ -184,7 +185,10 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                     className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200"
                   >
                     <div className="flex items-start justify-between">
-                      <div className="min-w-0">
+                      <Link
+                        href={`/jobs/${job.id}`}
+                        className="min-w-0 hover:opacity-75 transition-opacity"
+                      >
                         <p className="truncate text-sm font-medium text-gray-900">
                           {job.job_title}
                         </p>
@@ -192,7 +196,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
                           <Building2 className="h-3 w-3" />
                           {job.company_name}
                         </div>
-                      </div>
+                      </Link>
                       {job.job_url && (
                         <a
                           href={job.job_url}
