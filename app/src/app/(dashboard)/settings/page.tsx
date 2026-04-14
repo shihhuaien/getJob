@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import UpgradeButton from "@/components/dashboard/UpgradeButton";
+import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
+import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {
@@ -61,9 +63,29 @@ export default async function SettingsPage() {
                     : "升級 Pro 解鎖 AI 完整功能"}
                 </p>
               </div>
-              {profile?.subscription_tier !== "pro" && (
+              {profile?.subscription_tier === "pro" ? (
+                <CancelSubscriptionButton />
+              ) : (
                 <UpgradeButton />
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Danger zone */}
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-red-200">
+          <h2 className="text-lg font-semibold text-red-600">危險區域</h2>
+          <div className="mt-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-900">
+                  刪除帳號
+                </p>
+                <p className="mt-0.5 text-xs text-gray-500">
+                  永久刪除你的帳號和所有資料，此操作無法復原
+                </p>
+              </div>
+              <DeleteAccountButton />
             </div>
           </div>
         </div>
