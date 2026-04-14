@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { Mail } from "lucide-react";
 import CreateCoverLetterButton from "@/components/dashboard/CreateCoverLetterButton";
 
@@ -32,9 +33,10 @@ export default async function CoverLetterPage() {
       {coverLetters && coverLetters.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {coverLetters.map((letter: { id: string; title: string; updated_at: string }) => (
-            <div
+            <Link
+              href={`/cover-letter/${letter.id}`}
               key={letter.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
+              className="block rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
@@ -50,7 +52,7 @@ export default async function CoverLetterPage() {
                   </p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (
