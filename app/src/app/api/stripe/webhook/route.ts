@@ -35,10 +35,16 @@ export async function POST(request: Request) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       if (session.customer) {
-        await supabaseAdmin
+        const { error: dbError } = await supabaseAdmin
           .from("profiles")
           .update({ subscription_tier: "pro" })
           .eq("stripe_customer_id", session.customer as string);
+        if (dbError) {
+          return NextResponse.json(
+            { error: "資料庫更新失敗" },
+            { status: 500 }
+          );
+        }
       }
       break;
     }
@@ -47,10 +53,16 @@ export async function POST(request: Request) {
       const subscription = event.data.object as Stripe.Subscription;
       if (subscription.customer) {
         const isActive = subscription.status === "active" || subscription.status === "trialing";
-        await supabaseAdmin
+        const { error: dbError } = await supabaseAdmin
           .from("profiles")
           .update({ subscription_tier: isActive ? "pro" : "free" })
           .eq("stripe_customer_id", subscription.customer as string);
+        if (dbError) {
+          return NextResponse.json(
+            { error: "資料庫更新失敗" },
+            { status: 500 }
+          );
+        }
       }
       break;
     }
@@ -58,10 +70,16 @@ export async function POST(request: Request) {
     case "customer.subscription.deleted": {
       const subscription = event.data.object as Stripe.Subscription;
       if (subscription.customer) {
-        await supabaseAdmin
+        const { error: dbError } = await supabaseAdmin
           .from("profiles")
           .update({ subscription_tier: "free" })
           .eq("stripe_customer_id", subscription.customer as string);
+        if (dbError) {
+          return NextResponse.json(
+            { error: "資料庫更新失敗" },
+            { status: 500 }
+          );
+        }
       }
       break;
     }

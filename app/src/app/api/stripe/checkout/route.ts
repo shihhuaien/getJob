@@ -12,40 +12,47 @@ export async function POST() {
     return NextResponse.json({ error: "未授權" }, { status: 401 });
   }
 
-  // Get or create Stripe customer
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("stripe_customer_id")
-    .eq("id", user.id)
-    .single();
-
-  let customerId = profile?.stripe_customer_id;
-
-  if (!customerId) {
-    const customer = await getStripe().customers.create({
-      email: user.email,
-      metadata: { supabase_user_id: user.id },
-    });
-    customerId = customer.id;
-
-    await supabase
+  try {
+    // Get or create Stripe customer
+    const { data: profile } = await supabase
       .from("profiles")
-      .update({ stripe_customer_id: customerId })
-      .eq("id", user.id);
+      .select("stripe_customer_id")
+      .eq("id", user.id)
+      .single();
+
+    let customerId = profile?.stripe_customer_id;
+
+    if (!customerId) {
+      const customer = await getStripe().customers.create({
+        email: user.email,
+        metadata: { supabase_user_id: user.id },
+      });
+      customerId = customer.id;
+
+      await supabase
+        .from("profiles")
+        .update({ stripe_customer_id: customerId })
+        .eq("id", user.id);
+    }
+
+    const session = await getStripe().checkout.sessions.create({
+      customer: customerId,
+      mode: "subscription",
+      line_items: [
+        {
+          price: process.env.STRIPE_PRO_PRICE_ID!,
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch {
+    return NextResponse.json(
+      { error: "建立結帳階段失敗，請稍後再試" },
+      { status: 500 }
+    );
   }
-
-  const session = await getStripe().checkout.sessions.create({
-    customer: customerId,
-    mode: "subscription",
-    line_items: [
-      {
-        price: process.env.STRIPE_PRO_PRICE_ID!,
-        quantity: 1,
-      },
-    ],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/settings`,
-  });
-
-  return NextResponse.json({ url: session.url });
 }
