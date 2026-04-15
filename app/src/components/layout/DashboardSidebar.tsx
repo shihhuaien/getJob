@@ -7,6 +7,7 @@ import {
   FileText,
   Briefcase,
   Mail,
+  BarChart3,
   Settings,
   LogOut,
   Briefcase as Logo,
@@ -19,6 +20,7 @@ const navItems = [
   { href: "/jobs", label: "職缺追蹤", icon: Briefcase },
   { href: "/resume", label: "履歷管理", icon: FileText },
   { href: "/cover-letter", label: "求職信", icon: Mail },
+  { href: "/analytics", label: "數據分析", icon: BarChart3 },
   { href: "/settings", label: "設定", icon: Settings },
 ];
 
