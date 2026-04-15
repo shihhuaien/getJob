@@ -6,6 +6,7 @@ import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionB
 import ResumeSubscriptionButton from "@/components/dashboard/ResumeSubscriptionButton";
 import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
 import ProfileForm from "@/components/dashboard/ProfileForm";
+import ApiTokenManager from "@/components/dashboard/ApiTokenManager";
 export default async function SettingsPage() {
   const supabase = await createClient();
   const {
@@ -95,6 +96,9 @@ export default async function SettingsPage() {
             </div>
           </div>
         </div>
+
+        {/* API Token */}
+        <ApiTokenManager />
 
         {/* Danger zone */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-red-200">

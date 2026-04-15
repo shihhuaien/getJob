@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offery</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 標題列 -->
+    <div class="header">
+      <span class="logo">Offery</span>
+      <a href="https://offery.vercel.app/settings" target="_blank" class="settings-link">設定</a>
+    </div>
+
+    <!-- 未設定 API 金鑰 -->
+    <div id="setup-view" class="view" style="display:none;">
+      <p class="desc">請輸入 API 金鑰以連接你的 Offery 帳號</p>
+      <input type="text" id="token-input" placeholder="貼上你的 API 金鑰" />
+      <button id="save-token-btn" class="btn btn-primary">儲存金鑰</button>
+      <p class="hint">
+        前往
+        <a href="https://offery.vercel.app/settings" target="_blank">設定頁</a>
+        產生金鑰
+      </p>
+    </div>
+
+    <!-- 不支援的頁面 -->
+    <div id="unsupported-view" class="view" style="display:none;">
+      <p class="desc">此頁面不支援自動擷取</p>
+      <p class="hint">請前往 104、CakeResume 或 LinkedIn 的職缺頁面使用此功能</p>
+    </div>
+
+    <!-- 支援的頁面 - 顯示擷取結果 -->
+    <div id="job-view" class="view" style="display:none;">
+      <div class="job-preview">
+        <div class="field">
+          <label>公司名稱</label>
+          <input type="text" id="company-name" />
+        </div>
+        <div class="field">
+          <label>職位名稱</label>
+          <input type="text" id="job-title" />
+        </div>
+      </div>
+      <div class="actions">
+        <button id="save-basic-btn" class="btn btn-secondary">儲存職缺</button>
+        <button id="save-ai-btn" class="btn btn-primary">AI 解析並儲存</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading-view" class="view" style="display:none;">
+      <div class="spinner"></div>
+      <p class="desc">處理中...</p>
+    </div>
+
+    <!-- 成功 -->
+    <div id="success-view" class="view" style="display:none;">
+      <p class="success-text">已儲存！</p>
+      <a href="https://offery.vercel.app/jobs" target="_blank" class="btn btn-secondary">前往 Dashboard 查看</a>
+    </div>
+
+    <!-- 錯誤 -->
+    <div id="error-view" class="view" style="display:none;">
+      <p id="error-text" class="error-text"></p>
+      <button id="retry-btn" class="btn btn-secondary">重試</button>
+    </div>
+  </div>
+
+  <script src="../lib/api.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

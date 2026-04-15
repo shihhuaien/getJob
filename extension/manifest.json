@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Offery - 一鍵儲存職缺",
+  "version": "1.0.0",
+  "description": "從 104、CakeResume、LinkedIn 一鍵儲存職缺到 Offery",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "https://www.104.com.tw/*",
+    "https://www.cakeresume.com/*",
+    "https://www.linkedin.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.104.com.tw/job/*"],
+      "js": ["content-scripts/104.js"]
+    },
+    {
+      "matches": ["https://www.cakeresume.com/companies/*/jobs/*"],
+      "js": ["content-scripts/cakeresume.js"]
+    },
+    {
+      "matches": ["https://www.linkedin.com/jobs/view/*"],
+      "js": ["content-scripts/linkedin.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

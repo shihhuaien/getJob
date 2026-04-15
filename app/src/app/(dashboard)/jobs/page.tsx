@@ -10,12 +10,21 @@ export default async function JobsPage() {
 
   if (!user) redirect("/login");
 
-  const { data: jobs } = await supabase
-    .from("job_applications")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("position", { ascending: true })
-    .order("updated_at", { ascending: false });
+  const [jobsResult, profileResult] = await Promise.all([
+    supabase
+      .from("job_applications")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("position", { ascending: true })
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("profiles")
+      .select("subscription_tier")
+      .eq("id", user.id)
+      .single(),
+  ]);
+
+  const isPro = profileResult.data?.subscription_tier === "pro";
 
   return (
     <div>
@@ -28,7 +37,7 @@ export default async function JobsPage() {
         </div>
       </div>
 
-      <JobsBoard initialJobs={jobs ?? []} userId={user.id} />
+      <JobsBoard initialJobs={jobsResult.data ?? []} userId={user.id} isPro={isPro} />
     </div>
   );
 }

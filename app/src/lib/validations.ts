@@ -72,3 +72,39 @@ export const resumeUpdateSchema = z.object({
   title: titleSchema,
   target_job_title: z.string().max(200, "目標職位不可超過 200 字"),
 });
+
+// ── AI 解析 ──
+
+export const parseJobRequestSchema = z.object({
+  text: z
+    .string()
+    .min(1, "請輸入職缺內容")
+    .max(10000, "職缺內容不可超過 10000 字"),
+});
+
+export const jobCreateApiSchema = z.object({
+  company_name: z
+    .string()
+    .trim()
+    .min(1, "公司名稱為必填")
+    .max(200, "公司名稱不可超過 200 字"),
+  job_title: z
+    .string()
+    .trim()
+    .min(1, "職位名稱為必填")
+    .max(200, "職位名稱不可超過 200 字"),
+  job_url: z
+    .string()
+    .max(2000)
+    .refine((val) => !val || isValidHttpUrl(val), "請輸入有效的網址")
+    .optional()
+    .or(z.literal("")),
+  job_description: z.string().max(10000).optional().or(z.literal("")),
+  salary_min: z.number().int().min(0).max(99999999).nullable().optional(),
+  salary_max: z.number().int().min(0).max(99999999).nullable().optional(),
+  notes: z.string().max(5000).optional().or(z.literal("")),
+  status: z
+    .enum(["saved", "applied", "interview", "offer", "rejected"])
+    .optional()
+    .default("saved"),
+});

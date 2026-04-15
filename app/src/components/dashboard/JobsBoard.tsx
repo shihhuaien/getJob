@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Plus, Building2, ExternalLink, Search, X } from "lucide-react";
+import { Plus, Building2, ExternalLink, Search, X, Sparkles } from "lucide-react";
 import {
   DndContext,
   DragOverlay,
@@ -26,6 +26,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import { createClient } from "@/lib/supabase/client";
 import { jobInsertSchema, isValidHttpUrl } from "@/lib/validations";
+import ParseJobModal from "./ParseJobModal";
 import type { Database } from "@/types/database";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
@@ -162,9 +163,10 @@ function DroppableColumn({
 interface Props {
   initialJobs: JobApplication[];
   userId: string;
+  isPro?: boolean;
 }
 
-export default function JobsBoard({ initialJobs, userId }: Props) {
+export default function JobsBoard({ initialJobs, userId, isPro = false }: Props) {
   const [jobs, setJobs] = useState(initialJobs);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newJob, setNewJob] = useState({
@@ -179,6 +181,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "all">("all");
   const [activeJob, setActiveJob] = useState<JobApplication | null>(null);
   const [overColumnId, setOverColumnId] = useState<string | null>(null);
+  const [showParseModal, setShowParseModal] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -367,7 +370,7 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-6 flex gap-3">
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
@@ -375,6 +378,15 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
           <Plus className="h-4 w-4" />
           新增職缺
         </button>
+        {isPro && (
+          <button
+            onClick={() => setShowParseModal(true)}
+            className="inline-flex items-center gap-2 rounded-lg border border-brand-300 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-100 transition-colors"
+          >
+            <Sparkles className="h-4 w-4" />
+            AI 智慧解析
+          </button>
+        )}
       </div>
 
       {/* 搜尋與篩選 */}
@@ -512,6 +524,42 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
           {activeJob ? <DragOverlayCard job={activeJob} /> : null}
         </DragOverlay>
       </DndContext>
+
+      {showParseModal && (
+        <ParseJobModal
+          onClose={() => setShowParseModal(false)}
+          onSave={async (parsed) => {
+            const supabase = createClient();
+            const { data, error } = await supabase
+              .from("job_applications")
+              .insert({
+                user_id: userId,
+                company_name: parsed.company_name,
+                job_title: parsed.job_title,
+                job_url: parsed.job_url || null,
+                job_description: parsed.job_description || null,
+                salary_min: parsed.salary_min,
+                salary_max: parsed.salary_max,
+                status: parsed.status,
+                position: 0,
+              })
+              .select()
+              .single();
+
+            if (!error && data) {
+              setJobs((prev) => [
+                data,
+                ...prev.map((j) =>
+                  j.status === parsed.status
+                    ? { ...j, position: j.position + 1 }
+                    : j
+                ),
+              ]);
+            }
+            setShowParseModal(false);
+          }}
+        />
+      )}
     </div>
   );
 }
