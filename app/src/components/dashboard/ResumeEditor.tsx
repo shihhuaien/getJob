@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Plus, Trash2, X, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { resumeUpdateSchema } from "@/lib/validations";
 import type { Database } from "@/types/database";
 import type {
   ResumeContent,
@@ -52,15 +53,25 @@ export default function ResumeEditor({ resume }: Props) {
   >("personal");
 
   const handleSave = async () => {
-    setIsSaving(true);
     setError(null);
     setSuccess(false);
+
+    const validation = resumeUpdateSchema.safeParse({
+      title,
+      target_job_title: targetJobTitle || "",
+    });
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsSaving(true);
 
     const supabase = createClient();
     const { error: dbError } = await supabase
       .from("resumes")
       .update({
-        title,
+        title: validation.data.title,
         target_job_title: targetJobTitle || null,
         content: content as unknown as Database["public"]["Tables"]["resumes"]["Update"]["content"],
         updated_at: new Date().toISOString(),

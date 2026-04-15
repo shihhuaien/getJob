@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { titleSchema } from "@/lib/validations";
 import { useRouter } from "next/navigation";
 
 export default function CreateCoverLetterButton({ userId }: { userId: string }) {
@@ -14,15 +15,22 @@ export default function CreateCoverLetterButton({ userId }: { userId: string }) 
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError(null);
+
+    const validation = titleSchema.safeParse(title);
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const supabase = createClient();
       const { data, error: dbError } = await supabase
         .from("cover_letters")
         .insert({
           user_id: userId,
-          title,
+          title: validation.data,
           content: "",
         })
         .select("id")

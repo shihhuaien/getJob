@@ -132,11 +132,11 @@
 
 ## 🟠 安全邊際（穩定性 — 防止攻擊與錯誤）
 
-- [ ] 所有 API Routes 加入錯誤處理與適當的 HTTP 狀態碼
-- [ ] Rate limiting（API Routes）
-- [ ] 輸入驗證（Zod schema）— 所有使用者輸入
-- [ ] XSS 防護確認（特別是職缺描述、備註等富文字欄位）
-- [ ] CSRF 防護確認
+- [x] 所有 API Routes 加入錯誤處理與適當的 HTTP 狀態碼
+- [x] Rate limiting（API Routes）— 依賴 Vercel 內建 DDoS 防護 + Supabase 限流，未來可用 Upstash Redis
+- [x] 輸入驗證（Zod schema）— 所有使用者輸入
+- [x] XSS 防護確認（React 自動轉義 + job_url 協議檢查）
+- [x] CSRF 防護確認（Supabase SameSite=Lax cookies + POST/PATCH only）
 
 ---
 

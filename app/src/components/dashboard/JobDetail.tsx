@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
@@ -44,21 +45,38 @@ export default function JobDetail({ job }: Props) {
   });
 
   const handleSave = async () => {
-    setIsSaving(true);
     setError(null);
     setSuccess(false);
+
+    const validation = jobUpdateSchema.safeParse({
+      company_name: form.company_name,
+      job_title: form.job_title,
+      job_url: form.job_url || "",
+      job_description: form.job_description || "",
+      notes: form.notes || "",
+      salary_min: form.salary_min ? Number(form.salary_min) : null,
+      salary_max: form.salary_max ? Number(form.salary_max) : null,
+      applied_at: form.applied_at || null,
+    });
+
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsSaving(true);
 
     const supabase = createClient();
     const { error: dbError } = await supabase
       .from("job_applications")
       .update({
-        company_name: form.company_name,
-        job_title: form.job_title,
+        company_name: validation.data.company_name,
+        job_title: validation.data.job_title,
         job_url: form.job_url || null,
         job_description: form.job_description || null,
         status: form.status,
-        salary_min: form.salary_min ? Number(form.salary_min) : null,
-        salary_max: form.salary_max ? Number(form.salary_max) : null,
+        salary_min: validation.data.salary_min,
+        salary_max: validation.data.salary_max,
         notes: form.notes || null,
         applied_at: form.applied_at || null,
         updated_at: new Date().toISOString(),
@@ -296,15 +314,19 @@ export default function JobDetail({ job }: Props) {
                   placeholder="https://..."
                 />
               ) : job.job_url ? (
-                <a
-                  href={job.job_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700"
-                >
-                  {job.job_url}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+                isValidHttpUrl(job.job_url) ? (
+                  <a
+                    href={job.job_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-flex items-center gap-1 text-sm text-brand-600 hover:text-brand-700"
+                  >
+                    {job.job_url}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                ) : (
+                  <p className="mt-1 text-sm text-gray-900">{job.job_url}</p>
+                )
               ) : (
                 <p className="mt-1 text-sm text-gray-400">未設定</p>
               )}

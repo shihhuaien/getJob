@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { profileUpdateSchema } from "@/lib/validations";
 
 export async function PATCH(request: Request) {
   const supabase = await createClient();
@@ -13,25 +14,18 @@ export async function PATCH(request: Request) {
 
   try {
     const body = await request.json();
-    const { full_name } = body;
+    const result = profileUpdateSchema.safeParse(body);
 
-    if (typeof full_name !== "string" || full_name.trim().length === 0) {
+    if (!result.success) {
       return NextResponse.json(
-        { error: "姓名不可為空" },
-        { status: 400 }
-      );
-    }
-
-    if (full_name.trim().length > 100) {
-      return NextResponse.json(
-        { error: "姓名不可超過 100 字" },
+        { error: result.error.issues[0].message },
         { status: 400 }
       );
     }
 
     const { error: dbError } = await supabase
       .from("profiles")
-      .update({ full_name: full_name.trim() })
+      .update({ full_name: result.data.full_name })
       .eq("id", user.id);
 
     if (dbError) {

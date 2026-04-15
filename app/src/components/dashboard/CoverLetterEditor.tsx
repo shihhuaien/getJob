@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { coverLetterUpdateSchema } from "@/lib/validations";
 import type { Database } from "@/types/database";
 
 type CoverLetter = Database["public"]["Tables"]["cover_letters"]["Row"];
@@ -24,16 +25,23 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
   const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
-    setIsSaving(true);
     setError(null);
     setSuccess(false);
+
+    const validation = coverLetterUpdateSchema.safeParse({ title, content });
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsSaving(true);
 
     const supabase = createClient();
     const { error: dbError } = await supabase
       .from("cover_letters")
       .update({
-        title,
-        content,
+        title: validation.data.title,
+        content: validation.data.content,
         updated_at: new Date().toISOString(),
       })
       .eq("id", coverLetter.id);

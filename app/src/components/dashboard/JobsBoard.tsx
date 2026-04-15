@@ -25,6 +25,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { createClient } from "@/lib/supabase/client";
+import { jobInsertSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
@@ -81,7 +82,7 @@ function SortableJobCard({ job }: { job: JobApplication }) {
             {job.company_name}
           </div>
         </Link>
-        {job.job_url && (
+        {job.job_url && isValidHttpUrl(job.job_url) && (
           <a
             href={job.job_url}
             target="_blank"
@@ -200,16 +201,23 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
 
   const handleAddJob = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setFormError(null);
+
+    const validation = jobInsertSchema.safeParse(newJob);
+    if (!validation.success) {
+      setFormError(validation.error.issues[0].message);
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const supabase = createClient();
       const { data, error } = await supabase
         .from("job_applications")
         .insert({
           user_id: userId,
-          company_name: newJob.company_name,
-          job_title: newJob.job_title,
+          company_name: validation.data.company_name,
+          job_title: validation.data.job_title,
           job_url: newJob.job_url || null,
           status: newJob.status,
           position: 0,
