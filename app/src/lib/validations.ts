@@ -82,6 +82,13 @@ export const parseJobRequestSchema = z.object({
     .max(10000, "職缺內容不可超過 10000 字"),
 });
 
+// ── AI 履歷優化 ──
+
+export const optimizeResumeRequestSchema = z.object({
+  resume_id: z.string().uuid("無效的履歷 ID"),
+  job_id: z.string().uuid("無效的職缺 ID"),
+});
+
 export const jobCreateApiSchema = z.object({
   company_name: z
     .string()

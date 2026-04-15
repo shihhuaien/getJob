@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2, X, Eye } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles } from "lucide-react";
+import ResumeOptimizeModal from "./ResumeOptimizeModal";
 import { createClient } from "@/lib/supabase/client";
 import { resumeUpdateSchema } from "@/lib/validations";
 import type { Database } from "@/types/database";
@@ -32,11 +33,20 @@ function parseContent(content: unknown): ResumeContent {
   return emptyResumeContent;
 }
 
-interface Props {
-  resume: Resume;
+interface JobOption {
+  id: string;
+  company_name: string;
+  job_title: string;
+  has_description: boolean;
 }
 
-export default function ResumeEditor({ resume }: Props) {
+interface Props {
+  resume: Resume;
+  isPro?: boolean;
+  jobs?: JobOption[];
+}
+
+export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props) {
   const router = useRouter();
   const [title, setTitle] = useState(resume.title);
   const [targetJobTitle, setTargetJobTitle] = useState(
@@ -51,6 +61,7 @@ export default function ResumeEditor({ resume }: Props) {
   const [activeTab, setActiveTab] = useState<
     "personal" | "education" | "experience" | "skills"
   >("personal");
+  const [showOptimize, setShowOptimize] = useState(false);
 
   const handleSave = async () => {
     setError(null);
@@ -212,6 +223,15 @@ export default function ResumeEditor({ resume }: Props) {
             <span className="text-sm text-green-600">已儲存</span>
           )}
           {error && <span className="text-sm text-red-600">{error}</span>}
+          {isPro && (
+            <button
+              onClick={() => setShowOptimize(true)}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-100 transition-colors"
+            >
+              <Sparkles className="h-4 w-4" />
+              AI 優化分析
+            </button>
+          )}
           <Link
             href={`/resume/${resume.id}/preview`}
             target="_blank"
@@ -594,6 +614,15 @@ export default function ResumeEditor({ resume }: Props) {
             )}
           </div>
         </div>
+      )}
+
+      {/* AI 優化分析 Modal */}
+      {showOptimize && (
+        <ResumeOptimizeModal
+          resumeId={resume.id}
+          jobs={jobs}
+          onClose={() => setShowOptimize(false)}
+        />
       )}
     </div>
   );

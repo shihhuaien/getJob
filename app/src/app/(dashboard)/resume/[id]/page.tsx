@@ -15,14 +15,41 @@ export default async function ResumeEditorPage({
 
   if (!user) redirect("/login");
 
-  const { data: resume } = await supabase
-    .from("resumes")
-    .select("*")
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single();
+  // 平行查詢履歷、訂閱狀態、職缺列表
+  const [resumeResult, profileResult, jobsResult] = await Promise.all([
+    supabase
+      .from("resumes")
+      .select("*")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .single(),
+    supabase
+      .from("profiles")
+      .select("subscription_tier")
+      .eq("id", user.id)
+      .single(),
+    supabase
+      .from("job_applications")
+      .select("id, company_name, job_title, job_description")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false }),
+  ]);
 
-  if (!resume) notFound();
+  if (!resumeResult.data) notFound();
 
-  return <ResumeEditor resume={resume} />;
+  const isPro = profileResult.data?.subscription_tier === "pro";
+  const jobs = (jobsResult.data ?? []).map((j) => ({
+    id: j.id,
+    company_name: j.company_name,
+    job_title: j.job_title,
+    has_description: Boolean(j.job_description),
+  }));
+
+  return (
+    <ResumeEditor
+      resume={resumeResult.data}
+      isPro={isPro}
+      jobs={jobs}
+    />
+  );
 }
