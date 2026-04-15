@@ -122,7 +122,7 @@
 - [x] 職缺看板拖拉排序（drag & drop）
 - [x] 職缺搜尋與篩選功能
 - [x] 個人資料編輯表單
-- [ ] 履歷預覽 / PDF 匯出
+- [x] 履歷預覽 / PDF 匯出
 - [x] Dashboard 快速操作 `<a>` 改為 `<Link>`（見審查結果）
 - [x] Google OAuth error handling（見審查結果）
 - [x] Stripe Checkout route 加入 try-catch（見審查結果）

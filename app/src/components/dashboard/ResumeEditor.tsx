@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Plus, Trash2, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, X, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database";
 import type {
@@ -201,6 +201,14 @@ export default function ResumeEditor({ resume }: Props) {
             <span className="text-sm text-green-600">已儲存</span>
           )}
           {error && <span className="text-sm text-red-600">{error}</span>}
+          <Link
+            href={`/resume/${resume.id}/preview`}
+            target="_blank"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          >
+            <Eye className="h-4 w-4" />
+            預覽
+          </Link>
           <button
             onClick={handleSave}
             disabled={isSaving}
