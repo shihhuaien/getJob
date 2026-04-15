@@ -3,6 +3,27 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Plus, Building2, ExternalLink, Search, X } from "lucide-react";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  useDroppable,
+  closestCorners,
+  defaultDropAnimationSideEffects,
+  type DragStartEvent,
+  type DragEndEvent,
+  type DragOverEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/types/database";
 
@@ -16,6 +37,126 @@ const statusColumns: { key: ApplicationStatus; label: string; color: string }[] 
   { key: "offer", label: "已錄取", color: "bg-green-100 text-green-700" },
   { key: "rejected", label: "未錄取", color: "bg-red-100 text-red-700" },
 ];
+
+// 可排序的職缺卡片
+function SortableJobCard({ job }: { job: JobApplication }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: job.id, data: { job } });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200 cursor-grab active:cursor-grabbing touch-none ${
+        isDragging ? "opacity-50 shadow-lg ring-brand-300" : ""
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <Link
+          href={`/jobs/${job.id}`}
+          className="min-w-0 hover:opacity-75 transition-opacity"
+          onClick={(e) => {
+            // 拖曳中不觸發導航
+            if (isDragging) e.preventDefault();
+          }}
+        >
+          <p className="truncate text-sm font-medium text-gray-900">
+            {job.job_title}
+          </p>
+          <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+            <Building2 className="h-3 w-3" />
+            {job.company_name}
+          </div>
+        </Link>
+        {job.job_url && (
+          <a
+            href={job.job_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 text-gray-400 hover:text-gray-600"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// 拖曳中顯示的覆蓋卡片
+function DragOverlayCard({ job }: { job: JobApplication }) {
+  return (
+    <div className="w-56 rounded-lg bg-white p-3 shadow-xl ring-1 ring-brand-300 rotate-[2deg] scale-105">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-medium text-gray-900">
+          {job.job_title}
+        </p>
+        <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+          <Building2 className="h-3 w-3" />
+          {job.company_name}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 可放置的欄位
+function DroppableColumn({
+  col,
+  jobs,
+  isOver,
+}: {
+  col: (typeof statusColumns)[number];
+  jobs: JobApplication[];
+  isOver: boolean;
+}) {
+  const { setNodeRef } = useDroppable({ id: col.key });
+
+  return (
+    <div
+      ref={setNodeRef}
+      className={`rounded-xl p-3 transition-colors duration-200 ${
+        isOver ? "bg-brand-50 ring-2 ring-brand-300" : "bg-gray-100/50"
+      }`}
+    >
+      <div className="mb-3 flex items-center justify-between">
+        <span
+          className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${col.color}`}
+        >
+          {col.label}
+        </span>
+        <span className="text-xs text-gray-500">{jobs.length}</span>
+      </div>
+      <SortableContext
+        items={jobs.map((j) => j.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="space-y-2 min-h-[40px]">
+          {jobs.map((job) => (
+            <SortableJobCard key={job.id} job={job} />
+          ))}
+          {jobs.length === 0 && !isOver && (
+            <p className="py-4 text-center text-xs text-gray-400">尚無職缺</p>
+          )}
+        </div>
+      </SortableContext>
+    </div>
+  );
+}
 
 interface Props {
   initialJobs: JobApplication[];
@@ -35,16 +176,27 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
   const [formError, setFormError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "all">("all");
+  const [activeJob, setActiveJob] = useState<JobApplication | null>(null);
+  const [overColumnId, setOverColumnId] = useState<string | null>(null);
 
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch =
-      !searchQuery ||
-      job.job_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.company_name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" || job.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const filteredJobs = jobs
+    .filter((job) => {
+      const matchesSearch =
+        !searchQuery ||
+        job.job_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        job.company_name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" || job.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => a.position - b.position);
 
   const handleAddJob = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,13 +212,19 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
           job_title: newJob.job_title,
           job_url: newJob.job_url || null,
           status: newJob.status,
+          position: 0,
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      setJobs((prev) => [data, ...prev]);
+      // 將同欄其他卡片 position +1
+      setJobs((prev) =>
+        [data, ...prev.map((j) =>
+          j.status === newJob.status ? { ...j, position: j.position + 1 } : j
+        )]
+      );
       setNewJob({ company_name: "", job_title: "", job_url: "", status: "saved" });
       setShowAddForm(false);
     } catch {
@@ -76,18 +234,127 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
     }
   };
 
-  const handleStatusChange = async (id: string, status: ApplicationStatus) => {
+  // 批次更新 position 到 DB
+  const persistPositions = async (
+    updates: { id: string; status: ApplicationStatus; position: number }[]
+  ) => {
     const supabase = createClient();
-    const { error } = await supabase
-      .from("job_applications")
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq("id", id);
+    await Promise.all(
+      updates.map(({ id, status, position }) =>
+        supabase
+          .from("job_applications")
+          .update({ status, position, updated_at: new Date().toISOString() })
+          .eq("id", id)
+      )
+    );
+  };
 
-    if (!error) {
-      setJobs((prev) =>
-        prev.map((job) => (job.id === id ? { ...job, status } : job))
-      );
+  const handleDragStart = (event: DragStartEvent) => {
+    const job = event.active.data.current?.job as JobApplication | undefined;
+    if (job) setActiveJob(job);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    setOverColumnId(event.over?.id?.toString() ?? null);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    setActiveJob(null);
+    setOverColumnId(null);
+
+    const { active, over } = event;
+    if (!over) return;
+
+    const jobId = active.id as string;
+    const overId = over.id as string;
+    const draggedJob = jobs.find((j) => j.id === jobId);
+    if (!draggedJob) return;
+
+    // 判斷目標是欄位還是卡片
+    const isColumn = statusColumns.some((c) => c.key === overId);
+    let targetStatus: ApplicationStatus;
+    let targetCardId: string | null = null;
+
+    if (isColumn) {
+      targetStatus = overId as ApplicationStatus;
+    } else {
+      const targetJob = jobs.find((j) => j.id === overId);
+      if (!targetJob) return;
+      targetStatus = targetJob.status;
+      targetCardId = overId;
     }
+
+    const isSameColumn = draggedJob.status === targetStatus;
+
+    if (isSameColumn && !targetCardId) return; // 拖到同欄空白處，不動
+    if (isSameColumn && targetCardId === jobId) return; // 拖到自己，不動
+
+    // 取得目標欄的卡片（排除被拖曳的卡片）
+    const targetColumnJobs = jobs
+      .filter((j) => j.status === targetStatus && j.id !== jobId)
+      .sort((a, b) => a.position - b.position);
+
+    // 計算插入位置
+    let insertIndex: number;
+    if (!targetCardId || isColumn) {
+      // 拖到欄位 → 放在最後
+      insertIndex = targetColumnJobs.length;
+    } else {
+      // 拖到某張卡片上
+      const targetIndex = targetColumnJobs.findIndex((j) => j.id === targetCardId);
+      if (targetIndex === -1) {
+        insertIndex = targetColumnJobs.length;
+      } else if (isSameColumn && draggedJob.position < targetColumnJobs[targetIndex].position) {
+        // 同欄向下拖 → 插入目標卡片之後
+        insertIndex = targetIndex + 1;
+      } else {
+        // 同欄向上拖 / 跨欄 → 插入目標卡片之前
+        insertIndex = targetIndex;
+      }
+    }
+
+    // 插入被拖曳的卡片
+    const newColumnOrder = [...targetColumnJobs];
+    newColumnOrder.splice(insertIndex, 0, draggedJob);
+
+    // 樂觀更新 UI
+    const updates: { id: string; status: ApplicationStatus; position: number }[] = [];
+    const updatedJobs = jobs.map((j) => {
+      if (j.id === jobId) {
+        const newPos = insertIndex;
+        updates.push({ id: j.id, status: targetStatus, position: newPos });
+        return { ...j, status: targetStatus, position: newPos };
+      }
+      // 重新計算目標欄中其他卡片的 position
+      const idx = newColumnOrder.findIndex((c) => c.id === j.id);
+      if (idx !== -1 && j.status === targetStatus) {
+        if (j.position !== idx) {
+          updates.push({ id: j.id, status: targetStatus, position: idx });
+        }
+        return { ...j, position: idx };
+      }
+      // 若是從其他欄移出，重新計算來源欄的 position
+      if (!isSameColumn && j.status === draggedJob.status) {
+        const sourceColumnJobs = jobs
+          .filter((s) => s.status === draggedJob.status && s.id !== jobId)
+          .sort((a, b) => a.position - b.position);
+        const srcIdx = sourceColumnJobs.findIndex((c) => c.id === j.id);
+        if (srcIdx !== -1 && j.position !== srcIdx) {
+          updates.push({ id: j.id, status: j.status, position: srcIdx });
+          return { ...j, position: srcIdx };
+        }
+      }
+      return j;
+    });
+
+    setJobs(updatedJobs);
+    persistPositions(updates);
+  };
+
+  const dropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: { active: { opacity: "0" } },
+    }),
   };
 
   return (
@@ -211,81 +478,32 @@ export default function JobsBoard({ initialJobs, userId }: Props) {
         </form>
       )}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-        {statusColumns.map((col) => {
-          const columnJobs = filteredJobs.filter((job) => job.status === col.key);
-          return (
-            <div key={col.key} className="rounded-xl bg-gray-100/50 p-3">
-              <div className="mb-3 flex items-center justify-between">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${col.color}`}
-                >
-                  {col.label}
-                </span>
-                <span className="text-xs text-gray-500">
-                  {columnJobs.length}
-                </span>
-              </div>
-              <div className="space-y-2">
-                {columnJobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200"
-                  >
-                    <div className="flex items-start justify-between">
-                      <Link
-                        href={`/jobs/${job.id}`}
-                        className="min-w-0 hover:opacity-75 transition-opacity"
-                      >
-                        <p className="truncate text-sm font-medium text-gray-900">
-                          {job.job_title}
-                        </p>
-                        <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
-                          <Building2 className="h-3 w-3" />
-                          {job.company_name}
-                        </div>
-                      </Link>
-                      {job.job_url && (
-                        <a
-                          href={job.job_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex-shrink-0 text-gray-400 hover:text-gray-600"
-                        >
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                    </div>
-                    <div className="mt-2">
-                      <select
-                        value={job.status}
-                        onChange={(e) =>
-                          handleStatusChange(
-                            job.id,
-                            e.target.value as ApplicationStatus
-                          )
-                        }
-                        className="w-full rounded border border-gray-200 px-2 py-1 text-xs text-gray-600 focus:border-brand-500 focus:outline-none"
-                      >
-                        {statusColumns.map((s) => (
-                          <option key={s.key} value={s.key}>
-                            {s.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                ))}
-                {columnJobs.length === 0 && (
-                  <p className="py-4 text-center text-xs text-gray-400">
-                    尚無職缺
-                  </p>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCorners}
+        onDragStart={handleDragStart}
+        onDragOver={handleDragOver}
+        onDragEnd={handleDragEnd}
+      >
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+          {statusColumns.map((col) => {
+            const columnJobs = filteredJobs.filter(
+              (job) => job.status === col.key
+            );
+            return (
+              <DroppableColumn
+                key={col.key}
+                col={col}
+                jobs={columnJobs}
+                isOver={overColumnId === col.key}
+              />
+            );
+          })}
+        </div>
+        <DragOverlay dropAnimation={dropAnimation}>
+          {activeJob ? <DragOverlayCard job={activeJob} /> : null}
+        </DragOverlay>
+      </DndContext>
     </div>
   );
 }

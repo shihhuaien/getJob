@@ -14,6 +14,7 @@ export default async function JobsPage() {
     .from("job_applications")
     .select("*")
     .eq("user_id", user.id)
+    .order("position", { ascending: true })
     .order("updated_at", { ascending: false });
 
   return (

@@ -84,6 +84,7 @@ export interface Database {
           notes: string | null;
           applied_at: string | null;
           resume_id: string | null;
+          position: number;
           created_at: string;
           updated_at: string;
         };
@@ -100,6 +101,7 @@ export interface Database {
           notes?: string | null;
           applied_at?: string | null;
           resume_id?: string | null;
+          position?: number;
           created_at?: string;
           updated_at?: string;
         };
@@ -116,6 +118,7 @@ export interface Database {
           notes?: string | null;
           applied_at?: string | null;
           resume_id?: string | null;
+          position?: number;
           created_at?: string;
           updated_at?: string;
         };
