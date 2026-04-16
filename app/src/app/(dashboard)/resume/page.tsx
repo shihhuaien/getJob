@@ -11,11 +11,21 @@ export default async function ResumePage() {
 
   if (!user) redirect("/login");
 
-  const { data: resumes } = await supabase
-    .from("resumes")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("updated_at", { ascending: false });
+  const [resumesResult, profileResult] = await Promise.all([
+    supabase
+      .from("resumes")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false }),
+    supabase
+      .from("profiles")
+      .select("subscription_tier")
+      .eq("id", user.id)
+      .single(),
+  ]);
+
+  const resumes = resumesResult.data;
+  const isPro = profileResult.data?.subscription_tier === "pro";
 
   return (
     <div>
@@ -26,7 +36,7 @@ export default async function ResumePage() {
             建立和管理多份履歷，針對不同職缺客製化
           </p>
         </div>
-        <CreateResumeButton userId={user.id} />
+        <CreateResumeButton userId={user.id} isPro={isPro} />
       </div>
 
       {resumes && resumes.length > 0 ? (
@@ -69,7 +79,7 @@ export default async function ResumePage() {
             建立你的第一份履歷，開始求職之旅
           </p>
           <div className="mt-4">
-            <CreateResumeButton userId={user.id} />
+            <CreateResumeButton userId={user.id} isPro={isPro} />
           </div>
         </div>
       )}

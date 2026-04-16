@@ -89,6 +89,16 @@ export const optimizeResumeRequestSchema = z.object({
   job_id: z.string().uuid("無效的職缺 ID"),
 });
 
+// ── PDF 履歷上傳 ──
+
+export const parseResumePdfSchema = z.object({
+  pdf_base64: z
+    .string()
+    .min(1, "請上傳 PDF 檔案")
+    .max(7_000_000, "檔案大小不可超過 5MB"),
+  title: titleSchema,
+});
+
 export const jobCreateApiSchema = z.object({
   company_name: z
     .string()

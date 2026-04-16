@@ -151,6 +151,8 @@
 ### v2.0
 
 - [x] AI 履歷優化（職缺關鍵字比對、ATS 評分 0-100）— Gemini 2.0 Flash
+- [ ] AI 履歷優化-自動更新履歷
+- [x] AI 履歷 PDF 上傳功能 — Gemini 2.0 Flash
 - [ ] AI 求職信生成器（根據職缺 + 履歷自動產生）
 - [x] 職缺描述解析（自動擷取公司、職位、薪資、技能需求）— Gemini 2.0 Flash
 
@@ -175,7 +177,7 @@
 - [ ] Landing Page SEO 優化（meta tags, OG image, sitemap.xml）
 - [ ] 404 / 500 錯誤頁面
 - [ ] Loading skeleton / spinner
-- [ ] 響應式微調（平板尺寸）
+- [ ] 響應式微調（平板尺寸、手機尺寸）- 左側功能欄位收折
 - [ ] Favicon + OG image 設計
 - [ ] 隱私權政策頁面
 - [ ] 服務條款頁面

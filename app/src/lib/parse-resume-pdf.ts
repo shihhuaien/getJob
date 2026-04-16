@@ -1,0 +1,117 @@
+import { z } from "zod";
+import { getGemini } from "./gemini";
+import type { ResumeContent } from "@/types/resume";
+
+const resumeResponseSchema = z.object({
+  personal: z.object({
+    name: z.string().default(""),
+    email: z.string().default(""),
+    phone: z.string().default(""),
+    location: z.string().default(""),
+    summary: z.string().default(""),
+  }),
+  education: z
+    .array(
+      z.object({
+        school: z.string().default(""),
+        degree: z.string().default(""),
+        field: z.string().default(""),
+        start_date: z.string().default(""),
+        end_date: z.string().default(""),
+      })
+    )
+    .default([]),
+  experience: z
+    .array(
+      z.object({
+        company: z.string().default(""),
+        title: z.string().default(""),
+        start_date: z.string().default(""),
+        end_date: z.string().default(""),
+        description: z.string().default(""),
+      })
+    )
+    .default([]),
+  skills: z.array(z.string()).default([]),
+});
+
+const SYSTEM_PROMPT = `你是一位履歷資料擷取助手。從上傳的 PDF 履歷中擷取結構化資訊。
+
+回傳 JSON 格式：
+{
+  "personal": {
+    "name": "姓名",
+    "email": "電子郵件",
+    "phone": "電話號碼",
+    "location": "所在地（例：台北市）",
+    "summary": "自我介紹或專業摘要"
+  },
+  "education": [
+    {
+      "school": "學校名稱",
+      "degree": "學位（例：學士、碩士）",
+      "field": "科系名稱",
+      "start_date": "YYYY-MM",
+      "end_date": "YYYY-MM"
+    }
+  ],
+  "experience": [
+    {
+      "company": "公司名稱",
+      "title": "職位名稱",
+      "start_date": "YYYY-MM",
+      "end_date": "YYYY-MM（若為在職中則填空字串）",
+      "description": "工作內容描述（保留原文，條列式）"
+    }
+  ],
+  "skills": ["技能1", "技能2"]
+}
+
+規則：
+- 所有文字使用繁體中文（若原文為英文則保留英文）
+- 日期格式一律為 YYYY-MM（例：2023-06），若只有年份則填 YYYY-01
+- 若資訊不明確或找不到，對應欄位填空字串或空陣列
+- experience 按時間由新到舊排列
+- skills 擷取所有提到的技術能力、工具、程式語言、軟技能
+- description 盡可能保留原文內容，包含量化成果
+- 只回傳 JSON，不要包含其他文字`;
+
+export async function parseResumePdf(
+  base64Pdf: string
+): Promise<ResumeContent> {
+  const genAI = getGemini();
+  const model = genAI.getGenerativeModel({
+    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
+
+  const result = await model.generateContent([
+    { text: SYSTEM_PROMPT },
+    {
+      inlineData: {
+        mimeType: "application/pdf",
+        data: base64Pdf,
+      },
+    },
+  ]);
+
+  const responseText = result.response.text();
+  const json = JSON.parse(responseText);
+  const parsed = resumeResponseSchema.parse(json);
+
+  // 為 education 和 experience 加上 UUID
+  return {
+    personal: parsed.personal,
+    education: parsed.education.map((edu) => ({
+      ...edu,
+      id: crypto.randomUUID(),
+    })),
+    experience: parsed.experience.map((exp) => ({
+      ...exp,
+      id: crypto.randomUUID(),
+    })),
+    skills: parsed.skills,
+  };
+}
