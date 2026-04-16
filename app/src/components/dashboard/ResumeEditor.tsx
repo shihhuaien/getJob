@@ -63,10 +63,9 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
   >("personal");
   const [showOptimize, setShowOptimize] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleDelete = async () => {
-    if (!window.confirm("確定要刪除這份履歷嗎？此操作無法復原。")) return;
-
     setIsDeleting(true);
     const supabase = createClient();
     const { error: dbError } = await supabase
@@ -261,12 +260,10 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             預覽
           </Link>
           <button
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+            onClick={() => setShowDeleteConfirm(true)}
+            className="rounded-lg border border-red-300 p-2 text-red-600 hover:bg-red-50 transition-colors"
           >
             <Trash2 className="h-4 w-4" />
-            {isDeleting ? "刪除中..." : "刪除"}
           </button>
           <button
             onClick={handleSave}
@@ -277,6 +274,30 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           </button>
         </div>
       </div>
+
+      {/* 刪除確認 */}
+      {showDeleteConfirm && (
+        <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+          <p className="text-sm text-red-800">
+            確定要刪除此履歷嗎？此操作無法復原。
+          </p>
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
+            >
+              {isDeleting ? "刪除中..." : "確認刪除"}
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              取消
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* 履歷標題 */}
       <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">

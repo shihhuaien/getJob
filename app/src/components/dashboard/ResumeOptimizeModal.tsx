@@ -329,6 +329,10 @@ export default function ResumeOptimizeModal({
                 </div>
               </div>
 
+              <p className="text-xs text-gray-400">
+                AI 產出內容不一定完全正確，請先確認再使用
+              </p>
+
               {/* 操作按鈕 */}
               <div className="flex justify-end gap-3">
                 <button

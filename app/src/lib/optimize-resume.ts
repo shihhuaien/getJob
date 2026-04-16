@@ -64,7 +64,7 @@ const SYSTEM_PROMPT = `你是一位專業的履歷顧問與 ATS（Applicant Trac
 - 所有文字使用繁體中文
 - 只回傳 JSON，不要包含其他文字`;
 
-function resumeToText(content: ResumeContent): string {
+export function resumeToText(content: ResumeContent): string {
   const parts: string[] = [];
 
   // 個人資訊

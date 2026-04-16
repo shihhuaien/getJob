@@ -89,6 +89,13 @@ export const optimizeResumeRequestSchema = z.object({
   job_id: z.string().uuid("無效的職缺 ID"),
 });
 
+// ── AI 求職信生成 ──
+
+export const generateCoverLetterSchema = z.object({
+  job_id: z.string().uuid("無效的職缺 ID"),
+  resume_id: z.string().uuid("無效的履歷 ID"),
+});
+
 // ── PDF 履歷上傳 ──
 
 export const parseResumePdfSchema = z.object({

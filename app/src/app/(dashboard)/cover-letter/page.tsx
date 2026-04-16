@@ -12,11 +12,42 @@ export default async function CoverLetterPage() {
 
   if (!user) redirect("/login");
 
-  const { data: coverLetters } = await supabase
-    .from("cover_letters")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("updated_at", { ascending: false });
+  const [coverLettersResult, profileResult, resumesResult, jobsResult] =
+    await Promise.all([
+      supabase
+        .from("cover_letters")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("subscription_tier")
+        .eq("id", user.id)
+        .single(),
+      supabase
+        .from("resumes")
+        .select("id, title")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("job_applications")
+        .select("id, company_name, job_title, job_description")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+    ]);
+
+  const coverLetters = coverLettersResult.data;
+  const isPro = profileResult.data?.subscription_tier === "pro";
+  const resumes = (resumesResult.data ?? []).map((r) => ({
+    id: r.id,
+    title: r.title,
+  }));
+  const jobs = (jobsResult.data ?? []).map((j) => ({
+    id: j.id,
+    company_name: j.company_name,
+    job_title: j.job_title,
+    has_description: !!j.job_description,
+  }));
 
   return (
     <div>
@@ -27,7 +58,7 @@ export default async function CoverLetterPage() {
             使用 AI 產生針對每個職缺客製化的求職信
           </p>
         </div>
-        <CreateCoverLetterButton userId={user.id} />
+        <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />
       </div>
 
       {coverLetters && coverLetters.length > 0 ? (
@@ -65,7 +96,7 @@ export default async function CoverLetterPage() {
             建立你的第一封求職信
           </p>
           <div className="mt-4">
-            <CreateCoverLetterButton userId={user.id} />
+            <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />
           </div>
         </div>
       )}
