@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/optimize-resume";
 
@@ -82,10 +83,39 @@ export default function ResumeOptimizeModal({
   jobs,
   onClose,
 }: Props) {
+  const router = useRouter();
   const [step, setStep] = useState<"select" | "loading" | "result">("select");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<AtsAnalysis | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = async () => {
+    if (!selectedJobId) return;
+    setError(null);
+    setIsGenerating(true);
+
+    try {
+      const res = await fetch("/api/resume/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "生成失敗");
+        setIsGenerating(false);
+        return;
+      }
+
+      router.push(`/resume/${data.data.id}`);
+    } catch {
+      setError("生成失敗，請稍後再試");
+      setIsGenerating(false);
+    }
+  };
 
   const handleAnalyze = async () => {
     if (!selectedJobId) {
@@ -302,19 +332,28 @@ export default function ResumeOptimizeModal({
               {/* 操作按鈕 */}
               <div className="flex justify-end gap-3">
                 <button
-                  onClick={() => {
-                    setStep("select");
-                    setAnalysis(null);
-                  }}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  重新分析
-                </button>
-                <button
                   onClick={onClose}
-                  className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
+                  disabled={isGenerating}
+                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
                   關閉
+                </button>
+                <button
+                  onClick={handleGenerate}
+                  disabled={isGenerating}
+                  className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      生成中...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      生成履歷
+                    </>
+                  )}
                 </button>
               </div>
             </div>

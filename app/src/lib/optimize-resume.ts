@@ -97,6 +97,129 @@ function resumeToText(content: ResumeContent): string {
   return parts.join("\n");
 }
 
+const GENERATE_PROMPT = `你是一位專業的履歷優化顧問。你的任務是根據 ATS 分析結果，優化求職者的履歷內容以提高與目標職缺的匹配度。
+
+你會收到三項資料：
+1. 原始履歷（JSON 格式）
+2. 目標職缺描述
+3. ATS 分析結果（包含評分、匹配/缺少關鍵字、改善建議）
+
+回傳與原始履歷完全相同結構的 JSON：
+{
+  "personal": {
+    "name": "（保持不變）",
+    "email": "（保持不變）",
+    "phone": "（保持不變）",
+    "location": "（保持不變）",
+    "summary": "優化後的自我介紹"
+  },
+  "education": [
+    {
+      "school": "（保持不變）",
+      "degree": "（保持不變）",
+      "field": "（保持不變）",
+      "start_date": "（保持不變）",
+      "end_date": "（保持不變）"
+    }
+  ],
+  "experience": [
+    {
+      "company": "（保持不變）",
+      "title": "（保持不變）",
+      "start_date": "（保持不變）",
+      "end_date": "（保持不變）",
+      "description": "優化後的工作描述"
+    }
+  ],
+  "skills": ["技能1", "技能2"]
+}
+
+嚴格規則（違反任何一條即為失敗）：
+1. **不可捏造**：不可新增原始履歷中不存在的公司、職位、學歷、學校
+2. **不可虛構技能**：skills 陣列只能包含原始履歷已有的技能，不可新增
+3. **不可修改事實**：姓名、email、電話、地址、學校、學位、科系、公司名稱、職位名稱、日期一律保持原文不變
+4. **experience 與 education 數量必須與原始履歷完全相同**，不可新增或刪除
+
+你可以做的事：
+- 改寫 summary（自我介紹），融入職缺相關的關鍵字與重點，但基於原文內容改寫
+- 改寫 experience 的 description（工作描述），加入動作動詞、量化成果、職缺關鍵字，但必須基於原文內容改寫
+- 調整 skills 的排列順序，讓與職缺最相關的技能排在前面
+
+所有文字使用繁體中文（若原文為英文則保留英文）。
+只回傳 JSON，不要包含其他文字。`;
+
+const optimizedResumeSchema = z.object({
+  personal: z.object({
+    name: z.string(),
+    email: z.string(),
+    phone: z.string(),
+    location: z.string(),
+    summary: z.string(),
+  }),
+  education: z
+    .array(
+      z.object({
+        school: z.string(),
+        degree: z.string(),
+        field: z.string(),
+        start_date: z.string(),
+        end_date: z.string(),
+      })
+    )
+    .default([]),
+  experience: z
+    .array(
+      z.object({
+        company: z.string(),
+        title: z.string(),
+        start_date: z.string(),
+        end_date: z.string(),
+        description: z.string(),
+      })
+    )
+    .default([]),
+  skills: z.array(z.string()).default([]),
+});
+
+export async function generateOptimizedResume(
+  resumeContent: ResumeContent,
+  jobDescription: string,
+  analysis: AtsAnalysis
+): Promise<ResumeContent> {
+  const genAI = getGemini();
+  const model = genAI.getGenerativeModel({
+    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    generationConfig: {
+      responseMimeType: "application/json",
+    },
+  });
+
+  const result = await model.generateContent([
+    { text: GENERATE_PROMPT },
+    {
+      text: `原始履歷：\n${JSON.stringify(resumeContent, null, 2)}\n\n---\n\n目標職缺描述：\n${jobDescription}\n\n---\n\nATS 分析結果：\n${JSON.stringify(analysis, null, 2)}`,
+    },
+  ]);
+
+  const responseText = result.response.text();
+  const json = JSON.parse(responseText);
+  const parsed = optimizedResumeSchema.parse(json);
+
+  // 保留原始 education/experience 的 id
+  return {
+    personal: parsed.personal,
+    education: parsed.education.map((edu, i) => ({
+      ...edu,
+      id: resumeContent.education[i]?.id || crypto.randomUUID(),
+    })),
+    experience: parsed.experience.map((exp, i) => ({
+      ...exp,
+      id: resumeContent.experience[i]?.id || crypto.randomUUID(),
+    })),
+    skills: parsed.skills,
+  };
+}
+
 export async function analyzeResume(
   resumeContent: ResumeContent,
   jobDescription: string
