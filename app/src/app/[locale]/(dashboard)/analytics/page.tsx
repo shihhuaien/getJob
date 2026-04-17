@@ -1,16 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { BarChart3 } from "lucide-react";
 
 type ApplicationStatus = "saved" | "applied" | "interview" | "offer" | "rejected";
-
-const statusConfig: Record<ApplicationStatus, { label: string; color: string; bgColor: string }> = {
-  saved: { label: "已儲存", color: "bg-gray-500", bgColor: "bg-gray-100" },
-  applied: { label: "已投遞", color: "bg-blue-500", bgColor: "bg-blue-100" },
-  interview: { label: "面試中", color: "bg-yellow-500", bgColor: "bg-yellow-100" },
-  offer: { label: "已錄取", color: "bg-green-500", bgColor: "bg-green-100" },
-  rejected: { label: "未錄取", color: "bg-red-500", bgColor: "bg-red-100" },
-};
 
 function getWeekLabel(date: Date): string {
   const month = date.getMonth() + 1;
@@ -27,6 +20,8 @@ function getWeekStart(date: Date): string {
 }
 
 export default async function AnalyticsPage() {
+  const t = await getTranslations("analytics");
+  const tJobs = await getTranslations("jobs");
   const supabase = await createClient();
   const {
     data: { user },
@@ -42,6 +37,14 @@ export default async function AnalyticsPage() {
   const allJobs = jobs ?? [];
   const total = allJobs.length;
 
+  const statusConfig: Record<ApplicationStatus, { label: string; color: string; bgColor: string }> = {
+    saved: { label: tJobs("saved"), color: "bg-gray-500", bgColor: "bg-gray-100" },
+    applied: { label: tJobs("applied"), color: "bg-blue-500", bgColor: "bg-blue-100" },
+    interview: { label: tJobs("interview"), color: "bg-yellow-500", bgColor: "bg-yellow-100" },
+    offer: { label: tJobs("offer"), color: "bg-green-500", bgColor: "bg-green-100" },
+    rejected: { label: tJobs("rejected"), color: "bg-red-500", bgColor: "bg-red-100" },
+  };
+
   // ── 狀態分佈 ──
   const statusCounts: Record<ApplicationStatus, number> = {
     saved: 0,
@@ -55,9 +58,6 @@ export default async function AnalyticsPage() {
   }
 
   // ── 轉換率 ──
-  // 投遞率：(applied + interview + offer + rejected) / total
-  // 面試率：(interview + offer) / (applied + interview + offer + rejected)
-  // 錄取率：offer / (interview + offer)
   const appliedOrBeyond =
     statusCounts.applied + statusCounts.interview + statusCounts.offer + statusCounts.rejected;
   const interviewOrBeyond = statusCounts.interview + statusCounts.offer;
@@ -67,10 +67,10 @@ export default async function AnalyticsPage() {
   const offerRate = interviewOrBeyond > 0 ? Math.round((statusCounts.offer / interviewOrBeyond) * 100) : 0;
 
   const funnel = [
-    { label: "總職缺數", value: total, rate: null as number | null, color: "bg-gray-500" },
-    { label: "已投遞", value: appliedOrBeyond, rate: applyRate, color: "bg-blue-500" },
-    { label: "進入面試", value: interviewOrBeyond, rate: interviewRate, color: "bg-yellow-500" },
-    { label: "獲得錄取", value: statusCounts.offer, rate: offerRate, color: "bg-green-500" },
+    { label: t("totalCount"), value: total, rate: null as number | null, color: "bg-gray-500" },
+    { label: t("appliedCount"), value: appliedOrBeyond, rate: applyRate, color: "bg-blue-500" },
+    { label: t("interviewCount"), value: interviewOrBeyond, rate: interviewRate, color: "bg-yellow-500" },
+    { label: t("offerCount"), value: statusCounts.offer, rate: offerRate, color: "bg-green-500" },
   ];
 
   // ── 每週活動時間軸（最近 12 週）──
@@ -106,9 +106,9 @@ export default async function AnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">求職數據分析</h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
         <p className="mt-1 text-sm text-gray-500">
-          追蹤你的求職進度與轉換率
+          {t("subtitle")}
         </p>
       </div>
 
@@ -116,7 +116,7 @@ export default async function AnalyticsPage() {
         <div className="flex flex-col items-center justify-center rounded-xl bg-white p-12 shadow-sm ring-1 ring-gray-200">
           <BarChart3 className="h-12 w-12 text-gray-300" />
           <p className="mt-4 text-sm text-gray-400">
-            尚無職缺資料，開始追蹤職缺後將顯示分析圖表
+            {t("noData")}
           </p>
         </div>
       ) : (
@@ -125,9 +125,9 @@ export default async function AnalyticsPage() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* 狀態分佈 */}
             <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">狀態分佈</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t("statusDistribution")}</h2>
               <p className="mt-1 text-xs text-gray-500">
-                共 {total} 筆職缺
+                {t("totalJobs", { total })}
               </p>
               <div className="mt-5 space-y-3">
                 {(Object.keys(statusConfig) as ApplicationStatus[]).map((status) => {
@@ -159,9 +159,9 @@ export default async function AnalyticsPage() {
 
             {/* 轉換漏斗 */}
             <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">投遞轉換率</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t("conversionRate")}</h2>
               <p className="mt-1 text-xs text-gray-500">
-                從儲存到錄取的轉換過程
+                {t("conversionDesc")}
               </p>
               <div className="mt-5 space-y-4">
                 {funnel.map((step, i) => {
@@ -199,9 +199,9 @@ export default async function AnalyticsPage() {
 
           {/* 第二排：每週活動時間軸 */}
           <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">每週活動</h2>
+            <h2 className="text-lg font-semibold text-gray-900">{t("weeklyActivity")}</h2>
             <p className="mt-1 text-xs text-gray-500">
-              最近 12 週新增的職缺數量
+              {t("weeklyActivityDesc")}
             </p>
             <div className="mt-5 flex items-end gap-2" style={{ height: 160 }}>
               {weekData.map((week) => (

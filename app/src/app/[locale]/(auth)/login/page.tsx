@@ -1,33 +1,29 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
+import { useRouter } from "@/i18n/navigation";
 import { Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
 
-export default function RegisterPage() {
+export default function LoginPage() {
+  const router = useRouter();
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleRegister = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
-      options: {
-        data: {
-          full_name: fullName,
-        },
-        emailRedirectTo: `${window.location.origin}/api/auth/callback`,
-      },
     });
 
     if (error) {
@@ -36,42 +32,22 @@ export default function RegisterPage() {
       return;
     }
 
-    setSuccess(true);
-    setLoading(false);
+    router.push("/dashboard");
   };
 
   const handleGoogleLogin = async () => {
+    setError("");
     const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
+    if (error) {
+      setError(error.message);
+    }
   };
-
-  if (success) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-        <div className="w-full max-w-md text-center">
-          <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">
-            請確認你的電子郵件
-          </h1>
-          <p className="mt-2 text-gray-600">
-            我們已寄送確認信到 <strong>{email}</strong>
-            ，請點擊信中的連結完成註冊。
-          </p>
-          <Link
-            href="/login"
-            className="mt-6 inline-block text-sm font-medium text-brand-600 hover:text-brand-500"
-          >
-            返回登入頁面
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -82,15 +58,15 @@ export default function RegisterPage() {
             <span className="text-2xl font-bold text-gray-900">Offery</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
-            建立你的帳號
+            {t("loginTitle")}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            已有帳號？{" "}
+            {t("noAccount")}{" "}
             <Link
-              href="/login"
+              href="/register"
               className="font-medium text-brand-600 hover:text-brand-500"
             >
-              登入
+              {t("registerLink")}
             </Link>
           </p>
         </div>
@@ -118,7 +94,7 @@ export default function RegisterPage() {
                 fill="#EA4335"
               />
             </svg>
-            使用 Google 帳號註冊
+            {t("googleLogin")}
           </button>
 
           <div className="relative my-6">
@@ -126,11 +102,11 @@ export default function RegisterPage() {
               <div className="w-full border-t border-gray-200" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-500">或使用 Email</span>
+              <span className="bg-white px-4 text-gray-500">{t("orEmail")}</span>
             </div>
           </div>
 
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             {error && (
               <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
                 {error}
@@ -139,28 +115,10 @@ export default function RegisterPage() {
 
             <div>
               <label
-                htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                姓名
-              </label>
-              <input
-                id="fullName"
-                type="text"
-                required
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="王小明"
-              />
-            </div>
-
-            <div>
-              <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                電子郵件
+                {t("email")}
               </label>
               <input
                 id="email"
@@ -178,17 +136,16 @@ export default function RegisterPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                密碼
+                {t("password")}
               </label>
               <input
                 id="password"
                 type="password"
                 required
-                minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="至少 6 個字元"
+                placeholder="••••••••"
               />
             </div>
 
@@ -197,7 +154,7 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
             >
-              {loading ? "註冊中..." : "建立帳號"}
+              {loading ? t("loggingIn") : t("login")}
             </button>
           </form>
         </div>

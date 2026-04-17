@@ -1,62 +1,71 @@
-import Link from "next/link";
-import { Check } from "lucide-react";
+"use client";
 
-const plans = [
-  {
-    name: "免費方案",
-    price: "NT$0",
-    period: "永久免費",
-    description: "適合剛開始求職的你",
-    features: [
-      "無限職缺追蹤",
-      "基本履歷建立器",
-      "最多 3 份履歷",
-      "求職信範本",
-      "基本數據分析",
-      "人脈管理 CRM",
-    ],
-    cta: "免費開始",
-    href: "/register",
-    highlighted: false,
-  },
-  {
-    name: "Pro 方案",
-    price: "NT$299",
-    period: "/月",
-    description: "適合積極求職中的你",
-    features: [
-      "免費方案所有功能",
-      "無限 AI 履歷優化",
-      "無限份履歷管理",
-      "AI 求職信產生器",
-      "進階關鍵字比對分析",
-      "進階數據分析報表",
-      "AI 面試模擬練習",
-      "優先客服支援",
-    ],
-    cta: "升級 Pro",
-    href: "/register",
-    highlighted: true,
-  },
-];
+import { Link } from "@/i18n/navigation";
+import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
+
+const freeFeatureKeys = [
+  "freeFeature1",
+  "freeFeature2",
+  "freeFeature3",
+  "freeFeature4",
+  "freeFeature5",
+  "freeFeature6",
+] as const;
+
+const proFeatureKeys = [
+  "proFeature1",
+  "proFeature2",
+  "proFeature3",
+  "proFeature4",
+  "proFeature5",
+  "proFeature6",
+  "proFeature7",
+  "proFeature8",
+] as const;
 
 export default function PricingSection() {
+  const t = useTranslations("landing");
+
+  const plans = [
+    {
+      nameKey: "freePlan" as const,
+      priceKey: "freePrice" as const,
+      periodKey: "freePeriod" as const,
+      descKey: "freeDesc" as const,
+      featureKeys: freeFeatureKeys,
+      ctaKey: "freeCta" as const,
+      href: "/register",
+      highlighted: false,
+    },
+    {
+      nameKey: "proPlan" as const,
+      priceKey: "proPrice" as const,
+      periodKey: "proPeriod" as const,
+      descKey: "proDesc" as const,
+      featureKeys: proFeatureKeys,
+      ctaKey: "proCta" as const,
+      href: "/register",
+      highlighted: true,
+    },
+  ];
+
   return (
     <section id="pricing" className="bg-gray-50 py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            簡單透明的價格
+            {t("pricingTitle")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
-            免費方案功能就已經很強大，升級 Pro 解鎖 AI 完整功能。
+            {t("pricingSubtitle")}
           </p>
         </div>
 
         <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:max-w-4xl lg:mx-auto">
           {plans.map((plan) => (
             <div
-              key={plan.name}
+              key={plan.nameKey}
               className={`rounded-2xl p-8 ${
                 plan.highlighted
                   ? "bg-brand-600 text-white ring-2 ring-brand-600 shadow-xl"
@@ -66,29 +75,29 @@ export default function PricingSection() {
               <h3
                 className={`text-lg font-semibold ${plan.highlighted ? "text-brand-100" : "text-brand-600"}`}
               >
-                {plan.name}
+                {t(plan.nameKey)}
               </h3>
               <div className="mt-4 flex items-baseline gap-1">
-                <span className="text-4xl font-bold">{plan.price}</span>
+                <span className="text-4xl font-bold">{t(plan.priceKey)}</span>
                 <span
                   className={`text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
                 >
-                  {plan.period}
+                  {t(plan.periodKey)}
                 </span>
               </div>
               <p
                 className={`mt-2 text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
               >
-                {plan.description}
+                {t(plan.descKey)}
               </p>
 
               <ul className="mt-8 space-y-3">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-3">
+                {plan.featureKeys.map((featureKey) => (
+                  <li key={featureKey} className="flex items-start gap-3">
                     <Check
                       className={`mt-0.5 h-5 w-5 flex-shrink-0 ${plan.highlighted ? "text-brand-200" : "text-brand-600"}`}
                     />
-                    <span className="text-sm">{feature}</span>
+                    <span className="text-sm">{t(featureKey)}</span>
                   </li>
                 ))}
               </ul>
@@ -101,7 +110,7 @@ export default function PricingSection() {
                     : "bg-brand-600 text-white hover:bg-brand-700"
                 }`}
               >
-                {plan.cta}
+                {t(plan.ctaKey)}
               </Link>
             </div>
           ))}

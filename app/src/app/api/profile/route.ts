@@ -9,7 +9,7 @@ export async function PATCH(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -30,7 +30,7 @@ export async function PATCH(request: Request) {
 
     if (dbError) {
       return NextResponse.json(
-        { error: "更新失敗，請稍後再試" },
+        { error: "Update failed" },
         { status: 500 }
       );
     }
@@ -38,7 +38,7 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(
-      { error: "更新失敗，請稍後再試" },
+      { error: "Update failed" },
       { status: 500 }
     );
   }

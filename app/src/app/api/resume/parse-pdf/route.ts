@@ -12,10 +12,9 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 檢查訂閱狀態
     const { data: profile } = await supabase
       .from("profiles")
       .select("subscription_tier")
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
 
     if (profile?.subscription_tier !== "pro") {
       return NextResponse.json(
-        { error: "此功能需要 Pro 方案" },
+        { error: "Pro plan required" },
         { status: 403 }
       );
     }
@@ -41,8 +40,7 @@ export async function POST(request: Request) {
 
     const { pdf_base64, title } = validation.data;
 
-    // AI 解析 PDF
-    const content = await parseResumePdf(pdf_base64);
+    const content = await parseResumePdf(pdf_base64, body.locale);
 
     // 建立履歷
     const { data: resume, error: dbError } = await supabase
@@ -57,7 +55,7 @@ export async function POST(request: Request) {
 
     if (dbError) {
       return NextResponse.json(
-        { error: "建立履歷失敗，請稍後再試" },
+        { error: "Failed to create resume" },
         { status: 500 }
       );
     }
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("[/api/resume/parse-pdf] Error:", err);
     const message =
-      err instanceof Error ? err.message : "PDF 解析失敗，請稍後再試";
+      err instanceof Error ? err.message : "PDF parsing failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

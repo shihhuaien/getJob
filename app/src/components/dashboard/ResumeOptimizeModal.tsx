@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/optimize-resume";
 
@@ -63,19 +64,21 @@ function ScoreRing({ score }: { score: number }) {
 }
 
 function ScoreLabel({ score }: { score: number }) {
-  if (score >= 90) return <span className="text-sm font-medium text-green-600">非常匹配</span>;
-  if (score >= 70) return <span className="text-sm font-medium text-green-600">良好匹配</span>;
-  if (score >= 50) return <span className="text-sm font-medium text-yellow-600">中等匹配</span>;
-  if (score >= 30) return <span className="text-sm font-medium text-red-600">匹配度低</span>;
-  return <span className="text-sm font-medium text-red-600">幾乎不匹配</span>;
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const t = useTranslations("resume");
+  if (score >= 90) return <span className="text-sm font-medium text-green-600">{t("matchExcellent")}</span>;
+  if (score >= 70) return <span className="text-sm font-medium text-green-600">{t("matchGood")}</span>;
+  if (score >= 50) return <span className="text-sm font-medium text-yellow-600">{t("matchMedium")}</span>;
+  if (score >= 30) return <span className="text-sm font-medium text-red-600">{t("matchLow")}</span>;
+  return <span className="text-sm font-medium text-red-600">{t("matchPoor")}</span>;
 }
 
-const sectionLabels: Record<string, string> = {
-  summary: "自我介紹",
-  experience: "工作經歷",
-  skills: "技能",
-  education: "學歷",
-  general: "整體",
+const sectionKeys: Record<string, string> = {
+  summary: "sectionSummary",
+  experience: "sectionExperience",
+  skills: "sectionSkills",
+  education: "sectionEducation",
+  general: "sectionGeneral",
 };
 
 export default function ResumeOptimizeModal({
@@ -84,6 +87,9 @@ export default function ResumeOptimizeModal({
   onClose,
 }: Props) {
   const router = useRouter();
+  const t = useTranslations("resume");
+  const tc = useTranslations("common");
+  const locale = useLocale();
   const [step, setStep] = useState<"select" | "loading" | "result">("select");
   const [selectedJobId, setSelectedJobId] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -99,27 +105,27 @@ export default function ResumeOptimizeModal({
       const res = await fetch("/api/resume/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId }),
+        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId, locale }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "生成失敗");
+        setError(data.error || t("generateFailed"));
         setIsGenerating(false);
         return;
       }
 
       router.push(`/resume/${data.data.id}`);
     } catch {
-      setError("生成失敗，請稍後再試");
+      setError(t("generateFailed"));
       setIsGenerating(false);
     }
   };
 
   const handleAnalyze = async () => {
     if (!selectedJobId) {
-      setError("請選擇要比對的職缺");
+      setError(t("selectJob"));
       return;
     }
 
@@ -130,13 +136,13 @@ export default function ResumeOptimizeModal({
       const res = await fetch("/api/resume/optimize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId }),
+        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId, locale }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "分析失敗");
+        setError(data.error || t("analyzeFailed"));
         setStep("select");
         return;
       }
@@ -144,7 +150,7 @@ export default function ResumeOptimizeModal({
       setAnalysis(data.data);
       setStep("result");
     } catch {
-      setError("分析失敗，請稍後再試");
+      setError(t("analyzeFailedRetry"));
       setStep("select");
     }
   };
@@ -157,7 +163,7 @@ export default function ResumeOptimizeModal({
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand-600" />
             <h3 className="text-lg font-semibold text-gray-900">
-              AI 履歷優化分析
+              {t("optimizeTitle")}
             </h3>
           </div>
           <button
@@ -179,15 +185,12 @@ export default function ResumeOptimizeModal({
           {step === "select" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                選擇要比對的職缺
+                {t("selectJob")}
               </label>
-              <p className="mt-1 text-xs text-gray-500">
-                AI 將比對你的履歷與該職缺描述，給出 ATS 評分與改善建議
-              </p>
               {jobs.length === 0 ? (
                 <div className="mt-4 rounded-lg bg-gray-50 p-6 text-center">
                   <p className="text-sm text-gray-500">
-                    尚無已儲存的職缺。請先到職缺追蹤新增職缺並填寫職缺描述。
+                    {t("noJobs")}
                   </p>
                 </div>
               ) : (
@@ -196,7 +199,7 @@ export default function ResumeOptimizeModal({
                   onChange={(e) => setSelectedJobId(e.target.value)}
                   className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
-                  <option value="">請選擇職缺...</option>
+                  <option value="">{t("selectJobPlaceholder")}</option>
                   {jobs.map((job) => (
                     <option
                       key={job.id}
@@ -204,7 +207,7 @@ export default function ResumeOptimizeModal({
                       disabled={!job.has_description}
                     >
                       {job.company_name} — {job.job_title}
-                      {!job.has_description ? "（無職缺描述）" : ""}
+                      {!job.has_description ? tc("noDescription") : ""}
                     </option>
                   ))}
                 </select>
@@ -214,7 +217,7 @@ export default function ResumeOptimizeModal({
                   onClick={onClose}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  取消
+                  {tc("cancel")}
                 </button>
                 <button
                   onClick={handleAnalyze}
@@ -222,7 +225,7 @@ export default function ResumeOptimizeModal({
                   className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Sparkles className="h-4 w-4" />
-                  開始分析
+                  {t("startAnalysis")}
                 </button>
               </div>
             </div>
@@ -233,10 +236,10 @@ export default function ResumeOptimizeModal({
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
               <p className="mt-3 text-sm text-gray-500">
-                AI 正在分析你的履歷與職缺匹配度...
+                {t("analyzing")}
               </p>
               <p className="mt-1 text-xs text-gray-400">
-                這可能需要幾秒鐘
+                {t("analyzingNote")}
               </p>
             </div>
           )}
@@ -260,7 +263,7 @@ export default function ResumeOptimizeModal({
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-600" />
                     <h4 className="text-sm font-semibold text-green-800">
-                      已匹配關鍵字（{analysis.matched_keywords.length}）
+                      {t("matchedKeywords")}（{analysis.matched_keywords.length}）
                     </h4>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -274,7 +277,7 @@ export default function ResumeOptimizeModal({
                         </span>
                       ))
                     ) : (
-                      <p className="text-xs text-green-600">無匹配關鍵字</p>
+                      <p className="text-xs text-green-600">{t("noMatchedKeywords")}</p>
                     )}
                   </div>
                 </div>
@@ -284,7 +287,7 @@ export default function ResumeOptimizeModal({
                   <div className="flex items-center gap-2">
                     <XCircle className="h-4 w-4 text-red-600" />
                     <h4 className="text-sm font-semibold text-red-800">
-                      缺少關鍵字（{analysis.missing_keywords.length}）
+                      {t("missingKeywords")}（{analysis.missing_keywords.length}）
                     </h4>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -298,7 +301,7 @@ export default function ResumeOptimizeModal({
                         </span>
                       ))
                     ) : (
-                      <p className="text-xs text-red-600">無缺少關鍵字</p>
+                      <p className="text-xs text-red-600">{t("noMissingKeywords")}</p>
                     )}
                   </div>
                 </div>
@@ -309,7 +312,7 @@ export default function ResumeOptimizeModal({
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
                   <h4 className="text-sm font-semibold text-gray-900">
-                    改善建議
+                    {t("suggestions")}
                   </h4>
                 </div>
                 <div className="mt-3 space-y-3">
@@ -319,7 +322,7 @@ export default function ResumeOptimizeModal({
                       className="rounded-lg border border-gray-200 bg-white p-4"
                     >
                       <span className="inline-block rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                        {sectionLabels[s.section] || s.section}
+                        {sectionKeys[s.section] ? t(sectionKeys[s.section] as "sectionSummary" | "sectionExperience" | "sectionSkills" | "sectionEducation" | "sectionGeneral") : s.section}
                       </span>
                       <p className="mt-2 text-sm text-gray-700">
                         {s.suggestion}
@@ -330,7 +333,7 @@ export default function ResumeOptimizeModal({
               </div>
 
               <p className="text-xs text-gray-400">
-                AI 產出內容不一定完全正確，請先確認再使用
+                {tc("aiDisclaimer")}
               </p>
 
               {/* 操作按鈕 */}
@@ -340,7 +343,7 @@ export default function ResumeOptimizeModal({
                   disabled={isGenerating}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
-                  關閉
+                  {tc("close")}
                 </button>
                 <button
                   onClick={handleGenerate}
@@ -350,12 +353,12 @@ export default function ResumeOptimizeModal({
                   {isGenerating ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      生成中...
+                      {t("generating")}
                     </>
                   ) : (
                     <>
                       <Sparkles className="h-4 w-4" />
-                      生成履歷
+                      {t("generateResume")}
                     </>
                   )}
                 </button>

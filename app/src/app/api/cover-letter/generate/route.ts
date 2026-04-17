@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // 檢查訂閱狀態
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
     if (profile?.subscription_tier !== "pro") {
       return NextResponse.json(
-        { error: "此功能需要 Pro 方案" },
+        { error: "Pro plan required" },
         { status: 403 }
       );
     }
@@ -58,16 +58,16 @@ export async function POST(request: Request) {
     ]);
 
     if (!resumeResult.data) {
-      return NextResponse.json({ error: "找不到該履歷" }, { status: 404 });
+      return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
     if (!jobResult.data) {
-      return NextResponse.json({ error: "找不到該職缺" }, { status: 404 });
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
     if (!jobResult.data.job_description) {
       return NextResponse.json(
-        { error: "該職缺沒有描述內容，無法生成求職信" },
+        { error: "Job has no description" },
         { status: 400 }
       );
     }
@@ -76,19 +76,24 @@ export async function POST(request: Request) {
       .content as unknown as ResumeContent;
     const { job_description, company_name, job_title } = jobResult.data;
 
+    const locale = body.locale;
     const content = await generateCoverLetter(
       resumeContent,
       job_description,
       company_name,
-      job_title
+      job_title,
+      locale
     );
 
-    // 建立求職信
+    const titleText = locale === "en"
+      ? `Cover Letter for ${company_name}`
+      : `致${company_name}的求職信`;
+
     const { data: coverLetter, error: dbError } = await supabase
       .from("cover_letters")
       .insert({
         user_id: user.id,
-        title: `致${company_name}的求職信`,
+        title: titleText,
         content,
         job_application_id: job_id,
       })
@@ -97,7 +102,7 @@ export async function POST(request: Request) {
 
     if (dbError) {
       return NextResponse.json(
-        { error: "建立求職信失敗，請稍後再試" },
+        { error: "Failed to create cover letter" },
         { status: 500 }
       );
     }
@@ -106,7 +111,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error("[/api/cover-letter/generate] Error:", err);
     const message =
-      err instanceof Error ? err.message : "生成求職信失敗，請稍後再試";
+      err instanceof Error ? err.message : "Failed to generate cover letter";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

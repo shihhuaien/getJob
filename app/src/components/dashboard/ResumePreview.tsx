@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowLeft, Download, Mail, Phone, MapPin } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import type { Database } from "@/types/database";
 import type { ResumeContent } from "@/types/resume";
 import { emptyResumeContent } from "@/types/resume";
@@ -17,7 +18,6 @@ function parseContent(content: unknown): ResumeContent {
 
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
-  // 處理 "2024-06" 格式
   const [year, month] = dateStr.split("-");
   return month ? `${year}/${month}` : year;
 }
@@ -27,13 +27,13 @@ interface Props {
 }
 
 export default function ResumePreview({ resume }: Props) {
+  const t = useTranslations("resume");
   const content = parseContent(resume.content);
   const { personal, education, experience, skills } = content;
 
   const handlePrint = () => {
     window.print();
   };
-
 
   const hasPersonalInfo =
     personal.name || personal.email || personal.phone || personal.location;
@@ -46,7 +46,6 @@ export default function ResumePreview({ resume }: Props) {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* 操作列 - 列印時隱藏 */}
       <div className="print:hidden sticky top-0 z-10 border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
           <Link
@@ -54,7 +53,7 @@ export default function ResumePreview({ resume }: Props) {
             className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
-            返回編輯
+            {t("backToEdit")}
           </Link>
           <div className="flex items-center gap-3">
             <span className="text-sm text-gray-500">{resume.title}</span>
@@ -63,23 +62,21 @@ export default function ResumePreview({ resume }: Props) {
               className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
             >
               <Download className="h-4 w-4" />
-              匯出 PDF
+              {t("exportPdf")}
             </button>
           </div>
         </div>
       </div>
 
-      {/* 履歷內容 */}
       <div className="mx-auto max-w-4xl px-6 py-8 print:max-w-none print:px-0 print:py-0">
         <div className="bg-white shadow-sm print:shadow-none">
           <div className="px-12 py-10 print:px-16 print:py-12">
             {!hasContent ? (
               <p className="text-center text-gray-400">
-                履歷內容為空，請先填寫資料
+                {t("emptyContent")}
               </p>
             ) : (
               <div className="space-y-8">
-                {/* 個人資訊 */}
                 {hasPersonalInfo && (
                   <header className="text-center">
                     {personal.name && (
@@ -110,11 +107,10 @@ export default function ResumePreview({ resume }: Props) {
                   </header>
                 )}
 
-                {/* 自我介紹 */}
                 {personal.summary && (
                   <section>
                     <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
-                      自我介紹
+                      {t("summary")}
                     </h2>
                     <p className="mt-3 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
                       {personal.summary}
@@ -122,11 +118,10 @@ export default function ResumePreview({ resume }: Props) {
                   </section>
                 )}
 
-                {/* 工作經歷 */}
                 {experience.length > 0 && (
                   <section>
                     <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
-                      工作經歷
+                      {t("experience")}
                     </h2>
                     <div className="mt-3 space-y-4">
                       {experience.map((exp) => (
@@ -146,7 +141,7 @@ export default function ResumePreview({ resume }: Props) {
                                 {exp.start_date && " — "}
                                 {exp.end_date
                                   ? formatDate(exp.end_date)
-                                  : "至今"}
+                                  : t("present")}
                               </span>
                             )}
                           </div>
@@ -161,11 +156,10 @@ export default function ResumePreview({ resume }: Props) {
                   </section>
                 )}
 
-                {/* 學歷 */}
                 {education.length > 0 && (
                   <section>
                     <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
-                      學歷
+                      {t("education")}
                     </h2>
                     <div className="mt-3 space-y-3">
                       {education.map((edu) => (
@@ -189,7 +183,7 @@ export default function ResumePreview({ resume }: Props) {
                               {edu.start_date && " — "}
                               {edu.end_date
                                 ? formatDate(edu.end_date)
-                                : "至今"}
+                                : t("present")}
                             </span>
                           )}
                         </div>
@@ -198,11 +192,10 @@ export default function ResumePreview({ resume }: Props) {
                   </section>
                 )}
 
-                {/* 技能 */}
                 {skills.length > 0 && (
                   <section>
                     <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
-                      技能
+                      {t("skills")}
                     </h2>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {skills.map((skill) => (

@@ -1,27 +1,35 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
 
-export default function LoginPage() {
-  const router = useRouter();
+export default function RegisterPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          full_name: fullName,
+        },
+        emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+      },
     });
 
     if (error) {
@@ -30,22 +38,41 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    setSuccess(true);
+    setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
-    setError("");
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
+    await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/api/auth/callback`,
       },
     });
-    if (error) {
-      setError(error.message);
-    }
   };
+
+  if (success) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+        <div className="w-full max-w-md text-center">
+          <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
+          <h1 className="mt-4 text-2xl font-bold text-gray-900">
+            {t("confirmEmail")}
+          </h1>
+          <p className="mt-2 text-gray-600">
+            {t("confirmEmailDesc", { email })}
+          </p>
+          <Link
+            href="/login"
+            className="mt-6 inline-block text-sm font-medium text-brand-600 hover:text-brand-500"
+          >
+            {t("backToLogin")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
@@ -56,15 +83,15 @@ export default function LoginPage() {
             <span className="text-2xl font-bold text-gray-900">Offery</span>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-gray-900">
-            登入你的帳號
+            {t("registerTitle")}
           </h1>
           <p className="mt-2 text-sm text-gray-600">
-            還沒有帳號？{" "}
+            {t("hasAccount")}{" "}
             <Link
-              href="/register"
+              href="/login"
               className="font-medium text-brand-600 hover:text-brand-500"
             >
-              免費註冊
+              {t("loginLink")}
             </Link>
           </p>
         </div>
@@ -92,7 +119,7 @@ export default function LoginPage() {
                 fill="#EA4335"
               />
             </svg>
-            使用 Google 帳號登入
+            {t("googleRegister")}
           </button>
 
           <div className="relative my-6">
@@ -100,11 +127,11 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-200" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-500">或使用 Email</span>
+              <span className="bg-white px-4 text-gray-500">{t("orEmail")}</span>
             </div>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-4">
             {error && (
               <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
                 {error}
@@ -113,10 +140,28 @@ export default function LoginPage() {
 
             <div>
               <label
+                htmlFor="fullName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                {t("name")}
+              </label>
+              <input
+                id="fullName"
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                placeholder={t("namePlaceholder")}
+              />
+            </div>
+
+            <div>
+              <label
                 htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
-                電子郵件
+                {t("email")}
               </label>
               <input
                 id="email"
@@ -134,16 +179,17 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-gray-700"
               >
-                密碼
+                {t("password")}
               </label>
               <input
                 id="password"
                 type="password"
                 required
+                minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="••••••••"
+                placeholder={t("passwordHint")}
               />
             </div>
 
@@ -152,7 +198,7 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
             >
-              {loading ? "登入中..." : "登入"}
+              {loading ? t("registering") : t("register")}
             </button>
           </form>
         </div>

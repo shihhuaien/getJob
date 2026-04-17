@@ -12,10 +12,9 @@ export async function POST(request: Request) {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 檢查訂閱狀態
     const { data: profile } = await supabase
       .from("profiles")
       .select("subscription_tier")
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
 
     if (profile?.subscription_tier !== "pro") {
       return NextResponse.json(
-        { error: "此功能需要 Pro 方案" },
+        { error: "Pro plan required" },
         { status: 403 }
       );
     }
@@ -58,16 +57,16 @@ export async function POST(request: Request) {
     ]);
 
     if (!resumeResult.data) {
-      return NextResponse.json({ error: "找不到該履歷" }, { status: 404 });
+      return NextResponse.json({ error: "Resume not found" }, { status: 404 });
     }
 
     if (!jobResult.data) {
-      return NextResponse.json({ error: "找不到該職缺" }, { status: 404 });
+      return NextResponse.json({ error: "Job not found" }, { status: 404 });
     }
 
     if (!jobResult.data.job_description) {
       return NextResponse.json(
-        { error: "該職缺沒有描述內容，無法進行分析" },
+        { error: "Job has no description" },
         { status: 400 }
       );
     }
@@ -75,14 +74,15 @@ export async function POST(request: Request) {
     const resumeContent = resumeResult.data.content as unknown as ResumeContent;
     const analysis = await analyzeResume(
       resumeContent,
-      jobResult.data.job_description
+      jobResult.data.job_description,
+      body.locale
     );
 
     return NextResponse.json({ data: analysis });
   } catch (err) {
     console.error("[/api/resume/optimize] Error:", err);
     const message =
-      err instanceof Error ? err.message : "分析失敗，請稍後再試";
+      err instanceof Error ? err.message : "Analysis failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

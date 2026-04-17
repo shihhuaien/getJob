@@ -41,7 +41,7 @@ export async function POST(request: Request) {
           .eq("stripe_customer_id", session.customer as string);
         if (dbError) {
           return NextResponse.json(
-            { error: "資料庫更新失敗" },
+            { error: "Database update failed" },
             { status: 500 }
           );
         }
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
           .eq("stripe_customer_id", subscription.customer as string);
         if (dbError) {
           return NextResponse.json(
-            { error: "資料庫更新失敗" },
+            { error: "Database update failed" },
             { status: 500 }
           );
         }
@@ -76,7 +76,7 @@ export async function POST(request: Request) {
           .eq("stripe_customer_id", subscription.customer as string);
         if (dbError) {
           return NextResponse.json(
-            { error: "資料庫更新失敗" },
+            { error: "Database update failed" },
             { status: 500 }
           );
         }

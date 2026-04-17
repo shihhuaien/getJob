@@ -44,17 +44,17 @@ export async function POST(request: Request) {
 
     if (dbError) {
       return NextResponse.json(
-        { error: "儲存失敗，請稍後再試" },
+        { error: "Save failed" },
         { status: 500 }
       );
     }
 
     return NextResponse.json({ data });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "儲存失敗，請稍後再試";
-    if (message === "未授權" || message === "無效的 API 金鑰") {
+    const message = err instanceof Error ? err.message : "Save failed";
+    if (message === "Unauthorized" || message === "Invalid API key") {
       return NextResponse.json({ error: message }, { status: 401 });
     }
-    return NextResponse.json({ error: "儲存失敗，請稍後再試" }, { status: 500 });
+    return NextResponse.json({ error: "Save failed" }, { status: 500 });
   }
 }

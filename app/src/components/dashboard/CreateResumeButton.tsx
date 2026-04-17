@@ -4,7 +4,8 @@ import { useState, useRef } from "react";
 import { Plus, Sparkles, Upload, Loader2, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -20,6 +21,9 @@ export default function CreateResumeButton({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const t = useTranslations("resume");
+  const tc = useTranslations("common");
+  const locale = useLocale();
 
   // PDF 上傳相關
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -62,7 +66,7 @@ export default function CreateResumeButton({
       setShowForm(false);
       router.push(`/resume/${data.id}`);
     } catch {
-      setError("建立失敗，請稍後再試");
+      setError(tc("createFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -75,12 +79,12 @@ export default function CreateResumeButton({
     setError(null);
 
     if (file.type !== "application/pdf") {
-      setError("請選擇 PDF 格式的檔案");
+      setError(t("pdfTypeError"));
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      setError("檔案大小不可超過 5MB");
+      setError(t("pdfSizeError"));
       return;
     }
 
@@ -92,7 +96,7 @@ export default function CreateResumeButton({
     setError(null);
 
     if (!isPro) {
-      setError("此功能需要 Pro 方案");
+      setError(tc("proRequired"));
       return;
     }
 
@@ -108,22 +112,22 @@ export default function CreateResumeButton({
           const base64Data = result.split(",")[1];
           resolve(base64Data);
         };
-        reader.onerror = () => reject(new Error("讀取檔案失敗"));
+        reader.onerror = () => reject(new Error(tc("fileReadError")));
         reader.readAsDataURL(pdfFile);
       });
 
-      const resumeTitle = title.trim() || "PDF 匯入履歷";
+      const resumeTitle = title.trim() || t("pdfDefaultTitle");
 
       const res = await fetch("/api/resume/parse-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdf_base64: base64, title: resumeTitle }),
+        body: JSON.stringify({ pdf_base64: base64, title: resumeTitle, locale }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "PDF 解析失敗");
+        setError(data.error || t("pdfParseFailed"));
         return;
       }
 
@@ -131,7 +135,7 @@ export default function CreateResumeButton({
       setShowForm(false);
       router.push(`/resume/${data.data.id}`);
     } catch {
-      setError("PDF 解析失敗，請稍後再試");
+      setError(t("pdfParseFailedRetry"));
     } finally {
       setIsUploading(false);
     }
@@ -144,25 +148,25 @@ export default function CreateResumeButton({
         className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
       >
         <Plus className="h-4 w-4" />
-        新增履歷
+        {t("addResume")}
       </button>
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">新增履歷</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{t("addResume")}</h3>
 
             {/* 履歷標題（兩種方式共用） */}
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700">
-                履歷標題
+                {t("resumeTitle")}
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="例：前端工程師履歷"
+                placeholder={t("titlePlaceholder")}
                 disabled={isSubmitting || isUploading}
               />
             </div>
@@ -177,7 +181,7 @@ export default function CreateResumeButton({
                   disabled={isSubmitting || isUploading}
                   className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting ? "建立中..." : "建立空白履歷"}
+                  {isSubmitting ? tc("creating") : t("createBlank")}
                 </button>
                 <button
                   type="button"
@@ -188,7 +192,7 @@ export default function CreateResumeButton({
                   disabled={isUploading}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
-                  取消
+                  {tc("cancel")}
                 </button>
               </div>
             </form>
@@ -199,7 +203,7 @@ export default function CreateResumeButton({
                 <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-gray-400">或</span>
+                <span className="bg-white px-3 text-gray-400">{tc("or")}</span>
               </div>
             </div>
 
@@ -207,20 +211,20 @@ export default function CreateResumeButton({
             <div className="rounded-lg border border-dashed border-gray-300 p-4">
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                 <Sparkles className="h-4 w-4 text-brand-600" />
-                AI 解析 PDF 履歷
+                {t("aiParsePdf")}
                 {!isPro && (
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
-                    Pro
+                    {tc("pro")}
                   </span>
                 )}
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                上傳現有的 PDF 履歷，AI 自動擷取資料填入各欄位
+                {t("pdfDesc")}
               </p>
 
               {!isPro ? (
                 <p className="mt-3 text-xs text-gray-400">
-                  升級 Pro 方案即可使用 AI 功能
+                  {tc("proUpgrade")}
                 </p>
               ) : (
                 <div className="mt-3">
@@ -250,7 +254,7 @@ export default function CreateResumeButton({
                         disabled={isUploading}
                         className="text-xs text-gray-400 hover:text-gray-600"
                       >
-                        移除
+                        {t("remove")}
                       </button>
                     </div>
                   ) : (
@@ -261,7 +265,7 @@ export default function CreateResumeButton({
                       className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
                     >
                       <Upload className="h-4 w-4" />
-                      選擇 PDF 檔案
+                      {t("selectPdf")}
                     </button>
                   )}
 
@@ -275,12 +279,12 @@ export default function CreateResumeButton({
                     {isUploading ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        AI 解析中...
+                        {t("aiParsing")}
                       </>
                     ) : (
                       <>
                         <Sparkles className="h-4 w-4" />
-                        上傳並解析
+                        {t("uploadAndParse")}
                       </>
                     )}
                   </button>

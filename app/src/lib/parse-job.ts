@@ -17,7 +17,15 @@ const parsedJobSchema = z.object({
   job_description: z.string().default(""),
 });
 
-const SYSTEM_PROMPT = `你是一個求職資訊擷取助手。從以下職缺文字中擷取結構化資訊。
+function getLanguageInstruction(locale?: string): string {
+  return locale === "en"
+    ? "All text must be in English"
+    : "所有文字使用繁體中文";
+}
+
+function getSystemPrompt(locale?: string) {
+  const lang = getLanguageInstruction(locale);
+  return `你是一個求職資訊擷取助手。從以下職缺文字中擷取結構化資訊。
 
 回傳 JSON 格式：
 {
@@ -29,12 +37,13 @@ const SYSTEM_PROMPT = `你是一個求職資訊擷取助手。從以下職缺文
 }
 
 規則：
-- 所有文字使用繁體中文
+- ${lang}
 - salary 只填數字，單位為新台幣月薪。年薪請除以 12 轉換
 - 若資訊不明確，對應欄位填 null 或空字串
 - 只回傳 JSON，不要包含其他文字`;
+}
 
-export async function parseJobDescription(text: string): Promise<ParsedJob> {
+export async function parseJobDescription(text: string, locale?: string): Promise<ParsedJob> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
     model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
@@ -44,7 +53,7 @@ export async function parseJobDescription(text: string): Promise<ParsedJob> {
   });
 
   const result = await model.generateContent([
-    { text: SYSTEM_PROMPT },
+    { text: getSystemPrompt(locale) },
     { text: `以下是職缺內容：\n\n${text}` },
   ]);
 

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Sparkles, X, Loader2 } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import type { Database } from "@/types/database";
 
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -28,6 +29,9 @@ interface Props {
 }
 
 export default function ParseJobModal({ onClose, onSave }: Props) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
+  const locale = useLocale();
   const [step, setStep] = useState<"input" | "loading" | "review">("input");
   const [rawText, setRawText] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +41,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
   const handleParse = async () => {
     setError(null);
     if (!rawText.trim()) {
-      setError("請輸入職缺內容");
+      setError(t("inputRequired"));
       return;
     }
 
@@ -47,13 +51,13 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
       const res = await fetch("/api/jobs/parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: rawText }),
+        body: JSON.stringify({ text: rawText, locale }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "解析失敗");
+        setError(data.error || t("parseFailed"));
         setStep("input");
         return;
       }
@@ -61,7 +65,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
       setResult(data.data);
       setStep("review");
     } catch {
-      setError("解析失敗，請稍後再試");
+      setError(t("parseFailedRetry"));
       setStep("input");
     }
   };
@@ -87,7 +91,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand-600" />
             <h3 className="text-lg font-semibold text-gray-900">
-              AI 智慧解析
+              {t("parseTitle")}
             </h3>
           </div>
           <button
@@ -105,14 +109,13 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
             </div>
           )}
 
-          {/* Step 1: 貼上文字 */}
           {step === "input" && (
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                貼上職缺內容
+                {t("description")}
               </label>
               <p className="mt-1 text-xs text-gray-500">
-                從 104、CakeResume、LinkedIn 等網站複製職缺描述，AI 將自動擷取結構化資訊
+                {t("parseDesc")}
               </p>
               <textarea
                 value={rawText}
@@ -120,48 +123,46 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                 rows={12}
                 maxLength={10000}
                 className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="貼上完整的職缺描述文字..."
+                placeholder={t("parsePlaceholder")}
                 autoFocus
               />
               <div className="mt-1 text-right text-xs text-gray-400">
-                {rawText.length} / 10000
+                {t("parseCharCount", { count: rawText.length })}
               </div>
               <div className="mt-4 flex justify-end gap-3">
                 <button
                   onClick={onClose}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  取消
+                  {tc("cancel")}
                 </button>
                 <button
                   onClick={handleParse}
                   className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
                 >
                   <Sparkles className="h-4 w-4" />
-                  開始解析
+                  {t("startParse")}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Step 2: Loading */}
           {step === "loading" && (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
-              <p className="mt-3 text-sm text-gray-500">AI 正在解析職缺內容...</p>
+              <p className="mt-3 text-sm text-gray-500">{t("parsing")}</p>
             </div>
           )}
 
-          {/* Step 3: 審閱結果 */}
           {step === "review" && result && (
             <div className="space-y-4">
               <p className="text-sm text-gray-500">
-                請確認解析結果，可直接編輯後儲存
+                {t("parseConfirm")}
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    公司名稱
+                    {t("companyName")}
                   </label>
                   <input
                     type="text"
@@ -174,7 +175,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    職位名稱
+                    {t("jobTitle")}
                   </label>
                   <input
                     type="text"
@@ -187,7 +188,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    最低月薪
+                    {t("minSalary")}
                   </label>
                   <input
                     type="number"
@@ -199,12 +200,12 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                       })
                     }
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    placeholder="例：40000"
+                    placeholder={t("salaryMinPlaceholder")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    最高月薪
+                    {t("maxSalary")}
                   </label>
                   <input
                     type="number"
@@ -216,12 +217,12 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                       })
                     }
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    placeholder="例：60000"
+                    placeholder={t("salaryMaxPlaceholder")}
                   />
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    職缺連結
+                    {t("jobUrl")}
                   </label>
                   <input
                     type="url"
@@ -234,7 +235,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  職缺描述
+                  {t("description")}
                 </label>
                 <textarea
                   value={result.job_description}
@@ -253,13 +254,13 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                   }}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
-                  重新解析
+                  {t("reParse")}
                 </button>
                 <button
                   onClick={handleSave}
                   className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
                 >
-                  儲存職缺
+                  {t("saveJob")}
                 </button>
               </div>
             </div>

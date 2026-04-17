@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Key, Copy, Check, Trash2, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Token {
   id: string;
@@ -11,6 +12,8 @@ interface Token {
 }
 
 export default function ApiTokenManager() {
+  const t = useTranslations("settings");
+  const tc = useTranslations("common");
   const [tokens, setTokens] = useState<Token[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -28,7 +31,7 @@ export default function ApiTokenManager() {
       const data = await res.json();
       setTokens(data.data ?? []);
     } catch {
-      setError("載入失敗");
+      setError(tc("loadFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +50,7 @@ export default function ApiTokenManager() {
       setNewToken(data.token);
       loadTokens();
     } catch {
-      setError("建立失敗");
+      setError(tc("createFailed"));
     } finally {
       setIsCreating(false);
     }
@@ -58,7 +61,7 @@ export default function ApiTokenManager() {
       await fetch(`/api/tokens/${id}`, { method: "DELETE" });
       setTokens((prev) => prev.filter((t) => t.id !== id));
     } catch {
-      setError("刪除失敗");
+      setError(tc("deleteFailed"));
     }
   };
 
@@ -73,10 +76,10 @@ export default function ApiTokenManager() {
     <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
       <div className="flex items-center gap-2">
         <Key className="h-5 w-5 text-gray-600" />
-        <h2 className="text-lg font-semibold text-gray-900">API 金鑰</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t("apiKeys")}</h2>
       </div>
       <p className="mt-1 text-sm text-gray-500">
-        用於 Chrome 擴充套件連接你的帳號
+        {t("apiKeysDesc")}
       </p>
 
       {error && (
@@ -89,7 +92,7 @@ export default function ApiTokenManager() {
       {newToken && (
         <div className="mt-4 rounded-lg border border-green-200 bg-green-50 p-4">
           <p className="text-sm font-medium text-green-800">
-            金鑰已產生，請立即複製（此金鑰只會顯示一次）
+            {t("keyGenerated")}
           </p>
           <div className="mt-2 flex items-center gap-2">
             <code className="flex-1 overflow-x-auto rounded bg-white px-3 py-2 text-xs text-gray-800 ring-1 ring-gray-200">
@@ -110,7 +113,7 @@ export default function ApiTokenManager() {
             onClick={() => setNewToken(null)}
             className="mt-2 text-xs text-green-700 hover:underline"
           >
-            我已複製，關閉此提示
+            {t("keyCopied")}
           </button>
         </div>
       )}
@@ -118,9 +121,9 @@ export default function ApiTokenManager() {
       {/* Token 列表 */}
       <div className="mt-4">
         {isLoading ? (
-          <p className="text-sm text-gray-400">載入中...</p>
+          <p className="text-sm text-gray-400">{tc("loading")}</p>
         ) : tokens.length === 0 ? (
-          <p className="text-sm text-gray-400">尚未建立任何金鑰</p>
+          <p className="text-sm text-gray-400">{t("noKeys")}</p>
         ) : (
           <div className="space-y-2">
             {tokens.map((token) => (
@@ -133,15 +136,18 @@ export default function ApiTokenManager() {
                     {token.name}
                   </p>
                   <p className="text-xs text-gray-500">
-                    建立於{" "}
-                    {new Date(token.created_at).toLocaleDateString("zh-TW")}
+                    {t("createdAt", {
+                      date: new Date(token.created_at).toLocaleDateString("zh-TW"),
+                    })}
                     {token.last_used_at && (
                       <>
                         {" "}
-                        · 最後使用{" "}
-                        {new Date(token.last_used_at).toLocaleDateString(
-                          "zh-TW"
-                        )}
+                        ·{" "}
+                        {t("lastUsed", {
+                          date: new Date(token.last_used_at).toLocaleDateString(
+                            "zh-TW"
+                          ),
+                        })}
                       </>
                     )}
                   </p>
@@ -164,7 +170,7 @@ export default function ApiTokenManager() {
         className="mt-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
       >
         <Plus className="h-4 w-4" />
-        {isCreating ? "建立中..." : "產生新金鑰"}
+        {isCreating ? tc("creating") : t("generateKey")}
       </button>
     </div>
   );

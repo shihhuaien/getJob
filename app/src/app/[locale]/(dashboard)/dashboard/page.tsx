@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { getTranslations } from "next-intl/server";
 import {
   Briefcase,
   FileText,
@@ -10,6 +11,9 @@ import {
 } from "lucide-react";
 
 export default async function DashboardPage() {
+  const t = await getTranslations("dashboard");
+  const tJobs = await getTranslations("jobs");
+
   const supabase = await createClient();
   const {
     data: { user },
@@ -47,11 +51,11 @@ export default async function DashboardPage() {
     .limit(5);
 
   const statusLabels: Record<string, string> = {
-    saved: "已儲存",
-    applied: "已投遞",
-    interview: "面試中",
-    offer: "已錄取",
-    rejected: "未錄取",
+    saved: tJobs("saved"),
+    applied: tJobs("applied"),
+    interview: tJobs("interview"),
+    offer: tJobs("offer"),
+    rejected: tJobs("rejected"),
   };
 
   const statusDotColors: Record<string, string> = {
@@ -67,36 +71,36 @@ export default async function DashboardPage() {
     const date = new Date(dateStr);
     const diffMs = now.getTime() - date.getTime();
     const diffMin = Math.floor(diffMs / 60000);
-    if (diffMin < 1) return "剛剛";
-    if (diffMin < 60) return `${diffMin} 分鐘前`;
+    if (diffMin < 1) return t("justNow");
+    if (diffMin < 60) return t("minutesAgo", { n: diffMin });
     const diffHr = Math.floor(diffMin / 60);
-    if (diffHr < 24) return `${diffHr} 小時前`;
+    if (diffHr < 24) return t("hoursAgo", { n: diffHr });
     const diffDay = Math.floor(diffHr / 24);
-    if (diffDay < 30) return `${diffDay} 天前`;
+    if (diffDay < 30) return t("daysAgo", { n: diffDay });
     return date.toLocaleDateString("zh-TW");
   }
 
   const stats = [
     {
-      label: "追蹤中職缺",
+      label: t("trackingJobs"),
       value: jobCount ?? 0,
       icon: Briefcase,
       color: "text-blue-600 bg-blue-100",
     },
     {
-      label: "履歷數量",
+      label: t("resumeCount"),
       value: resumeCount ?? 0,
       icon: FileText,
       color: "text-green-600 bg-green-100",
     },
     {
-      label: "求職信",
+      label: t("coverLetterCount"),
       value: coverLetterCount ?? 0,
       icon: Mail,
       color: "text-purple-600 bg-purple-100",
     },
     {
-      label: "面試中",
+      label: t("interviewing"),
       value: interviewCount ?? 0,
       icon: TrendingUp,
       color: "text-orange-600 bg-orange-100",
@@ -107,10 +111,10 @@ export default async function DashboardPage() {
     <div>
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">
-          歡迎回來 👋
+          {t("welcome")}
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          這是你的求職總覽儀表板
+          {t("subtitle")}
         </p>
       </div>
 
@@ -139,7 +143,7 @@ export default async function DashboardPage() {
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">快速操作</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("quickActions")}</h2>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Link
               href="/jobs"
@@ -147,7 +151,7 @@ export default async function DashboardPage() {
             >
               <Briefcase className="h-5 w-5 text-brand-600" />
               <span className="text-sm font-medium text-gray-700">
-                新增職缺
+                {t("addJob")}
               </span>
             </Link>
             <Link
@@ -156,14 +160,14 @@ export default async function DashboardPage() {
             >
               <FileText className="h-5 w-5 text-brand-600" />
               <span className="text-sm font-medium text-gray-700">
-                建立履歷
+                {t("createResume")}
               </span>
             </Link>
           </div>
         </div>
 
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">最近活動</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("recentActivity")}</h2>
           {recentJobs && recentJobs.length > 0 ? (
             <div className="mt-4 space-y-3">
               {recentJobs.map((job) => (
@@ -191,7 +195,7 @@ export default async function DashboardPage() {
             </div>
           ) : (
             <div className="mt-4 flex items-center justify-center py-8 text-sm text-gray-400">
-              開始追蹤職缺，你的活動紀錄將顯示在這裡
+              {t("noActivity")}
             </div>
           )}
         </div>

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { Plus, Sparkles, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations, useLocale } from "next-intl";
 
 interface ResumeOption {
   id: string;
@@ -34,6 +35,9 @@ export default function CreateCoverLetterButton({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const t = useTranslations("coverLetter");
+  const tc = useTranslations("common");
+  const locale = useLocale();
 
   // AI 生成相關
   const [selectedJobId, setSelectedJobId] = useState("");
@@ -76,7 +80,7 @@ export default function CreateCoverLetterButton({
       setShowForm(false);
       router.push(`/cover-letter/${data.id}`);
     } catch {
-      setError("建立失敗，請稍後再試");
+      setError(tc("createFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -84,7 +88,7 @@ export default function CreateCoverLetterButton({
 
   const handleGenerate = async () => {
     if (!selectedJobId || !selectedResumeId) {
-      setError("請選擇職缺與履歷");
+      setError(t("selectJobAndResume"));
       return;
     }
 
@@ -98,13 +102,14 @@ export default function CreateCoverLetterButton({
         body: JSON.stringify({
           job_id: selectedJobId,
           resume_id: selectedResumeId,
+          locale,
         }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || "生成失敗");
+        setError(data.error || t("generateFailed"));
         setIsGenerating(false);
         return;
       }
@@ -113,7 +118,7 @@ export default function CreateCoverLetterButton({
       setShowForm(false);
       router.push(`/cover-letter/${data.data.id}`);
     } catch {
-      setError("生成失敗，請稍後再試");
+      setError(t("generateFailedRetry"));
       setIsGenerating(false);
     }
   };
@@ -125,13 +130,13 @@ export default function CreateCoverLetterButton({
         className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
       >
         <Plus className="h-4 w-4" />
-        新增求職信
+        {t("addCoverLetter")}
       </button>
 
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">新增求職信</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{t("addCoverLetter")}</h3>
 
             {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
@@ -139,14 +144,14 @@ export default function CreateCoverLetterButton({
             <form onSubmit={handleCreate}>
               <div className="mt-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  求職信標題
+                  {t("coverLetterTitle")}
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  placeholder="例：應徵前端工程師求職信"
+                  placeholder={t("titlePlaceholder")}
                   disabled={isSubmitting || isGenerating}
                 />
               </div>
@@ -156,7 +161,7 @@ export default function CreateCoverLetterButton({
                   disabled={isSubmitting || isGenerating}
                   className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
                 >
-                  {isSubmitting ? "建立中..." : "建立空白求職信"}
+                  {isSubmitting ? tc("creating") : t("createBlank")}
                 </button>
                 <button
                   type="button"
@@ -167,7 +172,7 @@ export default function CreateCoverLetterButton({
                   disabled={isGenerating}
                   className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
-                  取消
+                  {tc("cancel")}
                 </button>
               </div>
             </form>
@@ -178,7 +183,7 @@ export default function CreateCoverLetterButton({
                 <div className="w-full border-t border-gray-200" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-gray-400">或</span>
+                <span className="bg-white px-3 text-gray-400">{tc("or")}</span>
               </div>
             </div>
 
@@ -186,27 +191,27 @@ export default function CreateCoverLetterButton({
             <div className="rounded-lg border border-dashed border-gray-300 p-4">
               <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
                 <Sparkles className="h-4 w-4 text-brand-600" />
-                AI 生成求職信
+                {t("aiGenerate")}
                 {!isPro && (
                   <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
-                    Pro
+                    {tc("pro")}
                   </span>
                 )}
               </div>
               <p className="mt-1 text-xs text-gray-500">
-                選擇職缺與履歷，AI 自動產生客製化求職信
+                {t("aiGenerateDesc")}
               </p>
 
               {!isPro ? (
                 <p className="mt-3 text-xs text-gray-400">
-                  升級 Pro 方案即可使用 AI 功能
+                  {tc("proUpgrade")}
                 </p>
               ) : (
                 <div className="mt-3 space-y-3">
                   {/* 職缺選擇 */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600">
-                      選擇職缺
+                      {t("selectJob")}
                     </label>
                     <select
                       value={selectedJobId}
@@ -214,7 +219,7 @@ export default function CreateCoverLetterButton({
                       disabled={isGenerating || isSubmitting}
                       className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
                     >
-                      <option value="">請選擇職缺</option>
+                      <option value="">{t("selectJobPlaceholder")}</option>
                       {jobs.map((job) => (
                         <option
                           key={job.id}
@@ -222,7 +227,7 @@ export default function CreateCoverLetterButton({
                           disabled={!job.has_description}
                         >
                           {job.company_name} — {job.job_title}
-                          {!job.has_description ? "（無職缺描述）" : ""}
+                          {!job.has_description ? tc("noDescription") : ""}
                         </option>
                       ))}
                     </select>
@@ -231,7 +236,7 @@ export default function CreateCoverLetterButton({
                   {/* 履歷選擇 */}
                   <div>
                     <label className="block text-xs font-medium text-gray-600">
-                      選擇履歷
+                      {t("selectResume")}
                     </label>
                     <select
                       value={selectedResumeId}
@@ -239,7 +244,7 @@ export default function CreateCoverLetterButton({
                       disabled={isGenerating || isSubmitting}
                       className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
                     >
-                      <option value="">請選擇履歷</option>
+                      <option value="">{t("selectResumePlaceholder")}</option>
                       {resumes.map((resume) => (
                         <option key={resume.id} value={resume.id}>
                           {resume.title}
@@ -249,7 +254,7 @@ export default function CreateCoverLetterButton({
                   </div>
 
                   <p className="text-xs text-gray-400">
-                    AI 產出內容不一定完全正確，請先確認再使用
+                    {tc("aiDisclaimer")}
                   </p>
 
                   {/* 生成按鈕 */}
@@ -267,12 +272,12 @@ export default function CreateCoverLetterButton({
                     {isGenerating ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        AI 生成中...
+                        {t("aiGenerating")}
                       </>
                     ) : (
                       <>
                         <Sparkles className="h-4 w-4" />
-                        AI 生成求職信
+                        {t("aiGenerateBtn")}
                       </>
                     )}
                   </button>

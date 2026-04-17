@@ -1,19 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import { Link as I18nLink } from "@/i18n/navigation";
 import { useState } from "react";
 import { Briefcase, Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("nav");
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2">
+        <I18nLink href="/" className="flex items-center gap-2">
           <Briefcase className="h-6 w-6 text-brand-600" />
           <span className="text-xl font-bold text-gray-900">Offery</span>
-        </Link>
+        </I18nLink>
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
@@ -21,33 +25,34 @@ export default function Navbar() {
             href="#features"
             className="text-sm font-medium text-gray-600 hover:text-gray-900"
           >
-            功能特色
+            {t("features")}
           </Link>
           <Link
             href="#pricing"
             className="text-sm font-medium text-gray-600 hover:text-gray-900"
           >
-            方案價格
+            {t("pricing")}
           </Link>
-          <Link
+          <LocaleSwitcher />
+          <I18nLink
             href="/login"
             className="text-sm font-medium text-gray-600 hover:text-gray-900"
           >
-            登入
-          </Link>
-          <Link
+            {t("login")}
+          </I18nLink>
+          <I18nLink
             href="/register"
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
           >
-            免費註冊
-          </Link>
+            {t("register")}
+          </I18nLink>
         </div>
 
         {/* Mobile menu button */}
         <button
           className="md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="切換選單"
+          aria-label={t("toggleMenu")}
         >
           {mobileOpen ? (
             <X className="h-6 w-6" />
@@ -66,29 +71,30 @@ export default function Navbar() {
               className="text-sm font-medium text-gray-600"
               onClick={() => setMobileOpen(false)}
             >
-              功能特色
+              {t("features")}
             </Link>
             <Link
               href="#pricing"
               className="text-sm font-medium text-gray-600"
               onClick={() => setMobileOpen(false)}
             >
-              方案價格
+              {t("pricing")}
             </Link>
-            <Link
+            <I18nLink
               href="/login"
               className="text-sm font-medium text-gray-600"
               onClick={() => setMobileOpen(false)}
             >
-              登入
-            </Link>
-            <Link
+              {t("login")}
+            </I18nLink>
+            <I18nLink
               href="/register"
               className="rounded-lg bg-brand-600 px-4 py-2 text-center text-sm font-medium text-white"
               onClick={() => setMobileOpen(false)}
             >
-              免費註冊
-            </Link>
+              {t("register")}
+            </I18nLink>
+            <LocaleSwitcher />
           </div>
         </div>
       )}

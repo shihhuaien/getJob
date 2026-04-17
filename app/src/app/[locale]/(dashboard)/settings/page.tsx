@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getStripe } from "@/lib/stripe";
 import UpgradeButton from "@/components/dashboard/UpgradeButton";
 import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
@@ -8,6 +9,7 @@ import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
 import ProfileForm from "@/components/dashboard/ProfileForm";
 import ApiTokenManager from "@/components/dashboard/ApiTokenManager";
 export default async function SettingsPage() {
+  const t = await getTranslations("settings");
   const supabase = await createClient();
   const {
     data: { user },
@@ -49,14 +51,14 @@ export default async function SettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">設定</h1>
-        <p className="mt-1 text-sm text-gray-500">管理你的帳號和訂閱</p>
+        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
+        <p className="mt-1 text-sm text-gray-500">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-6">
         {/* Profile section */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">個人資料</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("profile")}</h2>
           <div className="mt-4">
             <ProfileForm
               email={user.email || ""}
@@ -67,21 +69,21 @@ export default async function SettingsPage() {
 
         {/* Subscription section */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">訂閱方案</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("subscription")}</h2>
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-900">
                   {profile?.subscription_tier === "pro"
-                    ? "Pro 方案"
-                    : "免費方案"}
+                    ? t("proPlan")
+                    : t("freePlan")}
                 </p>
                 <p className="mt-0.5 text-xs text-gray-500">
                   {cancelAtPeriodEnd && periodEndDate
-                    ? `你的 Pro 方案已排定取消，將於 ${periodEndDate} 到期後降為免費方案`
+                    ? t("cancelScheduled", { date: periodEndDate })
                     : profile?.subscription_tier === "pro"
-                      ? "你正在使用 Pro 方案的所有功能"
-                      : "升級 Pro 解鎖 AI 完整功能"}
+                      ? t("proActive")
+                      : t("freeUpgrade")}
                 </p>
               </div>
               {profile?.subscription_tier === "pro" ? (
@@ -102,15 +104,15 @@ export default async function SettingsPage() {
 
         {/* Danger zone */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-red-200">
-          <h2 className="text-lg font-semibold text-red-600">危險區域</h2>
+          <h2 className="text-lg font-semibold text-red-600">{t("dangerZone")}</h2>
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-900">
-                  刪除帳號
+                  {t("deleteAccount")}
                 </p>
                 <p className="mt-0.5 text-xs text-gray-500">
-                  永久刪除你的帳號和所有資料，此操作無法復原
+                  {t("deleteAccountDesc")}
                 </p>
               </div>
               <DeleteAccountButton />

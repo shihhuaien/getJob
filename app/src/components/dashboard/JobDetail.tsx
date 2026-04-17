@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
@@ -11,12 +11,12 @@ import type { Database } from "@/types/database";
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
 
-const statusOptions: { key: ApplicationStatus; label: string }[] = [
-  { key: "saved", label: "已儲存" },
-  { key: "applied", label: "已投遞" },
-  { key: "interview", label: "面試中" },
-  { key: "offer", label: "已錄取" },
-  { key: "rejected", label: "未錄取" },
+const statusKeys: { key: ApplicationStatus; labelKey: string }[] = [
+  { key: "saved", labelKey: "saved" },
+  { key: "applied", labelKey: "applied" },
+  { key: "interview", labelKey: "interview" },
+  { key: "offer", labelKey: "offer" },
+  { key: "rejected", labelKey: "rejected" },
 ];
 
 interface Props {
@@ -24,6 +24,8 @@ interface Props {
 }
 
 export default function JobDetail({ job }: Props) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -84,7 +86,7 @@ export default function JobDetail({ job }: Props) {
       .eq("id", job.id);
 
     if (dbError) {
-      setError("儲存失敗，請稍後再試");
+      setError(tc("saveFailed"));
     } else {
       setSuccess(true);
       setIsEditing(false);
@@ -102,7 +104,7 @@ export default function JobDetail({ job }: Props) {
       .eq("id", job.id);
 
     if (dbError) {
-      setError("刪除失敗，請稍後再試");
+      setError(tc("deleteFailed"));
       setIsDeleting(false);
     } else {
       router.push("/jobs");
@@ -135,7 +137,7 @@ export default function JobDetail({ job }: Props) {
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回職缺列表
+          {t("backToList")}
         </Link>
         <div className="flex gap-2">
           {!isEditing ? (
@@ -144,7 +146,7 @@ export default function JobDetail({ job }: Props) {
                 onClick={() => setIsEditing(true)}
                 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
               >
-                編輯
+                {tc("edit")}
               </button>
               <button
                 onClick={() => setShowDeleteConfirm(true)}
@@ -160,13 +162,13 @@ export default function JobDetail({ job }: Props) {
                 disabled={isSaving}
                 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
               >
-                {isSaving ? "儲存中..." : "儲存"}
+                {isSaving ? tc("saving") : tc("save")}
               </button>
               <button
                 onClick={handleCancel}
                 className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
               >
-                取消
+                {tc("cancel")}
               </button>
             </>
           )}
@@ -177,7 +179,7 @@ export default function JobDetail({ job }: Props) {
       {showDeleteConfirm && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
           <p className="text-sm text-red-800">
-            確定要刪除此職缺嗎？此操作無法復原。
+            {t("deleteConfirm")}
           </p>
           <div className="mt-3 flex gap-2">
             <button
@@ -185,13 +187,13 @@ export default function JobDetail({ job }: Props) {
               disabled={isDeleting}
               className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {isDeleting ? "刪除中..." : "確認刪除"}
+              {isDeleting ? tc("deleting") : tc("confirmDelete")}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              取消
+              {tc("cancel")}
             </button>
           </div>
         </div>
@@ -204,18 +206,18 @@ export default function JobDetail({ job }: Props) {
       )}
       {success && (
         <div className="mb-6 rounded-lg bg-green-50 p-3 text-sm text-green-700">
-          已更新
+          {tc("updated")}
         </div>
       )}
 
       <div className="space-y-6">
         {/* 基本資訊 */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">基本資訊</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("basicInfo")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                公司名稱
+                {t("companyName")}
               </label>
               {isEditing ? (
                 <input
@@ -235,7 +237,7 @@ export default function JobDetail({ job }: Props) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                職位名稱
+                {t("jobTitle")}
               </label>
               {isEditing ? (
                 <input
@@ -253,7 +255,7 @@ export default function JobDetail({ job }: Props) {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                狀態
+                {t("status")}
               </label>
               {isEditing ? (
                 <select
@@ -266,21 +268,21 @@ export default function JobDetail({ job }: Props) {
                   }
                   className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
-                  {statusOptions.map((s) => (
+                  {statusKeys.map((s) => (
                     <option key={s.key} value={s.key}>
-                      {s.label}
+                      {t(s.labelKey)}
                     </option>
                   ))}
                 </select>
               ) : (
                 <p className="mt-1 text-sm text-gray-900">
-                  {statusOptions.find((s) => s.key === job.status)?.label}
+                  {t(statusKeys.find((s) => s.key === job.status)?.labelKey ?? "saved")}
                 </p>
               )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                投遞日期
+                {t("applyDate")}
               </label>
               {isEditing ? (
                 <input
@@ -295,13 +297,13 @@ export default function JobDetail({ job }: Props) {
                 <p className="mt-1 text-sm text-gray-900">
                   {job.applied_at
                     ? new Date(job.applied_at).toLocaleDateString("zh-TW")
-                    : "未設定"}
+                    : tc("notSet")}
                 </p>
               )}
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-gray-700">
-                職缺連結
+                {t("jobUrl")}
               </label>
               {isEditing ? (
                 <input
@@ -328,7 +330,7 @@ export default function JobDetail({ job }: Props) {
                   <p className="mt-1 text-sm text-gray-900">{job.job_url}</p>
                 )
               ) : (
-                <p className="mt-1 text-sm text-gray-400">未設定</p>
+                <p className="mt-1 text-sm text-gray-400">{tc("notSet")}</p>
               )}
             </div>
           </div>
@@ -336,11 +338,11 @@ export default function JobDetail({ job }: Props) {
 
         {/* 薪資範圍 */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">薪資範圍</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("salary")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                最低薪資
+                {t("salaryMin")}
               </label>
               {isEditing ? (
                 <input
@@ -350,19 +352,19 @@ export default function JobDetail({ job }: Props) {
                     setForm({ ...form, salary_min: e.target.value })
                   }
                   className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  placeholder="例：40000"
+                  placeholder={t("salaryMinPlaceholder")}
                 />
               ) : (
                 <p className="mt-1 text-sm text-gray-900">
                   {job.salary_min
                     ? `NT$ ${job.salary_min.toLocaleString()}`
-                    : "未設定"}
+                    : tc("notSet")}
                 </p>
               )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                最高薪資
+                {t("salaryMax")}
               </label>
               {isEditing ? (
                 <input
@@ -372,13 +374,13 @@ export default function JobDetail({ job }: Props) {
                     setForm({ ...form, salary_max: e.target.value })
                   }
                   className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                  placeholder="例：60000"
+                  placeholder={t("salaryMaxPlaceholder")}
                 />
               ) : (
                 <p className="mt-1 text-sm text-gray-900">
                   {job.salary_max
                     ? `NT$ ${job.salary_max.toLocaleString()}`
-                    : "未設定"}
+                    : tc("notSet")}
                 </p>
               )}
             </div>
@@ -387,7 +389,7 @@ export default function JobDetail({ job }: Props) {
 
         {/* 職缺描述 */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">職缺描述</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("description")}</h2>
           <div className="mt-4">
             {isEditing ? (
               <textarea
@@ -397,11 +399,11 @@ export default function JobDetail({ job }: Props) {
                 }
                 rows={6}
                 className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="貼上職缺描述..."
+                placeholder={t("descriptionPlaceholder")}
               />
             ) : (
               <p className="whitespace-pre-wrap text-sm text-gray-700">
-                {job.job_description || "尚無描述"}
+                {job.job_description || t("noDescription")}
               </p>
             )}
           </div>
@@ -409,7 +411,7 @@ export default function JobDetail({ job }: Props) {
 
         {/* 備註 */}
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">備註</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("notes")}</h2>
           <div className="mt-4">
             {isEditing ? (
               <textarea
@@ -419,11 +421,11 @@ export default function JobDetail({ job }: Props) {
                 }
                 rows={4}
                 className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="記錄面試心得、聯絡人資訊等..."
+                placeholder={t("notesPlaceholder")}
               />
             ) : (
               <p className="whitespace-pre-wrap text-sm text-gray-700">
-                {job.notes || "尚無備註"}
+                {job.notes || t("noNotes")}
               </p>
             )}
           </div>

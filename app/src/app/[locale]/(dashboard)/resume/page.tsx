@@ -1,9 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { FileText } from "lucide-react";
 import CreateResumeButton from "@/components/dashboard/CreateResumeButton";
 export default async function ResumePage() {
+  const t = await getTranslations("resume");
+  const tCommon = await getTranslations("common");
   const supabase = await createClient();
   const {
     data: { user },
@@ -31,9 +34,9 @@ export default async function ResumePage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">履歷管理</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            建立和管理多份履歷，針對不同職缺客製化
+            {t("subtitle")}
           </p>
         </div>
         <CreateResumeButton userId={user.id} isPro={isPro} />
@@ -57,12 +60,13 @@ export default async function ResumePage() {
                   </h3>
                   {resume.target_job_title && (
                     <p className="mt-0.5 text-xs text-gray-500">
-                      目標職位：{resume.target_job_title}
+                      {t("targetJob", { title: resume.target_job_title })}
                     </p>
                   )}
                   <p className="mt-1 text-xs text-gray-400">
-                    更新於{" "}
-                    {new Date(resume.updated_at).toLocaleDateString("zh-TW")}
+                    {tCommon("updatedAt", {
+                      date: new Date(resume.updated_at).toLocaleDateString("zh-TW"),
+                    })}
                   </p>
                 </div>
               </div>
@@ -73,10 +77,10 @@ export default async function ResumePage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white py-16">
           <FileText className="h-12 w-12 text-gray-300" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">
-            還沒有履歷
+            {t("noResumes")}
           </h3>
           <p className="mt-1 text-sm text-gray-500">
-            建立你的第一份履歷，開始求職之旅
+            {t("noResumesDesc")}
           </p>
           <div className="mt-4">
             <CreateResumeButton userId={user.id} isPro={isPro} />

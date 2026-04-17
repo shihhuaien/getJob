@@ -13,7 +13,7 @@ export async function DELETE(
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { error: dbError } = await supabase
@@ -23,11 +23,11 @@ export async function DELETE(
       .eq("user_id", user.id);
 
     if (dbError) {
-      return NextResponse.json({ error: "刪除失敗" }, { status: 500 });
+      return NextResponse.json({ error: "Delete failed" }, { status: 500 });
     }
 
     return NextResponse.json({ success: true });
   } catch {
-    return NextResponse.json({ error: "刪除失敗" }, { status: 500 });
+    return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
 }

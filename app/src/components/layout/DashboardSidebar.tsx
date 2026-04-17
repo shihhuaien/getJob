@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import {
   LayoutDashboard,
   FileText,
@@ -13,20 +12,23 @@ import {
   Briefcase as Logo,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
 
 const navItems = [
-  { href: "/dashboard", label: "總覽", icon: LayoutDashboard },
-  { href: "/jobs", label: "職缺追蹤", icon: Briefcase },
-  { href: "/resume", label: "履歷管理", icon: FileText },
-  { href: "/cover-letter", label: "求職信", icon: Mail },
-  { href: "/analytics", label: "數據分析", icon: BarChart3 },
-  { href: "/settings", label: "設定", icon: Settings },
+  { href: "/dashboard" as const, labelKey: "overview" as const, icon: LayoutDashboard },
+  { href: "/jobs" as const, labelKey: "jobs" as const, icon: Briefcase },
+  { href: "/resume" as const, labelKey: "resume" as const, icon: FileText },
+  { href: "/cover-letter" as const, labelKey: "coverLetter" as const, icon: Mail },
+  { href: "/analytics" as const, labelKey: "analytics" as const, icon: BarChart3 },
+  { href: "/settings" as const, labelKey: "settings" as const, icon: Settings },
 ];
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("nav");
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -55,19 +57,22 @@ export default function DashboardSidebar() {
               }`}
             >
               <item.icon className="h-5 w-5" />
-              {item.label}
+              {t(item.labelKey)}
             </Link>
           );
         })}
       </nav>
 
       <div className="border-t border-gray-200 p-3">
+        <div className="mb-1 px-3">
+          <LocaleSwitcher />
+        </div>
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
         >
           <LogOut className="h-5 w-5" />
-          登出
+          {t("logout")}
         </button>
       </div>
     </aside>

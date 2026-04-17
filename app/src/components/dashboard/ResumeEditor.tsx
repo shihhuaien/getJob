@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter, Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles } from "lucide-react";
 import ResumeOptimizeModal from "./ResumeOptimizeModal";
 import { createClient } from "@/lib/supabase/client";
@@ -48,6 +48,8 @@ interface Props {
 
 export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props) {
   const router = useRouter();
+  const t = useTranslations("resume");
+  const tc = useTranslations("common");
   const [title, setTitle] = useState(resume.title);
   const [targetJobTitle, setTargetJobTitle] = useState(
     resume.target_job_title || ""
@@ -74,7 +76,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       .eq("id", resume.id);
 
     if (dbError) {
-      setError("刪除失敗，請稍後再試");
+      setError(tc("deleteFailed"));
       setIsDeleting(false);
       return;
     }
@@ -109,7 +111,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       .eq("id", resume.id);
 
     if (dbError) {
-      setError("儲存失敗，請稍後再試");
+      setError(tc("saveFailed"));
     } else {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
@@ -220,10 +222,10 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
   };
 
   const tabs = [
-    { key: "personal" as const, label: "個人資訊" },
-    { key: "education" as const, label: "學歷" },
-    { key: "experience" as const, label: "工作經歷" },
-    { key: "skills" as const, label: "技能" },
+    { key: "personal" as const, label: t("personal") },
+    { key: "education" as const, label: t("education") },
+    { key: "experience" as const, label: t("experience") },
+    { key: "skills" as const, label: t("skills") },
   ];
 
   return (
@@ -235,11 +237,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回履歷列表
+          {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
           {success && (
-            <span className="text-sm text-green-600">已儲存</span>
+            <span className="text-sm text-green-600">{tc("saved")}</span>
           )}
           {error && <span className="text-sm text-red-600">{error}</span>}
           {isPro && (
@@ -248,7 +250,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
               className="inline-flex items-center gap-1.5 rounded-lg border border-brand-300 bg-brand-50 px-4 py-2 text-sm font-medium text-brand-700 hover:bg-brand-100 transition-colors"
             >
               <Sparkles className="h-4 w-4" />
-              AI 優化分析
+              {t("aiOptimize")}
             </button>
           )}
           <Link
@@ -257,7 +259,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
           >
             <Eye className="h-4 w-4" />
-            預覽
+            {t("preview")}
           </Link>
           <button
             onClick={() => setShowDeleteConfirm(true)}
@@ -270,7 +272,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             disabled={isSaving}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
           >
-            {isSaving ? "儲存中..." : "儲存"}
+            {isSaving ? tc("saving") : tc("save")}
           </button>
         </div>
       </div>
@@ -279,7 +281,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       {showDeleteConfirm && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
           <p className="text-sm text-red-800">
-            確定要刪除此履歷嗎？此操作無法復原。
+            {t("deleteConfirm")}
           </p>
           <div className="mt-3 flex gap-2">
             <button
@@ -287,13 +289,13 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
               disabled={isDeleting}
               className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {isDeleting ? "刪除中..." : "確認刪除"}
+              {isDeleting ? tc("deleting") : tc("confirmDelete")}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              取消
+              {tc("cancel")}
             </button>
           </div>
         </div>
@@ -304,26 +306,26 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              履歷標題
+              {t("resumeTitle")}
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              placeholder="例：前端工程師履歷"
+              placeholder={t("titlePlaceholder")}
             />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              目標職位
+              {t("targetJobTitle")}
             </label>
             <input
               type="text"
               value={targetJobTitle}
               onChange={(e) => setTargetJobTitle(e.target.value)}
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-              placeholder="例：資深前端工程師"
+              placeholder={t("targetJobPlaceholder")}
             />
           </div>
         </div>
@@ -349,11 +351,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       {/* 個人資訊 */}
       {activeTab === "personal" && (
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">個人資訊</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("personal")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                姓名
+                {t("name")}
               </label>
               <input
                 type="text"
@@ -364,7 +366,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                電子郵件
+                {t("email")}
               </label>
               <input
                 type="email"
@@ -375,7 +377,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                電話
+                {t("phone")}
               </label>
               <input
                 type="tel"
@@ -386,26 +388,26 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                所在地
+                {t("location")}
               </label>
               <input
                 type="text"
                 value={content.personal.location}
                 onChange={(e) => updatePersonal("location", e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="例：台北市"
+                placeholder={t("locationPlaceholder")}
               />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-gray-700">
-                自我介紹
+                {t("summary")}
               </label>
               <textarea
                 value={content.personal.summary}
                 onChange={(e) => updatePersonal("summary", e.target.value)}
                 rows={4}
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="簡述你的專業背景與求職目標..."
+                placeholder={t("summaryPlaceholder")}
               />
             </div>
           </div>
@@ -422,7 +424,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900">
-                  {edu.school || "新學歷"}
+                  {edu.school || t("newEducation")}
                 </h3>
                 <button
                   onClick={() => removeEducation(edu.id)}
@@ -434,7 +436,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    學校名稱
+                    {t("school")}
                   </label>
                   <input
                     type="text"
@@ -447,7 +449,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    學位
+                    {t("degree")}
                   </label>
                   <input
                     type="text"
@@ -456,12 +458,12 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       updateEducation(edu.id, "degree", e.target.value)
                     }
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    placeholder="例：學士"
+                    placeholder={t("degreePlaceholder")}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    科系
+                    {t("field")}
                   </label>
                   <input
                     type="text"
@@ -470,13 +472,13 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       updateEducation(edu.id, "field", e.target.value)
                     }
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    placeholder="例：資訊工程學系"
+                    placeholder={t("fieldPlaceholder")}
                   />
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      開始日期
+                      {t("startDate")}
                     </label>
                     <input
                       type="month"
@@ -489,7 +491,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      結束日期
+                      {t("endDate")}
                     </label>
                     <input
                       type="month"
@@ -509,7 +511,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 py-4 text-sm font-medium text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            新增學歷
+            {t("addEducation")}
           </button>
         </div>
       )}
@@ -524,7 +526,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             >
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-gray-900">
-                  {exp.company || "新工作經歷"}
+                  {exp.company || t("newExperience")}
                 </h3>
                 <button
                   onClick={() => removeExperience(exp.id)}
@@ -536,7 +538,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    公司名稱
+                    {t("company")}
                   </label>
                   <input
                     type="text"
@@ -549,7 +551,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
-                    職位
+                    {t("jobTitleLabel")}
                   </label>
                   <input
                     type="text"
@@ -563,7 +565,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 <div className="flex gap-4">
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      開始日期
+                      {t("startDate")}
                     </label>
                     <input
                       type="month"
@@ -576,7 +578,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                   </div>
                   <div className="flex-1">
                     <label className="block text-sm font-medium text-gray-700">
-                      結束日期
+                      {t("endDate")}
                     </label>
                     <input
                       type="month"
@@ -590,7 +592,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    工作描述
+                    {t("workDescription")}
                   </label>
                   <textarea
                     value={exp.description}
@@ -599,7 +601,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     }
                     rows={4}
                     className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                    placeholder="描述你的工作內容、成就與貢獻..."
+                    placeholder={t("workDescPlaceholder")}
                   />
                 </div>
               </div>
@@ -610,7 +612,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 py-4 text-sm font-medium text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            新增工作經歷
+            {t("addExperience")}
           </button>
         </div>
       )}
@@ -618,7 +620,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       {/* 技能 */}
       {activeTab === "skills" && (
         <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">技能</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{t("skills")}</h2>
           <div className="mt-4">
             <div className="flex gap-2">
               <input
@@ -632,13 +634,13 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                   }
                 }}
                 className="block flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="輸入技能名稱，按 Enter 或點擊新增"
+                placeholder={t("skillPlaceholder")}
               />
               <button
                 onClick={addSkill}
                 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
               >
-                新增
+                {t("addSkill")}
               </button>
             </div>
             {content.skills.length > 0 ? (
@@ -659,7 +661,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 ))}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-gray-400">尚未新增任何技能</p>
+              <p className="mt-4 text-sm text-gray-400">{t("noSkills")}</p>
             )}
           </div>
         </div>

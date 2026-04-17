@@ -17,7 +17,7 @@ export async function POST() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -56,7 +56,7 @@ export async function POST() {
 
     if (authError) {
       return NextResponse.json(
-        { error: "帳號刪除失敗，請稍後再試" },
+        { error: "Account deletion failed" },
         { status: 500 }
       );
     }
@@ -64,7 +64,7 @@ export async function POST() {
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(
-      { error: "帳號刪除失敗，請稍後再試" },
+      { error: "Account deletion failed" },
       { status: 500 }
     );
   }

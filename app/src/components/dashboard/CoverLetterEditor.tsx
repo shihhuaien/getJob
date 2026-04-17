@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useRouter, Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { coverLetterUpdateSchema } from "@/lib/validations";
@@ -16,6 +16,8 @@ interface Props {
 
 export default function CoverLetterEditor({ coverLetter }: Props) {
   const router = useRouter();
+  const t = useTranslations("coverLetter");
+  const tc = useTranslations("common");
   const [title, setTitle] = useState(coverLetter.title);
   const [content, setContent] = useState(coverLetter.content);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,7 +49,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       .eq("id", coverLetter.id);
 
     if (dbError) {
-      setError("儲存失敗，請稍後再試");
+      setError(tc("saveFailed"));
     } else {
       setSuccess(true);
       setTimeout(() => setSuccess(false), 2000);
@@ -64,7 +66,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       .eq("id", coverLetter.id);
 
     if (dbError) {
-      setError("刪除失敗，請稍後再試");
+      setError(tc("deleteFailed"));
       setIsDeleting(false);
     } else {
       router.push("/cover-letter");
@@ -80,11 +82,11 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          返回求職信列表
+          {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
           {success && (
-            <span className="text-sm text-green-600">已儲存</span>
+            <span className="text-sm text-green-600">{tc("saved")}</span>
           )}
           {error && <span className="text-sm text-red-600">{error}</span>}
           <button
@@ -92,7 +94,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
             disabled={isSaving}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
           >
-            {isSaving ? "儲存中..." : "儲存"}
+            {isSaving ? tc("saving") : tc("save")}
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
@@ -107,7 +109,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       {showDeleteConfirm && (
         <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
           <p className="text-sm text-red-800">
-            確定要刪除此求職信嗎？此操作無法復原。
+            {t("deleteConfirm")}
           </p>
           <div className="mt-3 flex gap-2">
             <button
@@ -115,13 +117,13 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
               disabled={isDeleting}
               className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
             >
-              {isDeleting ? "刪除中..." : "確認刪除"}
+              {isDeleting ? tc("deleting") : tc("confirmDelete")}
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
               className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              取消
+              {tc("cancel")}
             </button>
           </div>
         </div>
@@ -130,28 +132,28 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       {/* 標題 */}
       <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
         <label className="block text-sm font-medium text-gray-700">
-          求職信標題
+          {t("coverLetterTitle")}
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          placeholder="例：應徵前端工程師求職信"
+          placeholder={t("titlePlaceholder")}
         />
       </div>
 
       {/* 內容編輯 */}
       <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
         <label className="block text-sm font-medium text-gray-700">
-          求職信內容
+          {t("content")}
         </label>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={20}
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm leading-relaxed focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-          placeholder={"親愛的招募經理：\n\n我對貴公司的職缺非常感興趣...\n\n在此附上我的履歷供參考，期待有機會進一步面談。\n\n此致\n敬禮"}
+          placeholder={t("contentPlaceholder")}
         />
       </div>
     </div>

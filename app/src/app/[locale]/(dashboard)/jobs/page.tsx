@@ -1,8 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import JobsBoard from "@/components/dashboard/JobsBoard";
 
 export default async function JobsPage() {
+  const t = await getTranslations("jobs");
   const supabase = await createClient();
   const {
     data: { user },
@@ -30,9 +32,9 @@ export default async function JobsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">職缺追蹤</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            管理你所有的求職進度
+            {t("subtitle")}
           </p>
         </div>
       </div>

@@ -2,7 +2,11 @@ import { getGemini } from "./gemini";
 import { resumeToText } from "./optimize-resume";
 import type { ResumeContent } from "@/types/resume";
 
-const SYSTEM_PROMPT = `你是一位專業的求職信撰寫顧問。根據求職者的履歷內容與目標職缺描述，撰寫一封客製化的求職信。
+function getSystemPrompt(locale?: string) {
+  const lang = locale === "en"
+    ? "The entire letter must be in English (keep English proper nouns as-is)"
+    : "全文使用繁體中文（若履歷中有英文專有名詞則保留英文）";
+  return `你是一位專業的求職信撰寫顧問。根據求職者的履歷內容與目標職缺描述，撰寫一封客製化的求職信。
 
 求職信結構：
 1. 開頭：稱呼招募團隊，表達對該職位的興趣
@@ -14,15 +18,17 @@ const SYSTEM_PROMPT = `你是一位專業的求職信撰寫顧問。根據求職
 嚴格規則：
 - 所有內容必須基於履歷中的真實經歷，不可捏造不存在的經驗、技能或成就
 - 語氣專業但溫暖自然，避免過度正式或套路化
-- 全文使用繁體中文（若履歷中有英文專有名詞則保留英文）
+- ${lang}
 - 長度約 300-500 字，不宜過長
 - 直接輸出求職信純文字，不要加任何標題、格式標記或額外說明`;
+}
 
 export async function generateCoverLetter(
   resumeContent: ResumeContent,
   jobDescription: string,
   companyName: string,
-  jobTitle: string
+  jobTitle: string,
+  locale?: string
 ): Promise<string> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
@@ -32,7 +38,7 @@ export async function generateCoverLetter(
   const resumeText = resumeToText(resumeContent);
 
   const result = await model.generateContent([
-    { text: SYSTEM_PROMPT },
+    { text: getSystemPrompt(locale) },
     {
       text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
     },

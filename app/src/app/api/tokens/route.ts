@@ -10,7 +10,7 @@ export async function GET() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { data: tokens } = await supabase
@@ -21,7 +21,7 @@ export async function GET() {
 
     return NextResponse.json({ data: tokens ?? [] });
   } catch {
-    return NextResponse.json({ error: "載入失敗" }, { status: 500 });
+    return NextResponse.json({ error: "Load failed" }, { status: 500 });
   }
 }
 
@@ -33,7 +33,7 @@ export async function POST() {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "未授權" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // 產生隨機 token
@@ -48,16 +48,16 @@ export async function POST() {
     const { error: dbError } = await supabase.from("api_tokens").insert({
       user_id: user.id,
       token_hash: tokenHash,
-      name: "Chrome 擴充功能",
+      name: "Chrome Extension",
     });
 
     if (dbError) {
-      return NextResponse.json({ error: "建立失敗" }, { status: 500 });
+      return NextResponse.json({ error: "Create failed" }, { status: 500 });
     }
 
     // 只回傳一次明文 token
     return NextResponse.json({ token: plainToken });
   } catch {
-    return NextResponse.json({ error: "建立失敗" }, { status: 500 });
+    return NextResponse.json({ error: "Create failed" }, { status: 500 });
   }
 }

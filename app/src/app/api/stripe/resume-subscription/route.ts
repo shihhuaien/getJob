@@ -9,7 +9,7 @@ export async function POST() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -21,7 +21,7 @@ export async function POST() {
 
     if (!profile?.stripe_customer_id) {
       return NextResponse.json(
-        { error: "找不到訂閱資訊" },
+        { error: "Subscription not found" },
         { status: 400 }
       );
     }
@@ -34,7 +34,7 @@ export async function POST() {
 
     if (subscriptions.data.length === 0) {
       return NextResponse.json(
-        { error: "找不到有效訂閱" },
+        { error: "No active subscription found" },
         { status: 400 }
       );
     }
@@ -47,7 +47,7 @@ export async function POST() {
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(
-      { error: "恢復訂閱失敗，請稍後再試" },
+      { error: "Failed to resume subscription" },
       { status: 500 }
     );
   }

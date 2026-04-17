@@ -1,6 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// 去除 locale prefix 取得實際路徑
+function stripLocale(pathname: string): string {
+  const localePattern = /^\/(zh-TW|en)(\/|$)/;
+  return pathname.replace(localePattern, "/");
+}
+
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
     request,
@@ -33,10 +39,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const pathname = stripLocale(request.nextUrl.pathname);
+
   // Protected routes: dashboard group pages
   const protectedPaths = ["/dashboard", "/jobs", "/resume", "/cover-letter", "/analytics", "/settings"];
   const isProtectedRoute = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
+    pathname.startsWith(path)
   );
 
   // Redirect unauthenticated users trying to access protected routes
@@ -49,8 +57,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect authenticated users away from auth pages
   if (
     user &&
-    (request.nextUrl.pathname === "/login" ||
-      request.nextUrl.pathname === "/register")
+    (pathname === "/login" || pathname === "/register")
   ) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";

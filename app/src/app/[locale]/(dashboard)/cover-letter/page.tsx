@@ -1,10 +1,13 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { Mail } from "lucide-react";
 import CreateCoverLetterButton from "@/components/dashboard/CreateCoverLetterButton";
 
 export default async function CoverLetterPage() {
+  const t = await getTranslations("coverLetter");
+  const tCommon = await getTranslations("common");
   const supabase = await createClient();
   const {
     data: { user },
@@ -53,9 +56,9 @@ export default async function CoverLetterPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">求職信</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
           <p className="mt-1 text-sm text-gray-500">
-            使用 AI 產生針對每個職缺客製化的求職信
+            {t("subtitle")}
           </p>
         </div>
         <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />
@@ -78,8 +81,9 @@ export default async function CoverLetterPage() {
                     {letter.title}
                   </h3>
                   <p className="mt-1 text-xs text-gray-400">
-                    更新於{" "}
-                    {new Date(letter.updated_at).toLocaleDateString("zh-TW")}
+                    {tCommon("updatedAt", {
+                      date: new Date(letter.updated_at).toLocaleDateString("zh-TW"),
+                    })}
                   </p>
                 </div>
               </div>
@@ -90,10 +94,10 @@ export default async function CoverLetterPage() {
         <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white py-16">
           <Mail className="h-12 w-12 text-gray-300" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">
-            還沒有求職信
+            {t("noCoverLetters")}
           </h3>
           <p className="mt-1 text-sm text-gray-500">
-            建立你的第一封求職信
+            {t("noCoverLettersDesc")}
           </p>
           <div className="mt-4">
             <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />

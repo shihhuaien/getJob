@@ -9,7 +9,7 @@ export async function POST() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ error: "未授權" }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
@@ -51,7 +51,7 @@ export async function POST() {
     return NextResponse.json({ url: session.url });
   } catch {
     return NextResponse.json(
-      { error: "建立結帳階段失敗，請稍後再試" },
+      { error: "Failed to create checkout session" },
       { status: 500 }
     );
   }

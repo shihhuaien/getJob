@@ -51,7 +51,7 @@ export async function verifyRequest(request: Request): Promise<AuthResult> {
   // 2. 嘗試 Bearer token auth（Chrome 擴充）
   const authHeader = request.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
-    throw new Error("未授權");
+    throw new Error("Unauthorized");
   }
 
   const token = authHeader.slice(7);
@@ -66,7 +66,7 @@ export async function verifyRequest(request: Request): Promise<AuthResult> {
     .single();
 
   if (!tokenRow) {
-    throw new Error("無效的 API 金鑰");
+    throw new Error("Invalid API key");
   }
 
   // 更新 last_used_at

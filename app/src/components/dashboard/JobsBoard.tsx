@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { Plus, Building2, ExternalLink, Search, X, Sparkles } from "lucide-react";
 import {
   DndContext,
@@ -32,12 +33,12 @@ import type { Database } from "@/types/database";
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
 
-const statusColumns: { key: ApplicationStatus; label: string; color: string }[] = [
-  { key: "saved", label: "已儲存", color: "bg-gray-100 text-gray-700" },
-  { key: "applied", label: "已投遞", color: "bg-blue-100 text-blue-700" },
-  { key: "interview", label: "面試中", color: "bg-yellow-100 text-yellow-700" },
-  { key: "offer", label: "已錄取", color: "bg-green-100 text-green-700" },
-  { key: "rejected", label: "未錄取", color: "bg-red-100 text-red-700" },
+const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }[] = [
+  { key: "saved", labelKey: "saved", color: "bg-gray-100 text-gray-700" },
+  { key: "applied", labelKey: "applied", color: "bg-blue-100 text-blue-700" },
+  { key: "interview", labelKey: "interview", color: "bg-yellow-100 text-yellow-700" },
+  { key: "offer", labelKey: "offer", color: "bg-green-100 text-green-700" },
+  { key: "rejected", labelKey: "rejected", color: "bg-red-100 text-red-700" },
 ];
 
 // 可排序的職缺卡片
@@ -121,10 +122,14 @@ function DroppableColumn({
   col,
   jobs,
   isOver,
+  label,
+  noJobsText,
 }: {
   col: (typeof statusColumns)[number];
   jobs: JobApplication[];
   isOver: boolean;
+  label: string;
+  noJobsText: string;
 }) {
   const { setNodeRef } = useDroppable({ id: col.key });
 
@@ -139,7 +144,7 @@ function DroppableColumn({
         <span
           className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${col.color}`}
         >
-          {col.label}
+          {label}
         </span>
         <span className="text-xs text-gray-500">{jobs.length}</span>
       </div>
@@ -152,7 +157,7 @@ function DroppableColumn({
             <SortableJobCard key={job.id} job={job} />
           ))}
           {jobs.length === 0 && !isOver && (
-            <p className="py-4 text-center text-xs text-gray-400">尚無職缺</p>
+            <p className="py-4 text-center text-xs text-gray-400">{noJobsText}</p>
           )}
         </div>
       </SortableContext>
@@ -167,6 +172,8 @@ interface Props {
 }
 
 export default function JobsBoard({ initialJobs, userId, isPro = false }: Props) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const [jobs, setJobs] = useState(initialJobs);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newJob, setNewJob] = useState({
@@ -239,7 +246,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       setNewJob({ company_name: "", job_title: "", job_url: "", status: "saved" });
       setShowAddForm(false);
     } catch {
-      setFormError("儲存失敗，請稍後再試");
+      setFormError(tc("saveFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -376,7 +383,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
         >
           <Plus className="h-4 w-4" />
-          新增職缺
+          {t("addJob")}
         </button>
         {isPro && (
           <button
@@ -384,7 +391,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
             className="inline-flex items-center gap-2 rounded-lg border border-brand-300 bg-brand-50 px-4 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-100 transition-colors"
           >
             <Sparkles className="h-4 w-4" />
-            AI 智慧解析
+            {t("aiParse")}
           </button>
         )}
       </div>
@@ -398,7 +405,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="block w-full rounded-lg border border-gray-300 py-2 pl-9 pr-9 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-            placeholder="搜尋公司名稱或職位..."
+            placeholder={t("searchPlaceholder")}
           />
           {searchQuery && (
             <button
@@ -416,10 +423,10 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           }
           className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
         >
-          <option value="all">所有狀態</option>
+          <option value="all">{t("allStatuses")}</option>
           {statusColumns.map((s) => (
             <option key={s.key} value={s.key}>
-              {s.label}
+              {t(s.labelKey)}
             </option>
           ))}
         </select>
@@ -433,7 +440,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                公司名稱
+                {t("companyName")}
               </label>
               <input
                 type="text"
@@ -443,12 +450,12 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                   setNewJob({ ...newJob, company_name: e.target.value })
                 }
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="例：台積電"
+                placeholder={t("companyPlaceholder")}
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                職位名稱
+                {t("jobTitle")}
               </label>
               <input
                 type="text"
@@ -458,12 +465,12 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                   setNewJob({ ...newJob, job_title: e.target.value })
                 }
                 className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
-                placeholder="例：前端工程師"
+                placeholder={t("jobTitlePlaceholder")}
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                職缺連結（選填）
+                {t("jobUrl")}
               </label>
               <input
                 type="url"
@@ -485,14 +492,14 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
               disabled={isSubmitting}
               className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
             >
-              {isSubmitting ? "儲存中..." : "儲存"}
+              {isSubmitting ? tc("saving") : tc("save")}
             </button>
             <button
               type="button"
               onClick={() => setShowAddForm(false)}
               className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              取消
+              {tc("cancel")}
             </button>
           </div>
         </form>
@@ -516,6 +523,8 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                 col={col}
                 jobs={columnJobs}
                 isOver={overColumnId === col.key}
+                label={t(col.labelKey)}
+                noJobsText={t("noJobs")}
               />
             );
           })}
