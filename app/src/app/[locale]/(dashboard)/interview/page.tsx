@@ -4,7 +4,27 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Mic, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import InterviewSessionCard from "@/components/interview/InterviewSessionCard";
-import type { InterviewReport } from "@/types/interview";
+import RadarChart from "@/components/interview/RadarChart";
+import type { InterviewReport, Scorecard } from "@/types/interview";
+
+function averageScorecard(list: Scorecard[]): Scorecard {
+  const sum = list.reduce(
+    (acc, s) => ({
+      relevance: acc.relevance + s.relevance,
+      logic: acc.logic + s.logic,
+      confidence: acc.confidence + s.confidence,
+      overall: acc.overall + s.overall,
+    }),
+    { relevance: 0, logic: 0, confidence: 0, overall: 0 }
+  );
+  const n = list.length;
+  return {
+    relevance: Math.round(sum.relevance / n),
+    logic: Math.round(sum.logic / n),
+    confidence: Math.round(sum.confidence / n),
+    overall: Math.round(sum.overall / n),
+  };
+}
 
 export default async function InterviewPage() {
   const t = await getTranslations("interview");
@@ -33,6 +53,16 @@ export default async function InterviewPage() {
 
   const sessions = sessionsResult.data ?? [];
   const isPro = profileResult.data?.subscription_tier === "pro";
+
+  const completedScorecards = sessions
+    .filter((s) => s.status === "completed" && s.report)
+    .map((s) => (s.report as unknown as InterviewReport).scorecard)
+    .filter((sc): sc is Scorecard => Boolean(sc));
+  const latestScorecard = completedScorecards[0] ?? null;
+  const averageScorecardValue =
+    completedScorecards.length > 0
+      ? averageScorecard(completedScorecards)
+      : null;
 
   return (
     <div>
@@ -64,6 +94,16 @@ export default async function InterviewPage() {
             {t("upgradeCta")}
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+        </div>
+      )}
+
+      {completedScorecards.length > 0 && (
+        <div className="mb-6">
+          <RadarChart
+            latest={latestScorecard}
+            average={averageScorecardValue}
+            sessionCount={completedScorecards.length}
+          />
         </div>
       )}
 
