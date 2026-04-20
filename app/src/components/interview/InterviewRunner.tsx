@@ -1,23 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, ChevronRight, Flag, AlertTriangle, SkipForward } from "lucide-react";
 import CountdownTimer from "./CountdownTimer";
 import StarHintPanel from "./StarHintPanel";
-import type { InterviewQuestion, InterviewAnswer } from "@/types/interview";
+import VoiceRecorder from "./VoiceRecorder";
+import type {
+  InterviewAnswer,
+  InterviewMode,
+  InterviewQuestion,
+} from "@/types/interview";
 
 interface Props {
   sessionId: string;
   questions: InterviewQuestion[];
   initialAnswers: InterviewAnswer[];
+  mode: InterviewMode;
+  locale: string;
 }
 
 export default function InterviewRunner({
   sessionId,
   questions,
   initialAnswers,
+  mode,
+  locale,
 }: Props) {
   const router = useRouter();
   const t = useTranslations("interview");
@@ -32,12 +41,27 @@ export default function InterviewRunner({
   const [answer, setAnswer] = useState(
     answerMap.get(questions[startIdx]?.id)?.answer_text ?? ""
   );
+  const [audioDuration, setAudioDuration] = useState(0);
   const [drillDownQuestion, setDrillDownQuestion] = useState<string | null>(null);
   const [drillDownAnswer, setDrillDownAnswer] = useState("");
   const [pendingAdvance, setPendingAdvance] = useState<"next" | "complete" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const handleVoiceAppend = useCallback(
+    (text: string, durationSec: number, target: "answer" | "drill") => {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      if (target === "answer") {
+        setAnswer((prev) => (prev ? `${prev} ${trimmed}` : trimmed));
+        setAudioDuration((d) => d + durationSec);
+      } else {
+        setDrillDownAnswer((prev) => (prev ? `${prev} ${trimmed}` : trimmed));
+      }
+    },
+    []
+  );
 
   const current = questions[currentIdx];
   const isLast = currentIdx === questions.length - 1;
@@ -49,6 +73,8 @@ export default function InterviewRunner({
       body: JSON.stringify({
         question_id: current.id,
         answer_text: answer,
+        audio_duration_sec:
+          mode === "voice" && audioDuration > 0 ? audioDuration : undefined,
       }),
     });
     const json = await res.json();
@@ -82,6 +108,7 @@ export default function InterviewRunner({
     setCurrentIdx(nextIdx);
     const existing = answerMap.get(questions[nextIdx]?.id);
     setAnswer(existing?.answer_text ?? "");
+    setAudioDuration(0);
     setDrillDownQuestion(null);
     setDrillDownAnswer("");
   };
@@ -232,6 +259,16 @@ export default function InterviewRunner({
                 {t("charCount", { count: answer.length })}
               </p>
             </div>
+            {mode === "voice" && (
+              <div className="mt-3">
+                <VoiceRecorder
+                  locale={locale}
+                  onAppend={(text, durationSec) =>
+                    handleVoiceAppend(text, durationSec, "answer")
+                  }
+                />
+              </div>
+            )}
           </div>
 
           {error && (
@@ -310,6 +347,15 @@ export default function InterviewRunner({
             placeholder={t("drillDownPlaceholder")}
             className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
+
+          {mode === "voice" && (
+            <VoiceRecorder
+              locale={locale}
+              onAppend={(text, durationSec) =>
+                handleVoiceAppend(text, durationSec, "drill")
+              }
+            />
+          )}
 
           {error && (
             <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">

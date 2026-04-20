@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Mic, BookOpen, Sparkles, ArrowRight } from "lucide-react";
+import InterviewSessionCard from "@/components/interview/InterviewSessionCard";
 import type { InterviewReport } from "@/types/interview";
 
 export default async function InterviewPage() {
@@ -80,67 +81,20 @@ export default async function InterviewPage() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {sessions.map((s) => {
             const report = s.report as unknown as InterviewReport | null;
-            const overall = report?.scorecard?.overall;
             const job = Array.isArray(s.job_applications)
               ? s.job_applications[0]
               : s.job_applications;
             return (
-              <Link
+              <InterviewSessionCard
                 key={s.id}
-                href={
-                  s.status === "completed"
-                    ? `/interview/${s.id}/report`
-                    : `/interview/${s.id}`
-                }
-                className="block rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="truncate text-sm font-semibold text-gray-900">
-                      {job?.company_name ?? t("unknownCompany")}
-                    </h3>
-                    <p className="mt-0.5 truncate text-xs text-gray-500">
-                      {job?.job_title ?? t("unknownJob")}
-                    </p>
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
-                        {t(`persona_${s.persona}`)}
-                      </span>
-                      <span className="rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
-                        {t(`type_${s.interview_type}`)}
-                      </span>
-                      <span
-                        className={`rounded-full px-2 py-0.5 ${
-                          s.status === "completed"
-                            ? "bg-green-50 text-green-700"
-                            : "bg-amber-50 text-amber-700"
-                        }`}
-                      >
-                        {t(`status_${s.status}`)}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-xs text-gray-400">
-                      {new Date(s.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                  {typeof overall === "number" && (
-                    <div className="flex flex-col items-center">
-                      <span
-                        className={`text-2xl font-bold ${
-                          overall >= 80
-                            ? "text-green-600"
-                            : overall >= 60
-                              ? "text-yellow-600"
-                              : "text-red-600"
-                        }`}
-                      >
-                        {overall}
-                      </span>
-                      <span className="text-[10px] text-gray-400">/ 100</span>
-                    </div>
-                  )}
-                </div>
-              </Link>
+                id={s.id}
+                persona={s.persona}
+                interviewType={s.interview_type}
+                status={s.status}
+                report={report}
+                createdAt={s.created_at}
+                job={job ?? null}
+              />
             );
           })}
         </div>

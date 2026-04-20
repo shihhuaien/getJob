@@ -4,7 +4,11 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
 import InterviewRunner from "@/components/interview/InterviewRunner";
-import type { InterviewQuestion, InterviewAnswer } from "@/types/interview";
+import type {
+  InterviewAnswer,
+  InterviewMode,
+  InterviewQuestion,
+} from "@/types/interview";
 
 export default async function InterviewRunnerPage({
   params,
@@ -23,7 +27,7 @@ export default async function InterviewRunnerPage({
   const { data: session } = await supabase
     .from("interview_sessions")
     .select(
-      "id, status, questions, answers, persona, interview_type, job_applications(company_name, job_title)"
+      "id, status, questions, answers, persona, interview_type, mode, locale, job_applications(company_name, job_title)"
     )
     .eq("id", id)
     .eq("user_id", user.id)
@@ -56,7 +60,8 @@ export default async function InterviewRunnerPage({
         </h1>
         <p className="mt-1 text-sm text-gray-500">
           {t(`persona_${session.persona}`)} ·{" "}
-          {t(`type_${session.interview_type}`)}
+          {t(`type_${session.interview_type}`)} ·{" "}
+          {t(`mode_${session.mode}`)}
         </p>
       </div>
 
@@ -64,6 +69,8 @@ export default async function InterviewRunnerPage({
         sessionId={id}
         questions={questions}
         initialAnswers={answers}
+        mode={session.mode as InterviewMode}
+        locale={session.locale}
       />
     </div>
   );

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Sparkles, X, Loader2, Mic } from "lucide-react";
+import { Sparkles, X, Loader2, Mic, Keyboard } from "lucide-react";
 import type {
   InterviewType,
   Persona,
@@ -48,10 +48,21 @@ export default function StartInterviewModal({
   const [resumeId, setResumeId] = useState(resumes[0]?.id ?? "");
   const [persona, setPersona] = useState<Persona>("hr_friendly");
   const [interviewType, setInterviewType] = useState<InterviewType>("mixed");
-  const [mode] = useState<InterviewMode>("text");
+  const [mode, setMode] = useState<InterviewMode>("text");
+  const [voiceSupported, setVoiceSupported] = useState(true);
   const [drillDown, setDrillDown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const w = window as unknown as {
+      SpeechRecognition?: unknown;
+      webkitSpeechRecognition?: unknown;
+    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setVoiceSupported(Boolean(w.SpeechRecognition || w.webkitSpeechRecognition));
+  }, []);
 
   const canStart = hasDescription && resumeId && !isLoading;
 
@@ -185,6 +196,49 @@ export default function StartInterviewModal({
                   {t(`type_${ty}`)}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              {t("selectMode")}
+            </label>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setMode("text")}
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                  mode === "text"
+                    ? "border-brand-500 bg-brand-50 text-brand-700"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                <Keyboard className="h-4 w-4" />
+                <div className="text-left">
+                  <div className="font-medium">{t("mode_text")}</div>
+                  <div className="text-xs text-gray-500">
+                    {t("mode_text_desc")}
+                  </div>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => voiceSupported && setMode("voice")}
+                disabled={!voiceSupported}
+                className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                  mode === "voice"
+                    ? "border-brand-500 bg-brand-50 text-brand-700"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-50"
+                } disabled:cursor-not-allowed disabled:opacity-50`}
+              >
+                <Mic className="h-4 w-4" />
+                <div className="text-left">
+                  <div className="font-medium">{t("mode_voice")}</div>
+                  <div className="text-xs text-gray-500">
+                    {voiceSupported ? t("mode_voice_desc") : t("voiceUnsupported")}
+                  </div>
+                </div>
+              </button>
             </div>
           </div>
 
