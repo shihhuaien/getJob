@@ -147,21 +147,23 @@
 - [ ] 人脈管理 CRM（聯絡人 CRUD、關聯職缺、追蹤提醒）
 - [x] 求職數據分析圖表（投遞轉換率、面試成功率、時間軸）
 - [x] Dashboard 最近活動列表（取代佔位文字）
-- [ ] 履歷刪除功能
+- [x] 履歷刪除功能
 
 ### v2.0
 
 - [x] AI 履歷優化（職缺關鍵字比對、ATS 評分 0-100）— Gemini 2.0 Flash
 - [x] AI 履歷優化-自動更新履歷
 - [x] AI 履歷 PDF 上傳功能 — Gemini 2.0 Flash
-- [ ] AI 求職信生成器（根據職缺 + 履歷自動產生）
+- [x] AI 求職信生成器（根據職缺 + 履歷自動產生）
 - [x] 職缺描述解析（自動擷取公司、職位、薪資、技能需求）— Gemini 2.0 Flash
 
 ### v3.0
 
 - [x] Chrome 擴充套件（一鍵從 104/CakeResume/LinkedIn 儲存職缺）
 - [ ] Chrome 擴充套件測試（載入未封裝擴充、API 金鑰設定、104/CakeResume/LinkedIn 實機擷取驗證）
-- [ ] AI 面試模擬練習（根據職缺產生題目）
+- [x] AI 面試模擬練習（根據職缺產生題目）— Gemini 2.0 Flash，含 Persona/題型選擇、追問模式、STAR 提示、語音輸入、多維度評分報告、黃金回答重塑、雷達圖成長軌跡、個人題庫、看板狀態觸發 Banner
+- [ ] AI 語音面試錄音測試（實機多瀏覽器／多麥克風驗證）
+- [ ] AI 面試題目語音朗讀（TTS）— Web Speech API 中文 voice 品質不佳，需改用雲端 TTS（ElevenLabs / Google Cloud TTS / Azure Neural TTS）
 - [ ] 薪資情報整合
 - [x] 多語言支援（English）
 
@@ -221,6 +223,8 @@
 | 求職信       | `/cover-letter` | ✅ 完成                     |
 | 設定         | `/settings`     | ✅ 完成                     |
 | 數據分析     | `/analytics`    | ✅ 完成                     |
+| AI 面試模擬  | `/interview`    | ✅ 完成                     |
+| 個人題庫     | `/interview/bank` | ✅ 完成                   |
 | 人脈管理     | `/contacts`     | ⬜ 未開始                   |
 
 ---

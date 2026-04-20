@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
 import InterviewLaunchButton from "@/components/interview/InterviewLaunchButton";
+import InterviewTriggerBanner from "@/components/interview/InterviewTriggerBanner";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -215,6 +216,15 @@ export default function JobDetail({ job }: Props) {
         <div className="mb-6 rounded-lg bg-green-50 p-3 text-sm text-green-700">
           {tc("updated")}
         </div>
+      )}
+
+      {job.status === "interview" && !isEditing && (
+        <InterviewTriggerBanner
+          jobId={job.id}
+          jobTitle={job.job_title}
+          companyName={job.company_name}
+          hasDescription={Boolean(job.job_description)}
+        />
       )}
 
       <div className="space-y-6">

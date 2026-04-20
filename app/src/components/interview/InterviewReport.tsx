@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { CheckCircle2, TrendingUp } from "lucide-react";
+import BookmarkQuestionButton from "./BookmarkQuestionButton";
 import type {
   InterviewQuestion,
   InterviewAnswer,
@@ -9,9 +10,12 @@ import type {
 } from "@/types/interview";
 
 interface Props {
+  sessionId: string;
+  jobId: string | null;
   questions: InterviewQuestion[];
   answers: InterviewAnswer[];
   report: Report;
+  savedQuestionTexts: Set<string>;
 }
 
 function scoreColor(score: number) {
@@ -46,9 +50,12 @@ function ScoreBar({ label, score }: { label: string; score: number }) {
 }
 
 export default function InterviewReport({
+  sessionId,
+  jobId,
   questions,
   answers,
   report,
+  savedQuestionTexts,
 }: Props) {
   const t = useTranslations("interview");
   const tc = useTranslations("common");
@@ -97,9 +104,18 @@ export default function InterviewReport({
                 key={q.id}
                 className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
               >
-                <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
-                  Q{i + 1} · {q.category}
-                </span>
+                <div className="flex items-start justify-between gap-3">
+                  <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
+                    Q{i + 1} · {q.category}
+                  </span>
+                  <BookmarkQuestionButton
+                    questionText={q.text}
+                    category={q.category}
+                    sessionId={sessionId}
+                    jobId={jobId}
+                    initiallySaved={savedQuestionTexts.has(q.text)}
+                  />
+                </div>
                 <p className="mt-2 font-medium text-gray-900">{q.text}</p>
 
                 <div className="mt-4 space-y-3">

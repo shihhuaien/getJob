@@ -27,7 +27,7 @@ export default async function InterviewReportPage({
   const { data: session } = await supabase
     .from("interview_sessions")
     .select(
-      "id, status, questions, answers, report, persona, interview_type, job_applications(company_name, job_title)"
+      "id, status, questions, answers, report, persona, interview_type, job_application_id, job_applications(company_name, job_title)"
     )
     .eq("id", id)
     .eq("user_id", user.id)
@@ -45,6 +45,15 @@ export default async function InterviewReportPage({
   const job = Array.isArray(session.job_applications)
     ? session.job_applications[0]
     : session.job_applications;
+
+  const { data: savedRows } = await supabase
+    .from("interview_question_bank")
+    .select("question_text")
+    .eq("user_id", user.id)
+    .eq("source_session_id", id);
+  const savedQuestionTexts = new Set(
+    (savedRows ?? []).map((r) => r.question_text)
+  );
 
   return (
     <div>
@@ -66,7 +75,14 @@ export default async function InterviewReportPage({
         </p>
       </div>
 
-      <InterviewReport questions={questions} answers={answers} report={report} />
+      <InterviewReport
+        sessionId={id}
+        jobId={session.job_application_id}
+        questions={questions}
+        answers={answers}
+        report={report}
+        savedQuestionTexts={savedQuestionTexts}
+      />
     </div>
   );
 }
