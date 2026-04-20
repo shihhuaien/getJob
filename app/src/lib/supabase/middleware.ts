@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
   const pathname = stripLocale(request.nextUrl.pathname);
 
   // Protected routes: dashboard group pages
-  const protectedPaths = ["/dashboard", "/jobs", "/resume", "/cover-letter", "/analytics", "/settings"];
+  const protectedPaths = ["/dashboard", "/jobs", "/resume", "/cover-letter", "/interview", "/analytics", "/settings"];
   const isProtectedRoute = protectedPaths.some((path) =>
     pathname.startsWith(path)
   );

@@ -222,6 +222,97 @@ export interface Database {
           updated_at?: string;
         };
       };
+      interview_sessions: {
+        Row: {
+          id: string;
+          user_id: string;
+          job_application_id: string | null;
+          resume_id: string | null;
+          persona: "hr_friendly" | "tech_strict" | "ceo_business";
+          interview_type: "behavioral" | "technical" | "case_study" | "mixed";
+          mode: "text" | "voice";
+          drill_down_enabled: boolean;
+          status: "in_progress" | "completed" | "abandoned";
+          questions: Json;
+          answers: Json;
+          report: Json | null;
+          locale: string;
+          created_at: string;
+          updated_at: string;
+          completed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          job_application_id?: string | null;
+          resume_id?: string | null;
+          persona: "hr_friendly" | "tech_strict" | "ceo_business";
+          interview_type: "behavioral" | "technical" | "case_study" | "mixed";
+          mode?: "text" | "voice";
+          drill_down_enabled?: boolean;
+          status?: "in_progress" | "completed" | "abandoned";
+          questions?: Json;
+          answers?: Json;
+          report?: Json | null;
+          locale?: string;
+          created_at?: string;
+          updated_at?: string;
+          completed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          job_application_id?: string | null;
+          resume_id?: string | null;
+          persona?: "hr_friendly" | "tech_strict" | "ceo_business";
+          interview_type?: "behavioral" | "technical" | "case_study" | "mixed";
+          mode?: "text" | "voice";
+          drill_down_enabled?: boolean;
+          status?: "in_progress" | "completed" | "abandoned";
+          questions?: Json;
+          answers?: Json;
+          report?: Json | null;
+          locale?: string;
+          created_at?: string;
+          updated_at?: string;
+          completed_at?: string | null;
+        };
+      };
+      interview_question_bank: {
+        Row: {
+          id: string;
+          user_id: string;
+          question_text: string;
+          category: string | null;
+          source_session_id: string | null;
+          source_job_id: string | null;
+          user_notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          question_text: string;
+          category?: string | null;
+          source_session_id?: string | null;
+          source_job_id?: string | null;
+          user_notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          question_text?: string;
+          category?: string | null;
+          source_session_id?: string | null;
+          source_job_id?: string | null;
+          user_notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -233,6 +324,10 @@ export interface Database {
         | "interview"
         | "offer"
         | "rejected";
+      interview_persona: "hr_friendly" | "tech_strict" | "ceo_business";
+      interview_type: "behavioral" | "technical" | "case_study" | "mixed";
+      interview_mode: "text" | "voice";
+      interview_status: "in_progress" | "completed" | "abandoned";
     };
   };
 }

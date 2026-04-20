@@ -7,6 +7,7 @@ import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
+import InterviewLaunchButton from "@/components/interview/InterviewLaunchButton";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -142,6 +143,12 @@ export default function JobDetail({ job }: Props) {
         <div className="flex gap-2">
           {!isEditing ? (
             <>
+              <InterviewLaunchButton
+                jobId={job.id}
+                jobTitle={job.job_title}
+                companyName={job.company_name}
+                hasDescription={Boolean(job.job_description)}
+              />
               <button
                 onClick={() => setIsEditing(true)}
                 className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"

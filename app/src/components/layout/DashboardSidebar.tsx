@@ -7,6 +7,7 @@ import {
   Briefcase,
   Mail,
   BarChart3,
+  Mic,
   Settings,
   LogOut,
   Briefcase as Logo,
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/jobs" as const, labelKey: "jobs" as const, icon: Briefcase },
   { href: "/resume" as const, labelKey: "resume" as const, icon: FileText },
   { href: "/cover-letter" as const, labelKey: "coverLetter" as const, icon: Mail },
+  { href: "/interview" as const, labelKey: "interview" as const, icon: Mic },
   { href: "/analytics" as const, labelKey: "analytics" as const, icon: BarChart3 },
   { href: "/settings" as const, labelKey: "settings" as const, icon: Settings },
 ];

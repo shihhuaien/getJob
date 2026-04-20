@@ -105,6 +105,35 @@ export const parseResumePdfSchema = z.object({
   title: titleSchema,
 });
 
+// ── AI Interview ──
+
+export const createInterviewSessionSchema = z.object({
+  job_id: z.string().uuid("Invalid job ID"),
+  resume_id: z.string().uuid("Invalid resume ID"),
+  persona: z.enum(["hr_friendly", "tech_strict", "ceo_business"]),
+  interview_type: z.enum(["behavioral", "technical", "case_study", "mixed"]),
+  mode: z.enum(["text", "voice"]).default("text"),
+  drill_down_enabled: z.boolean().default(false),
+});
+
+export const submitInterviewAnswerSchema = z.object({
+  question_id: z.string().min(1),
+  answer_text: z.string().max(10000),
+  audio_duration_sec: z.number().min(0).max(3600).optional(),
+  drill_down_answer: z.string().max(10000).optional(),
+});
+
+export const questionBankInsertSchema = z.object({
+  question_text: z.string().min(1).max(2000),
+  category: z.string().max(100).optional(),
+  source_session_id: z.string().uuid().nullable().optional(),
+  source_job_id: z.string().uuid().nullable().optional(),
+});
+
+export const questionBankUpdateSchema = z.object({
+  user_notes: z.string().max(5000),
+});
+
 export const jobCreateApiSchema = z.object({
   company_name: z
     .string()
