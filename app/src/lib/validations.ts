@@ -118,8 +118,9 @@ export const createInterviewSessionSchema = z.object({
 
 export const submitInterviewAnswerSchema = z.object({
   question_id: z.string().min(1),
-  answer_text: z.string().max(10000),
+  answer_text: z.string().max(10000).optional(),
   audio_duration_sec: z.number().min(0).max(3600).optional(),
+  drill_down_question: z.string().max(2000).optional(),
   drill_down_answer: z.string().max(10000).optional(),
 });
 

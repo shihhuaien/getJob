@@ -112,6 +112,23 @@ export default function InterviewReport({
                     </p>
                   </div>
 
+                  {ans?.drill_down && (
+                    <div className="rounded-lg border border-amber-200 bg-amber-50/50 p-3">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
+                        {t("drillDownBannerTitle")}
+                      </p>
+                      <p className="mt-1 text-sm text-gray-800">
+                        {ans.drill_down.question}
+                      </p>
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        {t("yourAnswer")}
+                      </p>
+                      <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">
+                        {ans.drill_down.answer?.trim() || t("noAnswer")}
+                      </p>
+                    </div>
+                  )}
+
                   {fb && (
                     <>
                       <div>
