@@ -71,6 +71,8 @@ export default function OpenGraphImage() {
         </div>
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
             fontSize: 76,
             fontWeight: 700,
             color: "#3A3A3A",
@@ -79,12 +81,12 @@ export default function OpenGraphImage() {
             letterSpacing: "-0.02em",
           }}
         >
-          找到理想工作的
-          <br />
+          <span>找到理想工作的</span>
           <span style={{ color: "#688F79" }}>最短路徑</span>
         </div>
         <div
           style={{
+            display: "flex",
             marginTop: 32,
             fontSize: 30,
             color: "#6B7280",
