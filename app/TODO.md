@@ -1,7 +1,7 @@
 # TODO：Offery 待辦事項
 
 **最後更新**：2026-04-21
-**收費模式**：免費 + 訂閱制（Stripe，NT$299/月）
+**收費模式**：免費 + 訂閱制（Stripe，US$9.99/月）
 
 ---
 
@@ -104,7 +104,7 @@
 - [x] **修復 Middleware 路由保護漏洞**（見審查結果）
 - [x] **補充 Stripe webhook `subscription.updated` 處理**（見審查結果）
 - [x] 設定 Supabase 專案並執行 migration
-- [x] 設定 Stripe 產品與價格（Pro 方案 NT$299/月）
+- [x] 設定 Stripe 產品與價格（Pro 方案 US$9.99/月）
 - [x] 填入 `.env.local` 所有環境變數
 - [x] SECURITY DEFINER：`check_resume_limit(user_id)` — 免費方案履歷上限 3 份（migration 已建立，已部署）
 - [x] 設定頁「升級 Pro」按鈕串接 Stripe Checkout

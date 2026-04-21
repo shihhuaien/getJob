@@ -104,17 +104,22 @@
 
 ## Tech Stack
 
-| 領域        | 技術                               |
-| ----------- | ---------------------------------- |
-| 框架        | Next.js 16 (App Router)            |
-| 語言        | TypeScript (strict mode)           |
-| 樣式        | Tailwind CSS v4                    |
-| 後端/資料庫 | Supabase (Auth + PostgreSQL + RLS) |
-| 支付        | Stripe (Subscription)              |
-| 狀態管理    | Zustand                            |
-| 表單        | React Hook Form + Zod              |
-| 圖示        | Lucide React                       |
-| 部署        | Vercel                             |
+| 領域        | 技術                                                |
+| ----------- | --------------------------------------------------- |
+| 框架        | Next.js 16 (App Router)                             |
+| 語言        | TypeScript (strict mode)                            |
+| 樣式        | Tailwind CSS v4                                     |
+| 後端/資料庫 | Supabase (Auth + PostgreSQL + RLS + Storage)        |
+| 支付        | Stripe (Subscription)                               |
+| 狀態管理    | Zustand                                             |
+| 表單 / 驗證 | React Hook Form + Zod                               |
+| 多語系      | next-intl（zh-TW 預設、en）                         |
+| AI          | Google Generative AI SDK（`gemini-2.5-flash`）      |
+| 拖拉        | @dnd-kit                                            |
+| 動畫        | @lottiefiles/dotlottie-react（loading spinner）     |
+| 日期        | date-fns                                            |
+| 圖示        | Lucide React                                        |
+| 部署        | Vercel                                              |
 
 ---
 
@@ -191,23 +196,57 @@ npx supabase gen types typescript --local > src/types/database.ts
 
 ```
 src/
-├── app/                    # Next.js App Router
-│   ├── (auth)/            # 認證相關頁面（login, register）
-│   ├── (dashboard)/       # 登入後功能頁面（dashboard, jobs, resume, cover-letter, settings）
-│   └── api/               # API Routes（auth/callback, stripe/webhook, stripe/checkout）
+├── app/
+│   ├── [locale]/                    # 多語系根（zh-TW 預設、en）
+│   │   ├── (auth)/                  # login, register
+│   │   ├── (dashboard)/             # dashboard, jobs, resume, cover-letter, interview, analytics, settings
+│   │   ├── privacy/                 # 隱私權政策
+│   │   ├── terms/                   # 服務條款
+│   │   ├── error.tsx                # locale 層級錯誤邊界
+│   │   ├── not-found.tsx            # locale 層級 404
+│   │   └── layout.tsx               # html/body + NextIntlClientProvider + metadata
+│   ├── api/                         # account, auth, cover-letter, interview, jobs, profile, resume, stripe, tokens
+│   ├── icon.tsx                     # 32×32 favicon（ImageResponse 動態產生）
+│   ├── apple-icon.tsx               # 180×180
+│   ├── opengraph-image.tsx          # 1200×630 OG card
+│   ├── twitter-image.tsx
+│   ├── sitemap.ts                   # 動態 sitemap（多語系）
+│   ├── robots.ts
+│   ├── global-error.tsx             # 根層級錯誤（含 html/body）
+│   ├── not-found.tsx                # 根層級 404 fallback
+│   ├── globals.css                  # 品牌 CSS 變數 + 微擬物工具類
+│   └── layout.tsx                   # passthrough root layout
 ├── components/
-│   ├── ui/                # 通用 UI 元件
-│   ├── layout/            # 佈局元件（Navbar, Footer, DashboardSidebar）
-│   ├── landing/           # 首頁元件（Hero, Features, Pricing, CTA）
-│   └── dashboard/         # 儀表板元件（JobsBoard）
+│   ├── ui/                          # Button, Card, Input, LottieSpinner, LocaleSwitcher
+│   ├── layout/                      # Navbar, Footer, DashboardShell, DashboardSidebar
+│   ├── landing/                     # Hero, Features, Pricing, CTA
+│   ├── dashboard/                   # JobsBoard, JobDetail, ResumeEditor, CoverLetterEditor, Create/Upgrade/Cancel/Delete 等按鈕
+│   └── interview/                   # InterviewRunner, VoiceRecorder, RadarChart, QuestionBankList 等
+├── content/
+│   └── legal/                       # privacy / terms 的 zh-TW 與 en content 模組
+├── i18n/                            # next-intl 設定（routing, navigation, request）
 ├── lib/
-│   ├── supabase/          # Supabase 客戶端（client.ts, server.ts, middleware.ts）
-│   ├── stripe.ts          # Stripe 設定
-│   └── theme.ts           # 品牌設計系統常數（色彩、間距、陰影）
-├── store/                 # Zustand 狀態管理（auth.ts, jobs.ts）
-└── types/                 # TypeScript 型別定義（database.ts）
+│   ├── supabase/                    # client.ts, server.ts, middleware.ts
+│   ├── interview/                   # generate-questions / drill-down / hint / evaluate-session
+│   ├── auth/                        # verify-api-token
+│   ├── gemini.ts                    # Gemini client + withGeminiRetry（指數退避）
+│   ├── generate-cover-letter.ts
+│   ├── optimize-resume.ts
+│   ├── parse-job.ts
+│   ├── parse-resume-pdf.ts
+│   ├── stripe.ts
+│   ├── theme.ts                     # 品牌常數（色彩、間距、陰影）
+│   └── validations.ts               # Zod schemas
+├── store/                           # auth.ts, jobs.ts
+├── types/                           # database.ts, resume.ts, interview.ts
+└── middleware.ts                    # Supabase session + next-intl locale（matcher 排除靜態副檔名）
+messages/
+├── zh-TW.json
+└── en.json
+public/
+└── loading.lottie                   # Button loading 動畫資產
 supabase/
-└── migrations/            # SQL migration 檔案
+└── migrations/                      # SQL migration 檔案
 ```
 
 ---
@@ -225,6 +264,6 @@ supabase/
 ## Key Business Rules
 
 - **免費方案**：職缺追蹤無限、最多 3 份履歷、基本分析
-- **Pro 方案**：NT$299/月，無限 AI 功能、無限履歷、進階分析
+- **Pro 方案**：US$9.99/月（Stripe 月循環），無限 AI 功能、無限履歷、進階分析、AI 面試模擬
 - 訂閱狀態流程：`用戶購買 → Stripe → Webhook → Supabase DB 更新 → App 讀取 DB 判斷權限`
 - 訂閱狀態值：`free`（免費）、`pro`（訂閱中）
