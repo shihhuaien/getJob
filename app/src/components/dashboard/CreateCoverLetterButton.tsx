@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Sparkles, Loader2 } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 interface ResumeOption {
   id: string;
@@ -156,24 +157,25 @@ export default function CreateCoverLetterButton({
                 />
               </div>
               <div className="mt-4 flex gap-3">
-                <button
+                <Button
                   type="submit"
-                  disabled={isSubmitting || isGenerating}
-                  className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+                  loading={isSubmitting}
+                  disabled={isGenerating}
+                  variant="primary"
                 >
-                  {isSubmitting ? tc("creating") : t("createBlank")}
-                </button>
-                <button
+                  {t("createBlank")}
+                </Button>
+                <Button
                   type="button"
                   onClick={() => {
                     setShowForm(false);
                     resetState();
                   }}
                   disabled={isGenerating}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  variant="secondary"
                 >
                   {tc("cancel")}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -258,29 +260,17 @@ export default function CreateCoverLetterButton({
                   </p>
 
                   {/* 生成按鈕 */}
-                  <button
+                  <Button
                     type="button"
                     onClick={handleGenerate}
-                    disabled={
-                      !selectedJobId ||
-                      !selectedResumeId ||
-                      isGenerating ||
-                      isSubmitting
-                    }
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!selectedJobId || !selectedResumeId || isSubmitting}
+                    loading={isGenerating}
+                    variant="primary"
+                    leftIcon={<Sparkles className="h-4 w-4" />}
+                    className="w-full"
                   >
-                    {isGenerating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        {t("aiGenerating")}
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="h-4 w-4" />
-                        {t("aiGenerateBtn")}
-                      </>
-                    )}
-                  </button>
+                    {isGenerating ? t("aiGenerating") : t("aiGenerateBtn")}
+                  </Button>
                 </div>
               )}
             </div>

@@ -27,7 +27,11 @@ const navItems = [
   { href: "/settings" as const, labelKey: "settings" as const, icon: Settings },
 ];
 
-export default function DashboardSidebar() {
+export default function DashboardSidebar({
+  onNavigate,
+}: {
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations("nav");
@@ -35,11 +39,12 @@ export default function DashboardSidebar() {
   const handleLogout = async () => {
     const supabase = createClient();
     await supabase.auth.signOut();
+    onNavigate?.();
     router.push("/");
   };
 
   return (
-    <aside className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
+    <div className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
       <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-6">
         <Logo className="h-5 w-5 text-brand-600" />
         <span className="text-lg font-bold text-gray-900">Offery</span>
@@ -52,6 +57,7 @@ export default function DashboardSidebar() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={() => onNavigate?.()}
               className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
                   ? "bg-brand-50 text-brand-700"
@@ -77,6 +83,6 @@ export default function DashboardSidebar() {
           {t("logout")}
         </button>
       </div>
-    </aside>
+    </div>
   );
 }

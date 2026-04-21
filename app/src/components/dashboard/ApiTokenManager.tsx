@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Key, Copy, Check, Trash2, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 interface Token {
   id: string;
@@ -164,14 +165,15 @@ export default function ApiTokenManager() {
         )}
       </div>
 
-      <button
+      <Button
         onClick={handleCreate}
-        disabled={isCreating}
-        className="mt-4 inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+        loading={isCreating}
+        variant="secondary"
+        leftIcon={<Plus className="h-4 w-4" />}
+        className="mt-4"
       >
-        <Plus className="h-4 w-4" />
-        {isCreating ? tc("creating") : t("generateKey")}
-      </button>
+        {t("generateKey")}
+      </Button>
     </div>
   );
 }

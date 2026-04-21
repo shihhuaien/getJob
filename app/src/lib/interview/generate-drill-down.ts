@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "../gemini";
+import { getGemini, withGeminiRetry } from "../gemini";
 
 const responseSchema = z.object({
   should_drill_down: z.boolean(),
@@ -50,18 +50,20 @@ export async function generateDrillDown(
 ): Promise<string | null> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
   });
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(locale) },
-    {
-      text: `題目：${questionText}\n\n候選人回答：\n${answerText || "（空白或極短，候選人沒好好回答）"}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(locale) },
+      {
+        text: `題目：${questionText}\n\n候選人回答：\n${answerText || "（空白或極短，候選人沒好好回答）"}`,
+      },
+    ]),
+  );
 
   const rawText = result.response.text();
   const cleaned = rawText

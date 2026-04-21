@@ -82,20 +82,20 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-900">{tFooter("legal")}</h3>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link
-                  href="#"
+                <I18nLink
+                  href="/privacy"
                   className="text-sm text-gray-500 hover:text-gray-700"
                 >
                   {tFooter("privacy")}
-                </Link>
+                </I18nLink>
               </li>
               <li>
-                <Link
-                  href="#"
+                <I18nLink
+                  href="/terms"
                   className="text-sm text-gray-500 hover:text-gray-700"
                 >
                   {tFooter("terms")}
-                </Link>
+                </I18nLink>
               </li>
             </ul>
           </div>

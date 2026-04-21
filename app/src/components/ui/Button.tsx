@@ -1,4 +1,7 @@
+"use client";
+
 import { forwardRef } from "react";
+import dynamic from "next/dynamic";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "ghost" | "danger";
@@ -31,11 +34,15 @@ const sizeClass: Record<Size, string> = {
   lg: "h-12 px-6 py-3 text-base rounded-xl",
 };
 
-const Spinner = () => (
+const spinnerPx: Record<Size, number> = { sm: 16, md: 20, lg: 24 };
+
+const SvgSpinner = ({ size }: { size: number }) => (
   <svg
-    className="h-4 w-4 animate-spin"
+    width={size}
+    height={size}
     viewBox="0 0 24 24"
     fill="none"
+    className="animate-spin"
     aria-hidden="true"
   >
     <circle
@@ -54,6 +61,11 @@ const Spinner = () => (
     />
   </svg>
 );
+
+const LottieSpinner = dynamic(() => import("./LottieSpinner"), {
+  ssr: false,
+  loading: () => <SvgSpinner size={20} />,
+});
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
@@ -83,7 +95,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={classes}
         {...rest}
       >
-        {loading ? <Spinner /> : leftIcon}
+        {loading ? <LottieSpinner size={spinnerPx[size]} /> : leftIcon}
         {children}
         {!loading && rightIcon}
       </button>

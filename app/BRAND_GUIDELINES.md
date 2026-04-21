@@ -372,5 +372,5 @@ Dashboard 佈局：
 - [x] 所有現有頁面套用品牌色彩（indigo-600 → brand-600 鼠尾草綠）
 - [x] Landing Page 套用品牌背景色
 - [x] Dashboard 套用微擬物卡片樣式
-- [ ] Favicon + OG image 設計
+- [x] Favicon + OG image 設計（以 `next/og` `ImageResponse` 程式化產出）
 - [ ] Logo 正式版設計

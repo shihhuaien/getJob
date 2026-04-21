@@ -58,6 +58,7 @@ export default function RootNotFound() {
           >
             你造訪的頁面可能已移除或網址輸入錯誤。回首頁繼續掌握求職進度吧。
           </p>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/"
             style={{

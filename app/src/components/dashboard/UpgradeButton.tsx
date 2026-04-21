@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 export default function UpgradeButton() {
   const t = useTranslations("settings");
@@ -27,13 +28,9 @@ export default function UpgradeButton() {
 
   return (
     <div>
-      <button
-        onClick={handleUpgrade}
-        disabled={isLoading}
-        className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
-      >
-        {isLoading ? tc("loading") : t("upgradePro")}
-      </button>
+      <Button onClick={handleUpgrade} loading={isLoading} variant="primary">
+        {t("upgradePro")}
+      </Button>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );

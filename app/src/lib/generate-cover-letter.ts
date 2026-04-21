@@ -1,4 +1,4 @@
-import { getGemini } from "./gemini";
+import { getGemini, withGeminiRetry } from "./gemini";
 import { resumeToText } from "./optimize-resume";
 import type { ResumeContent } from "@/types/resume";
 
@@ -32,17 +32,19 @@ export async function generateCoverLetter(
 ): Promise<string> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
   });
 
   const resumeText = resumeToText(resumeContent);
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(locale) },
-    {
-      text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(locale) },
+      {
+        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
+      },
+    ]),
+  );
 
   return result.response.text().trim();
 }

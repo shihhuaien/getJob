@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 export default function CancelSubscriptionButton() {
   const router = useRouter();
@@ -32,12 +33,12 @@ export default function CancelSubscriptionButton() {
 
   if (!showConfirm) {
     return (
-      <button
+      <Button
         onClick={() => setShowConfirm(true)}
-        className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        variant="secondary"
       >
         {t("cancelSub")}
-      </button>
+      </Button>
     );
   }
 
@@ -47,23 +48,25 @@ export default function CancelSubscriptionButton() {
         {t("cancelConfirm")}
       </p>
       <div className="mt-3 flex gap-2">
-        <button
+        <Button
           onClick={handleCancel}
-          disabled={isLoading}
-          className="rounded-lg bg-amber-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-amber-700 transition-colors disabled:opacity-50"
+          loading={isLoading}
+          variant="danger"
+          size="sm"
         >
-          {isLoading ? tc("loading") : t("confirmCancel")}
-        </button>
-        <button
+          {t("confirmCancel")}
+        </Button>
+        <Button
           onClick={() => {
             setShowConfirm(false);
             setError(null);
           }}
           disabled={isLoading}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          variant="secondary"
+          size="sm"
         >
           {tc("back")}
-        </button>
+        </Button>
       </div>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>

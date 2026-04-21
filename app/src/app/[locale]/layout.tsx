@@ -57,20 +57,11 @@ export async function generateMetadata({
       title: t("title"),
       description: t("description"),
       locale: locale === "zh-TW" ? "zh_TW" : "en_US",
-      images: [
-        {
-          url: "/og-image.png",
-          width: 1200,
-          height: 630,
-          alt: t("ogAlt"),
-        },
-      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("title"),
       description: t("description"),
-      images: ["/og-image.png"],
     },
     robots: {
       index: true,
@@ -82,9 +73,6 @@ export async function generateMetadata({
         "max-snippet": -1,
         "max-video-preview": -1,
       },
-    },
-    icons: {
-      icon: "/favicon.ico",
     },
   };
 }

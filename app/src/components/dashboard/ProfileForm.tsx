@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 interface ProfileFormProps {
   email: string;
@@ -81,20 +82,22 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
               maxLength={100}
             />
             <div className="mt-3 flex gap-2">
-              <button
+              <Button
                 onClick={handleSave}
-                disabled={isLoading}
-                className="rounded-lg bg-brand-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+                loading={isLoading}
+                variant="primary"
+                size="sm"
               >
-                {isLoading ? tc("saving") : tc("save")}
-              </button>
-              <button
+                {tc("save")}
+              </Button>
+              <Button
                 onClick={handleCancel}
                 disabled={isLoading}
-                className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                variant="secondary"
+                size="sm"
               >
                 {tc("cancel")}
-              </button>
+              </Button>
             </div>
           </div>
         ) : (

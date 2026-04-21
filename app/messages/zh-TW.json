@@ -29,6 +29,12 @@
     "proRequired": "此功能需要 Pro 方案",
     "fileReadError": "讀取檔案失敗"
   },
+  "legal": {
+    "privacyTitle": "隱私權政策",
+    "termsTitle": "服務條款",
+    "lastUpdated": "最後更新：2026-04-21",
+    "contactEmail": "timshih@thdg.site"
+  },
   "notFound": {
     "code": "404",
     "title": "找不到這個頁面",
@@ -48,6 +54,7 @@
     "login": "登入",
     "register": "免費註冊",
     "toggleMenu": "切換選單",
+    "closeMenu": "關閉選單",
     "overview": "總覽",
     "jobs": "職缺追蹤",
     "resume": "履歷管理",

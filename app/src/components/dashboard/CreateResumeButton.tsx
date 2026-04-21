@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Plus, Sparkles, Upload, Loader2, FileText } from "lucide-react";
+import { Plus, Sparkles, Upload, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -176,24 +177,25 @@ export default function CreateResumeButton({
             {/* 方式一：空白建立 */}
             <form onSubmit={handleCreate}>
               <div className="mt-4 flex gap-3">
-                <button
+                <Button
                   type="submit"
-                  disabled={isSubmitting || isUploading}
-                  className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
+                  loading={isSubmitting}
+                  disabled={isUploading}
+                  variant="primary"
                 >
-                  {isSubmitting ? tc("creating") : t("createBlank")}
-                </button>
-                <button
+                  {t("createBlank")}
+                </Button>
+                <Button
                   type="button"
                   onClick={() => {
                     setShowForm(false);
                     resetState();
                   }}
                   disabled={isUploading}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  variant="secondary"
                 >
                   {tc("cancel")}
-                </button>
+                </Button>
               </div>
             </form>
 
@@ -270,24 +272,17 @@ export default function CreateResumeButton({
                   )}
 
                   {/* 上傳按鈕 */}
-                  <button
+                  <Button
                     type="button"
                     onClick={handlePdfUpload}
-                    disabled={!pdfFile || isUploading || isSubmitting}
-                    className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={!pdfFile || isSubmitting}
+                    loading={isUploading}
+                    variant="primary"
+                    leftIcon={<Sparkles className="h-4 w-4" />}
+                    className="mt-3 w-full"
                   >
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        {t("aiParsing")}
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="h-4 w-4" />
-                        {t("uploadAndParse")}
-                      </>
-                    )}
-                  </button>
+                    {isUploading ? t("aiParsing") : t("uploadAndParse")}
+                  </Button>
                 </div>
               )}
             </div>

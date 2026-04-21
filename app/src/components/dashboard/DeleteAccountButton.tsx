@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 export default function DeleteAccountButton() {
   const router = useRouter();
@@ -31,12 +32,12 @@ export default function DeleteAccountButton() {
 
   if (!showConfirm) {
     return (
-      <button
+      <Button
         onClick={() => setShowConfirm(true)}
-        className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+        variant="danger"
       >
         {t("deleteAccount")}
-      </button>
+      </Button>
     );
   }
 
@@ -56,24 +57,27 @@ export default function DeleteAccountButton() {
         placeholder={t("deleteAccountConfirmText")}
       />
       <div className="mt-3 flex gap-2">
-        <button
+        <Button
           onClick={handleDelete}
-          disabled={isLoading || confirmText !== t("deleteAccountConfirmText")}
-          className="rounded-lg bg-red-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-700 transition-colors disabled:opacity-50"
+          loading={isLoading}
+          disabled={confirmText !== t("deleteAccountConfirmText")}
+          variant="danger"
+          size="sm"
         >
-          {isLoading ? tc("deleting") : t("deleteAccountBtn")}
-        </button>
-        <button
+          {t("deleteAccountBtn")}
+        </Button>
+        <Button
           onClick={() => {
             setShowConfirm(false);
             setConfirmText("");
             setError(null);
           }}
           disabled={isLoading}
-          className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          variant="secondary"
+          size="sm"
         >
           {tc("cancel")}
-        </button>
+        </Button>
       </div>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>

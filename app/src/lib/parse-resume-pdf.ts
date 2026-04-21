@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "./gemini";
+import { getGemini, withGeminiRetry } from "./gemini";
 import type { ResumeContent } from "@/types/resume";
 
 const resumeResponseSchema = z.object({
@@ -87,21 +87,23 @@ export async function parseResumePdf(
 ): Promise<ResumeContent> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
   });
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(locale) },
-    {
-      inlineData: {
-        mimeType: "application/pdf",
-        data: base64Pdf,
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(locale) },
+      {
+        inlineData: {
+          mimeType: "application/pdf",
+          data: base64Pdf,
+        },
       },
-    },
-  ]);
+    ]),
+  );
 
   const responseText = result.response.text();
   const json = JSON.parse(responseText);

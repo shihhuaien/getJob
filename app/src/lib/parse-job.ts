@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "./gemini";
+import { getGemini, withGeminiRetry } from "./gemini";
 
 export interface ParsedJob {
   company_name: string;
@@ -46,16 +46,18 @@ function getSystemPrompt(locale?: string) {
 export async function parseJobDescription(text: string, locale?: string): Promise<ParsedJob> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
   });
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(locale) },
-    { text: `以下是職缺內容：\n\n${text}` },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(locale) },
+      { text: `以下是職缺內容：\n\n${text}` },
+    ]),
+  );
 
   const responseText = result.response.text();
   const json = JSON.parse(responseText);

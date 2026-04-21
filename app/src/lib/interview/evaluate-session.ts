@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "../gemini";
+import { getGemini, withGeminiRetry } from "../gemini";
 import { resumeToText } from "../optimize-resume";
 import type { ResumeContent } from "@/types/resume";
 import type {
@@ -145,7 +145,7 @@ export async function evaluateSession(
 ): Promise<InterviewReport> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
@@ -156,12 +156,14 @@ export async function evaluateSession(
     ? resumeToText(resumeContent)
     : "（未提供履歷）";
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(mode, locale) },
-    {
-      text: `職缺描述：\n${jobDescription}\n\n---\n\n候選人履歷：\n${resumeText}\n\n---\n\n面試逐題內容：\n${transcript}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(mode, locale) },
+      {
+        text: `職缺描述：\n${jobDescription}\n\n---\n\n候選人履歷：\n${resumeText}\n\n---\n\n面試逐題內容：\n${transcript}`,
+      },
+    ]),
+  );
 
   const rawText = result.response.text();
   const cleaned = stripMarkdownFence(rawText);

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "./gemini";
+import { getGemini, withGeminiRetry } from "./gemini";
 import type { ResumeContent } from "@/types/resume";
 
 export interface AtsAnalysis {
@@ -203,18 +203,20 @@ export async function generateOptimizedResume(
 ): Promise<ResumeContent> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
   });
 
-  const result = await model.generateContent([
-    { text: getGeneratePrompt(locale) },
-    {
-      text: `原始履歷：\n${JSON.stringify(resumeContent, null, 2)}\n\n---\n\n目標職缺描述：\n${jobDescription}\n\n---\n\nATS 分析結果：\n${JSON.stringify(analysis, null, 2)}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getGeneratePrompt(locale) },
+      {
+        text: `原始履歷：\n${JSON.stringify(resumeContent, null, 2)}\n\n---\n\n目標職缺描述：\n${jobDescription}\n\n---\n\nATS 分析結果：\n${JSON.stringify(analysis, null, 2)}`,
+      },
+    ]),
+  );
 
   const responseText = result.response.text();
   const json = JSON.parse(responseText);
@@ -242,7 +244,7 @@ export async function analyzeResume(
 ): Promise<AtsAnalysis> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
@@ -250,12 +252,14 @@ export async function analyzeResume(
 
   const resumeText = resumeToText(resumeContent);
 
-  const result = await model.generateContent([
-    { text: getAnalysisPrompt(locale) },
-    {
-      text: `以下是求職者的履歷：\n\n${resumeText}\n\n---\n\n以下是目標職缺描述：\n\n${jobDescription}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getAnalysisPrompt(locale) },
+      {
+        text: `以下是求職者的履歷：\n\n${resumeText}\n\n---\n\n以下是目標職缺描述：\n\n${jobDescription}`,
+      },
+    ]),
+  );
 
   const responseText = result.response.text();
   const json = JSON.parse(responseText);

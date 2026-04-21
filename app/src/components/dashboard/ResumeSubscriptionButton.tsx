@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/Button";
 
 export default function ResumeSubscriptionButton() {
   const router = useRouter();
@@ -30,13 +31,9 @@ export default function ResumeSubscriptionButton() {
 
   return (
     <div>
-      <button
-        onClick={handleResume}
-        disabled={isLoading}
-        className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
-      >
-        {isLoading ? tc("loading") : t("resumeSub")}
-      </button>
+      <Button onClick={handleResume} loading={isLoading} variant="primary">
+        {t("resumeSub")}
+      </Button>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
   );

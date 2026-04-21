@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "../gemini";
+import { getGemini, withGeminiRetry } from "../gemini";
 import { resumeToText } from "../optimize-resume";
 import type { ResumeContent } from "@/types/resume";
 import type {
@@ -106,7 +106,7 @@ export async function generateInterviewQuestions(
 ): Promise<InterviewQuestion[]> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
@@ -114,12 +114,14 @@ export async function generateInterviewQuestions(
 
   const resumeText = resumeToText(resumeContent);
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(persona, interviewType, locale) },
-    {
-      text: `目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}\n\n---\n\n求職者履歷：\n${resumeText}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(persona, interviewType, locale) },
+      {
+        text: `目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}\n\n---\n\n求職者履歷：\n${resumeText}`,
+      },
+    ]),
+  );
 
   const responseText = result.response.text();
   const json = JSON.parse(responseText);

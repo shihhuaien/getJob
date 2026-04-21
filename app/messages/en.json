@@ -29,6 +29,12 @@
     "proRequired": "This feature requires a Pro plan",
     "fileReadError": "Failed to read file"
   },
+  "legal": {
+    "privacyTitle": "Privacy Policy",
+    "termsTitle": "Terms of Service",
+    "lastUpdated": "Last updated: 2026-04-21",
+    "contactEmail": "timshih@thdg.site"
+  },
   "notFound": {
     "code": "404",
     "title": "Page not found",
@@ -48,6 +54,7 @@
     "login": "Login",
     "register": "Sign Up Free",
     "toggleMenu": "Toggle menu",
+    "closeMenu": "Close menu",
     "overview": "Overview",
     "jobs": "Job Tracker",
     "resume": "Resumes",

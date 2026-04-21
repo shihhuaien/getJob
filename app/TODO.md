@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-13
+**最後更新**：2026-04-21
 **收費模式**：免費 + 訂閱制（Stripe，NT$299/月）
 
 ---
@@ -180,11 +180,11 @@
 - [x] Landing Page SEO 優化（meta tags, OG image, sitemap.xml）
 - [x] 404 / 500 錯誤頁面
 - [x] Loading skeleton / spinner
-- [ ] 響應式微調（平板尺寸、手機尺寸）- 左側功能欄位收折
-- [ ] Favicon + OG image 設計
-- [ ] 隱私權政策頁面
-- [ ] 服務條款頁面
-- [ ] 新增 loading 動畫，結合進 button
+- [x] 響應式微調（平板尺寸、手機尺寸）- 左側功能欄位收折
+- [x] Favicon + OG image 設計
+- [x] 隱私權政策頁面
+- [x] 服務條款頁面
+- [x] 新增 loading 動畫，結合進 button
 
 ---
 
@@ -232,6 +232,6 @@
 
 ### 其他
 
-- [ ] 撰寫隱私權政策（獨立網頁部署）
-- [ ] 撰寫服務條款
-- [ ] 設計 Logo / Favicon / OG image
+- [x] 撰寫隱私權政策
+- [x] 撰寫服務條款
+- [x] 設計 Logo / Favicon / OG image（程式化以 `ImageResponse` 產出，未來可換正式版）

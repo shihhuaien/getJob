@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getGemini } from "../gemini";
+import { getGemini, withGeminiRetry } from "../gemini";
 
 export interface StarHint {
   situation: string;
@@ -53,18 +53,20 @@ export async function generateStarHint(
 ): Promise<StarHint> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
-    model: process.env.GEMINI_MODEL || "gemini-2.0-flash",
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
     },
   });
 
-  const result = await model.generateContent([
-    { text: getSystemPrompt(locale) },
-    {
-      text: `題目：${questionText}\n\n候選人目前草稿：\n${currentAnswer || "（尚未輸入）"}`,
-    },
-  ]);
+  const result = await withGeminiRetry(() =>
+    model.generateContent([
+      { text: getSystemPrompt(locale) },
+      {
+        text: `題目：${questionText}\n\n候選人目前草稿：\n${currentAnswer || "（尚未輸入）"}`,
+      },
+    ]),
+  );
 
   const rawText = result.response.text();
   const cleaned = rawText
