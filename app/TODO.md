@@ -171,61 +171,39 @@
 
 ## 🟢 低優先（上線前完成即可）
 
-- [ ] 品牌套用：所有現有頁面套用品牌色彩（替換 indigo-600 → 品牌主色 #5B6ABF）
-- [ ] 品牌套用：Dashboard 卡片套用微擬物陰影（shadow-neu）
-- [ ] 品牌套用：Landing Page 背景套用暖奶白（#FAF8F5）
-- [ ] 封裝 UI 元件：Button（主要/次要/文字/危險）
-- [ ] 封裝 UI 元件：Card（微擬物卡片）
-- [ ] 封裝 UI 元件：Input（微凹陷輸入框）
-- [ ] Landing Page SEO 優化（meta tags, OG image, sitemap.xml）
-- [ ] 404 / 500 錯誤頁面
-- [ ] Loading skeleton / spinner
+- [x] 品牌套用：所有現有頁面套用品牌色彩（indigo-600 → brand-600 鼠尾草綠 #688F79）
+- [x] 品牌套用：Dashboard 卡片套用微擬物陰影（shadow-neu）
+- [x] 品牌套用：Landing Page 背景套用暖奶白（#FCFBF9）
+- [x] 封裝 UI 元件：Button（主要/次要/文字/危險）
+- [x] 封裝 UI 元件：Card（微擬物卡片）
+- [x] 封裝 UI 元件：Input（微凹陷輸入框）
+- [x] Landing Page SEO 優化（meta tags, OG image, sitemap.xml）
+- [x] 404 / 500 錯誤頁面
+- [x] Loading skeleton / spinner
 - [ ] 響應式微調（平板尺寸、手機尺寸）- 左側功能欄位收折
 - [ ] Favicon + OG image 設計
 - [ ] 隱私權政策頁面
 - [ ] 服務條款頁面
-
----
-
-## 🗺️ 未來版本路線圖
-
-### v1.1（上線後 1 個月）
-
-- 履歷編輯器 + PDF 匯出
-- 求職信編輯器
-- 人脈管理 CRM
-- 數據分析圖表
-
-### v2.0（上線後 3 個月）
-
-- AI 履歷優化 + ATS 評分
-- AI 求職信生成器
-- 職缺描述智慧解析
-
-### v3.0（上線後 6 個月）
-
-- Chrome 擴充套件
-- AI 面試模擬
-- 多語言支援
+- [ ] 新增 loading 動畫，結合進 button
 
 ---
 
 ## 畫面開發進度
 
-| 畫面         | 路徑            | 狀態                        |
-| ------------ | --------------- | --------------------------- |
-| Landing Page | `/`             | ✅ 完成                     |
-| 登入         | `/login`        | ✅ 完成                     |
-| 註冊         | `/register`     | ✅ 完成                     |
-| Dashboard    | `/dashboard`    | ✅ 完成                     |
-| 職缺追蹤     | `/jobs`         | ✅ 基本完成（缺拖拉、搜尋） |
-| 履歷管理     | `/resume`       | ✅ 完成                     |
-| 求職信       | `/cover-letter` | ✅ 完成                     |
-| 設定         | `/settings`     | ✅ 完成                     |
-| 數據分析     | `/analytics`    | ✅ 完成                     |
-| AI 面試模擬  | `/interview`    | ✅ 完成                     |
-| 個人題庫     | `/interview/bank` | ✅ 完成                   |
-| 人脈管理     | `/contacts`     | ⬜ 未開始                   |
+| 畫面         | 路徑              | 狀態                        |
+| ------------ | ----------------- | --------------------------- |
+| Landing Page | `/`               | ✅ 完成                     |
+| 登入         | `/login`          | ✅ 完成                     |
+| 註冊         | `/register`       | ✅ 完成                     |
+| Dashboard    | `/dashboard`      | ✅ 完成                     |
+| 職缺追蹤     | `/jobs`           | ✅ 基本完成（缺拖拉、搜尋） |
+| 履歷管理     | `/resume`         | ✅ 完成                     |
+| 求職信       | `/cover-letter`   | ✅ 完成                     |
+| 設定         | `/settings`       | ✅ 完成                     |
+| 數據分析     | `/analytics`      | ✅ 完成                     |
+| AI 面試模擬  | `/interview`      | ✅ 完成                     |
+| 個人題庫     | `/interview/bank` | ✅ 完成                     |
+| 人脈管理     | `/contacts`       | ⬜ 未開始                   |
 
 ---
 

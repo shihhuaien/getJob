@@ -122,7 +122,7 @@ export default async function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+            className="rounded-2xl bg-white p-6 shadow-neu"
           >
             <div className="flex items-center gap-4">
               <div
@@ -142,7 +142,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-gray-900">{t("quickActions")}</h2>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Link
@@ -166,7 +166,7 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-gray-900">{t("recentActivity")}</h2>
           {recentJobs && recentJobs.length > 0 ? (
             <div className="mt-4 space-y-3">

@@ -70,7 +70,7 @@ export default async function CoverLetterPage() {
             <Link
               href={`/cover-letter/${letter.id}`}
               key={letter.id}
-              className="block rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow"
+              className="block rounded-2xl bg-white p-6 shadow-neu hover:shadow-neu-hover transition-shadow"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">

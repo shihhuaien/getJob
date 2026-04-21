@@ -29,6 +29,19 @@
     "proRequired": "此功能需要 Pro 方案",
     "fileReadError": "讀取檔案失敗"
   },
+  "notFound": {
+    "code": "404",
+    "title": "找不到這個頁面",
+    "description": "你造訪的頁面可能已移除或網址輸入錯誤。回首頁繼續掌握求職進度吧。",
+    "backHome": "返回首頁"
+  },
+  "errorPage": {
+    "code": "500",
+    "title": "伺服器出了點狀況",
+    "description": "我們已記錄這次錯誤，請稍後再試。如果一直遇到，請聯絡我們。",
+    "retry": "重試",
+    "backHome": "返回首頁"
+  },
   "nav": {
     "features": "功能特色",
     "pricing": "方案價格",
@@ -360,7 +373,11 @@
   },
   "metadata": {
     "title": "Offery - 智慧求職平台",
-    "description": "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 58%。"
+    "titleTemplate": "%s｜Offery",
+    "description": "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 58%。",
+    "keywords": "求職, AI 履歷, 職缺追蹤, 面試準備, 求職管理, Offery, 履歷優化, ATS, 求職信",
+    "ogAlt": "Offery — 智慧求職平台",
+    "siteName": "Offery"
   },
   "interview": {
     "title": "AI 面試模擬",

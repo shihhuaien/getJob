@@ -29,6 +29,19 @@
     "proRequired": "This feature requires a Pro plan",
     "fileReadError": "Failed to read file"
   },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "description": "The page you were looking for may have been moved or the URL is incorrect. Head back home to keep tracking your job search.",
+    "backHome": "Back to home"
+  },
+  "errorPage": {
+    "code": "500",
+    "title": "Something went wrong",
+    "description": "We've logged the issue. Please try again in a moment — if it keeps happening, let us know.",
+    "retry": "Try again",
+    "backHome": "Back to home"
+  },
   "nav": {
     "features": "Features",
     "pricing": "Pricing",
@@ -360,7 +373,11 @@
   },
   "metadata": {
     "title": "Offery - Smart Job Search Platform",
-    "description": "AI-powered job search tool. Track applications, optimize resumes, prepare for interviews — boost your job search efficiency by 58%."
+    "titleTemplate": "%s | Offery",
+    "description": "AI-powered job search tool. Track applications, optimize resumes, prepare for interviews — boost your job search efficiency by 58%.",
+    "keywords": "job search, AI resume, application tracker, interview prep, job hunt, Offery, resume optimizer, ATS, cover letter",
+    "ogAlt": "Offery — Smart Job Search Platform",
+    "siteName": "Offery"
   },
   "interview": {
     "title": "AI Interview Simulator",

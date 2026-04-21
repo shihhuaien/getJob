@@ -113,7 +113,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {isEmpty ? (
-        <div className="flex flex-col items-center justify-center rounded-xl bg-white p-12 shadow-sm ring-1 ring-gray-200">
+        <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 shadow-neu">
           <BarChart3 className="h-12 w-12 text-gray-300" />
           <p className="mt-4 text-sm text-gray-400">
             {t("noData")}
@@ -124,7 +124,7 @@ export default async function AnalyticsPage() {
           {/* 第一排：狀態分佈 + 轉換漏斗 */}
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* 狀態分佈 */}
-            <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+            <div className="rounded-2xl bg-white p-6 shadow-neu">
               <h2 className="text-lg font-semibold text-gray-900">{t("statusDistribution")}</h2>
               <p className="mt-1 text-xs text-gray-500">
                 {t("totalJobs", { total })}
@@ -158,7 +158,7 @@ export default async function AnalyticsPage() {
             </div>
 
             {/* 轉換漏斗 */}
-            <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+            <div className="rounded-2xl bg-white p-6 shadow-neu">
               <h2 className="text-lg font-semibold text-gray-900">{t("conversionRate")}</h2>
               <p className="mt-1 text-xs text-gray-500">
                 {t("conversionDesc")}
@@ -198,7 +198,7 @@ export default async function AnalyticsPage() {
           </div>
 
           {/* 第二排：每週活動時間軸 */}
-          <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+          <div className="rounded-2xl bg-white p-6 shadow-neu">
             <h2 className="text-lg font-semibold text-gray-900">{t("weeklyActivity")}</h2>
             <p className="mt-1 text-xs text-gray-500">
               {t("weeklyActivityDesc")}

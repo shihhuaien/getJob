@@ -8,7 +8,7 @@ export default function CTASection() {
   const t = useTranslations("landing");
 
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-[var(--color-bg)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-brand-600 px-6 py-16 text-center sm:px-12 lg:px-20">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">

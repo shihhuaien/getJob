@@ -364,13 +364,13 @@ Dashboard 佈局：
 
 ## 十、設計 Checklist
 
-- [ ] `globals.css` 加入品牌 CSS 變數與微擬物工具類
-- [ ] `src/lib/theme.ts` 建立 Theme 常數檔
-- [ ] `src/components/ui/Button.tsx` 封裝品牌按鈕
-- [ ] `src/components/ui/Card.tsx` 封裝微擬物卡片
-- [ ] `src/components/ui/Input.tsx` 封裝微擬物輸入框
+- [x] `globals.css` 加入品牌 CSS 變數與微擬物工具類
+- [x] `src/lib/theme.ts` 建立 Theme 常數檔
+- [x] `src/components/ui/Button.tsx` 封裝品牌按鈕
+- [x] `src/components/ui/Card.tsx` 封裝微擬物卡片
+- [x] `src/components/ui/Input.tsx` 封裝微擬物輸入框
 - [x] 所有現有頁面套用品牌色彩（indigo-600 → brand-600 鼠尾草綠）
 - [x] Landing Page 套用品牌背景色
-- [ ] Dashboard 套用微擬物卡片樣式
+- [x] Dashboard 套用微擬物卡片樣式
 - [ ] Favicon + OG image 設計
 - [ ] Logo 正式版設計

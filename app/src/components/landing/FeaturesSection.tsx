@@ -23,7 +23,7 @@ export default function FeaturesSection() {
   const t = useTranslations("landing");
 
   return (
-    <section id="features" className="bg-white py-20 sm:py-28">
+    <section id="features" className="bg-[var(--color-bg)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -38,7 +38,7 @@ export default function FeaturesSection() {
           {featureKeys.map((feature) => (
             <div
               key={feature.titleKey}
-              className="group rounded-xl border border-gray-200 p-6 transition-all hover:border-brand-200 hover:shadow-md"
+              className="group rounded-2xl bg-white p-6 shadow-neu transition-all hover:shadow-neu-hover"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-100 text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors">
                 <feature.icon className="h-6 w-6" />

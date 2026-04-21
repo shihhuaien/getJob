@@ -9,7 +9,7 @@ export default function HeroSection() {
   const t = useTranslations("landing");
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-white">
+    <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-[var(--color-bg)] to-[var(--color-bg)]">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-100/50 blur-3xl" />

@@ -57,7 +57,7 @@ export default async function SettingsPage() {
 
       <div className="space-y-6">
         {/* Profile section */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-gray-900">{t("profile")}</h2>
           <div className="mt-4">
             <ProfileForm
@@ -68,7 +68,7 @@ export default async function SettingsPage() {
         </div>
 
         {/* Subscription section */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+        <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-gray-900">{t("subscription")}</h2>
           <div className="mt-4">
             <div className="flex items-center justify-between">
@@ -103,7 +103,7 @@ export default async function SettingsPage() {
         <ApiTokenManager />
 
         {/* Danger zone */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-red-200">
+        <div className="rounded-2xl bg-white p-6 shadow-neu ring-1 ring-red-200">
           <h2 className="text-lg font-semibold text-red-600">{t("dangerZone")}</h2>
           <div className="mt-4">
             <div className="flex items-center justify-between">
