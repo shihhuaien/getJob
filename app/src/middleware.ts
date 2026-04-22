@@ -34,6 +34,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|lottie|json|txt|xml)$).*)",
+    // 排除 Next.js metadata routes（icon / apple-icon / opengraph-image / twitter-image），
+    // 避免 next-intl 將其重導到 /zh-TW/icon 等不存在路徑，導致瀏覽器 favicon 回退成灰色地球。
+    "/((?!_next/static|_next/image|favicon.ico|icon|apple-icon|opengraph-image|twitter-image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|lottie|json|txt|xml)$).*)",
   ],
 };
