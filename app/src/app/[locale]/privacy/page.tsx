@@ -19,10 +19,10 @@ export default async function PrivacyPage({
       <main className="flex-1 bg-[var(--color-bg)] py-16 sm:py-20">
         <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <header className="mb-8">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-4xl font-bold tracking-tight text-text">
               {t("privacyTitle")}
             </h1>
-            <p className="mt-2 text-sm text-gray-500">{t("lastUpdated")}</p>
+            <p className="mt-2 text-sm text-text-light">{t("lastUpdated")}</p>
           </header>
           <div className="rounded-2xl bg-white p-6 shadow-neu sm:p-10">
             <Body />

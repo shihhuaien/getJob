@@ -74,12 +74,12 @@ export default function ApiTokenManager() {
   };
 
   return (
-    <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+    <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
       <div className="flex items-center gap-2">
-        <Key className="h-5 w-5 text-gray-600" />
-        <h2 className="text-lg font-semibold text-gray-900">{t("apiKeys")}</h2>
+        <Key className="h-5 w-5 text-text-light" />
+        <h2 className="text-lg font-semibold text-text">{t("apiKeys")}</h2>
       </div>
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-text-light">
         {t("apiKeysDesc")}
       </p>
 
@@ -96,12 +96,12 @@ export default function ApiTokenManager() {
             {t("keyGenerated")}
           </p>
           <div className="mt-2 flex items-center gap-2">
-            <code className="flex-1 overflow-x-auto rounded bg-white px-3 py-2 text-xs text-gray-800 ring-1 ring-gray-200">
+            <code className="flex-1 overflow-x-auto rounded bg-white px-3 py-2 text-xs text-text ring-1 ring-brand-100">
               {newToken}
             </code>
             <button
               onClick={handleCopy}
-              className="rounded-lg border border-gray-300 p-2 text-gray-600 hover:bg-gray-50 transition-colors"
+              className="rounded-lg border border-brand-200 p-2 text-text-light hover:bg-[color:var(--color-bg)] transition-colors"
             >
               {copied ? (
                 <Check className="h-4 w-4 text-green-600" />
@@ -122,21 +122,21 @@ export default function ApiTokenManager() {
       {/* Token 列表 */}
       <div className="mt-4">
         {isLoading ? (
-          <p className="text-sm text-gray-400">{tc("loading")}</p>
+          <p className="text-sm text-text-placeholder">{tc("loading")}</p>
         ) : tokens.length === 0 ? (
-          <p className="text-sm text-gray-400">{t("noKeys")}</p>
+          <p className="text-sm text-text-placeholder">{t("noKeys")}</p>
         ) : (
           <div className="space-y-2">
             {tokens.map((token) => (
               <div
                 key={token.id}
-                className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3"
+                className="flex items-center justify-between rounded-lg border border-brand-100 px-4 py-3"
               >
                 <div>
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-text">
                     {token.name}
                   </p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-text-light">
                     {t("createdAt", {
                       date: new Date(token.created_at).toLocaleDateString("zh-TW"),
                     })}
@@ -155,7 +155,7 @@ export default function ApiTokenManager() {
                 </div>
                 <button
                   onClick={() => handleDelete(token.id)}
-                  className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                  className="rounded-lg p-1.5 text-text-placeholder hover:bg-red-50 hover:text-red-600 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

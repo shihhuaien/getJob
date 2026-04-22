@@ -14,8 +14,8 @@ export default async function LocaleNotFound() {
         <p className="mt-6 text-sm font-semibold tracking-widest text-brand-600">
           {t("code")}
         </p>
-        <h1 className="mt-2 text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="mt-3 text-sm leading-6 text-gray-600">
+        <h1 className="mt-2 text-2xl font-bold text-text">{t("title")}</h1>
+        <p className="mt-3 text-sm leading-6 text-text-light">
           {t("description")}
         </p>
         <Link

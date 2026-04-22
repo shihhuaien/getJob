@@ -137,21 +137,21 @@ export default function CreateCoverLetterButton({
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">{t("addCoverLetter")}</h3>
+            <h3 className="text-lg font-semibold text-text">{t("addCoverLetter")}</h3>
 
             {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
             {/* 方式一：空白建立 */}
             <form onSubmit={handleCreate}>
               <div className="mt-4">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-text">
                   {t("coverLetterTitle")}
                 </label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   placeholder={t("titlePlaceholder")}
                   disabled={isSubmitting || isGenerating}
                 />
@@ -182,16 +182,16 @@ export default function CreateCoverLetterButton({
             {/* 分隔線 */}
             <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-brand-100" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-gray-400">{tc("or")}</span>
+                <span className="bg-white px-3 text-text-placeholder">{tc("or")}</span>
               </div>
             </div>
 
             {/* 方式二：AI 生成 */}
-            <div className="rounded-lg border border-dashed border-gray-300 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <div className="rounded-lg border border-dashed border-brand-200 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-text">
                 <Sparkles className="h-4 w-4 text-brand-600" />
                 {t("aiGenerate")}
                 {!isPro && (
@@ -200,26 +200,26 @@ export default function CreateCoverLetterButton({
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-text-light">
                 {t("aiGenerateDesc")}
               </p>
 
               {!isPro ? (
-                <p className="mt-3 text-xs text-gray-400">
+                <p className="mt-3 text-xs text-text-placeholder">
                   {tc("proUpgrade")}
                 </p>
               ) : (
                 <div className="mt-3 space-y-3">
                   {/* 職缺選擇 */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600">
+                    <label className="block text-xs font-medium text-text-light">
                       {t("selectJob")}
                     </label>
                     <select
                       value={selectedJobId}
                       onChange={(e) => setSelectedJobId(e.target.value)}
                       disabled={isGenerating || isSubmitting}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
                     >
                       <option value="">{t("selectJobPlaceholder")}</option>
                       {jobs.map((job) => (
@@ -237,14 +237,14 @@ export default function CreateCoverLetterButton({
 
                   {/* 履歷選擇 */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-600">
+                    <label className="block text-xs font-medium text-text-light">
                       {t("selectResume")}
                     </label>
                     <select
                       value={selectedResumeId}
                       onChange={(e) => setSelectedResumeId(e.target.value)}
                       disabled={isGenerating || isSubmitting}
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
                     >
                       <option value="">{t("selectResumePlaceholder")}</option>
                       {resumes.map((resume) => (
@@ -255,7 +255,7 @@ export default function CreateCoverLetterButton({
                     </select>
                   </div>
 
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-text-placeholder">
                     {tc("aiDisclaimer")}
                   </p>
 

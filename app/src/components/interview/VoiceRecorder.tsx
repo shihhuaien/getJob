@@ -167,7 +167,7 @@ export default function VoiceRecorder({ locale, onAppend }: Props) {
         )}
       </div>
       {interim && (
-        <p className="text-xs italic text-gray-500">
+        <p className="text-xs italic text-text-light">
           {t("interimPrefix")} {interim}
         </p>
       )}

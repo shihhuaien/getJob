@@ -40,7 +40,7 @@ function ScoreRing({ score }: { score: number }) {
           fill="none"
           stroke="currentColor"
           strokeWidth="8"
-          className="text-gray-200"
+          className="text-text-placeholder"
         />
         <circle
           cx="60"
@@ -57,7 +57,7 @@ function ScoreRing({ score }: { score: number }) {
       </svg>
       <div className="absolute flex flex-col items-center">
         <span className={`text-3xl font-bold ${color}`}>{score}</span>
-        <span className="text-xs text-gray-500">/ 100</span>
+        <span className="text-xs text-text-light">/ 100</span>
       </div>
     </div>
   );
@@ -159,16 +159,16 @@ export default function ResumeOptimizeModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-white shadow-xl">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4 rounded-t-xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-brand-100 bg-white px-6 py-4 rounded-t-xl">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand-600" />
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-text">
               {t("optimizeTitle")}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-1 text-text-placeholder hover:bg-brand-50 hover:text-text-light"
           >
             <X className="h-5 w-5" />
           </button>
@@ -184,12 +184,12 @@ export default function ResumeOptimizeModal({
           {/* Step 1: 選擇職缺 */}
           {step === "select" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("selectJob")}
               </label>
               {jobs.length === 0 ? (
-                <div className="mt-4 rounded-lg bg-gray-50 p-6 text-center">
-                  <p className="text-sm text-gray-500">
+                <div className="mt-4 rounded-lg bg-[color:var(--color-bg)] p-6 text-center">
+                  <p className="text-sm text-text-light">
                     {t("noJobs")}
                   </p>
                 </div>
@@ -197,7 +197,7 @@ export default function ResumeOptimizeModal({
                 <select
                   value={selectedJobId}
                   onChange={(e) => setSelectedJobId(e.target.value)}
-                  className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-2 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
                   <option value="">{t("selectJobPlaceholder")}</option>
                   {jobs.map((job) => (
@@ -215,7 +215,7 @@ export default function ResumeOptimizeModal({
               <div className="mt-6 flex justify-end gap-3">
                 <button
                   onClick={onClose}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
                 >
                   {tc("cancel")}
                 </button>
@@ -235,10 +235,10 @@ export default function ResumeOptimizeModal({
           {step === "loading" && (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
-              <p className="mt-3 text-sm text-gray-500">
+              <p className="mt-3 text-sm text-text-light">
                 {t("analyzing")}
               </p>
-              <p className="mt-1 text-xs text-gray-400">
+              <p className="mt-1 text-xs text-text-placeholder">
                 {t("analyzingNote")}
               </p>
             </div>
@@ -248,10 +248,10 @@ export default function ResumeOptimizeModal({
           {step === "result" && analysis && (
             <div className="space-y-6">
               {/* ATS 分數 */}
-              <div className="flex flex-col items-center gap-2 rounded-xl bg-gray-50 py-6">
+              <div className="flex flex-col items-center gap-2 rounded-xl bg-[color:var(--color-bg)] py-6">
                 <ScoreRing score={analysis.score} />
                 <ScoreLabel score={analysis.score} />
-                <p className="mt-2 max-w-md text-center text-sm text-gray-600">
+                <p className="mt-2 max-w-md text-center text-sm text-text-light">
                   {analysis.summary}
                 </p>
               </div>
@@ -311,7 +311,7 @@ export default function ResumeOptimizeModal({
               <div>
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-amber-600" />
-                  <h4 className="text-sm font-semibold text-gray-900">
+                  <h4 className="text-sm font-semibold text-text">
                     {t("suggestions")}
                   </h4>
                 </div>
@@ -319,12 +319,12 @@ export default function ResumeOptimizeModal({
                   {analysis.suggestions.map((s, i) => (
                     <div
                       key={i}
-                      className="rounded-lg border border-gray-200 bg-white p-4"
+                      className="rounded-lg border border-brand-100 bg-white p-4"
                     >
-                      <span className="inline-block rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                      <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-text-light">
                         {sectionKeys[s.section] ? t(sectionKeys[s.section] as "sectionSummary" | "sectionExperience" | "sectionSkills" | "sectionEducation" | "sectionGeneral") : s.section}
                       </span>
-                      <p className="mt-2 text-sm text-gray-700">
+                      <p className="mt-2 text-sm text-text">
                         {s.suggestion}
                       </p>
                     </div>
@@ -332,7 +332,7 @@ export default function ResumeOptimizeModal({
                 </div>
               </div>
 
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-text-placeholder">
                 {tc("aiDisclaimer")}
               </p>
 
@@ -341,7 +341,7 @@ export default function ResumeOptimizeModal({
                 <button
                   onClick={onClose}
                   disabled={isGenerating}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
                 >
                   {tc("close")}
                 </button>

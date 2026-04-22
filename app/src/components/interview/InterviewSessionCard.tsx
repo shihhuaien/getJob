@@ -61,21 +61,21 @@ export default function InterviewSessionCard({
   };
 
   return (
-    <div className="group relative rounded-xl bg-white shadow-sm ring-1 ring-gray-200 hover:shadow-md transition-shadow">
+    <div className="group relative rounded-xl bg-white shadow-sm ring-1 ring-brand-100 hover:shadow-md transition-shadow">
       <Link href={href} className="block p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1 pr-8">
-            <h3 className="truncate text-sm font-semibold text-gray-900">
+            <h3 className="truncate text-sm font-semibold text-text">
               {job?.company_name ?? t("unknownCompany")}
             </h3>
-            <p className="mt-0.5 truncate text-xs text-gray-500">
+            <p className="mt-0.5 truncate text-xs text-text-light">
               {job?.job_title ?? t("unknownJob")}
             </p>
             <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs">
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
+              <span className="rounded-full bg-brand-50 px-2 py-0.5 text-text">
                 {t(`persona_${persona}` as "persona_hr_friendly")}
               </span>
-              <span className="rounded-full bg-gray-100 px-2 py-0.5 text-gray-700">
+              <span className="rounded-full bg-brand-50 px-2 py-0.5 text-text">
                 {t(`type_${interviewType}` as "type_behavioral")}
               </span>
               <span
@@ -88,7 +88,7 @@ export default function InterviewSessionCard({
                 {t(`status_${status}` as "status_completed")}
               </span>
             </div>
-            <p className="mt-2 text-xs text-gray-400">
+            <p className="mt-2 text-xs text-text-placeholder">
               {new Date(createdAt).toLocaleString()}
             </p>
           </div>
@@ -105,7 +105,7 @@ export default function InterviewSessionCard({
               >
                 {overall}
               </span>
-              <span className="text-[10px] text-gray-400">/ 100</span>
+              <span className="text-[10px] text-text-placeholder">/ 100</span>
             </div>
           )}
         </div>
@@ -118,7 +118,7 @@ export default function InterviewSessionCard({
           e.stopPropagation();
           setShowConfirm(true);
         }}
-        className="absolute right-2 top-2 rounded-lg p-1.5 text-gray-400 opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 transition-opacity"
+        className="absolute right-2 top-2 rounded-lg p-1.5 text-text-placeholder opacity-0 hover:bg-red-50 hover:text-red-600 group-hover:opacity-100 transition-opacity"
         aria-label={tc("delete")}
       >
         <Trash2 className="h-4 w-4" />
@@ -126,7 +126,7 @@ export default function InterviewSessionCard({
 
       {showConfirm && (
         <div className="absolute inset-0 z-10 flex flex-col justify-center rounded-xl bg-white/95 p-5">
-          <p className="text-sm text-gray-800">{t("deleteConfirm")}</p>
+          <p className="text-sm text-text">{t("deleteConfirm")}</p>
           {error && (
             <p className="mt-2 text-xs text-red-600">{error}</p>
           )}
@@ -153,7 +153,7 @@ export default function InterviewSessionCard({
                 setError(null);
               }}
               disabled={isDeleting}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
             >
               {tc("cancel")}
             </button>

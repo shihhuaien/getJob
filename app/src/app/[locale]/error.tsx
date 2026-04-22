@@ -21,14 +21,14 @@ export default function LocaleError({
   return (
     <main className="flex flex-1 items-center justify-center bg-[var(--color-bg)] px-4 py-16">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-neu text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-[#FCEAEA] text-[#D96B6B]">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-error/10 text-error">
           <AlertTriangle className="h-8 w-8" />
         </div>
-        <p className="mt-6 text-sm font-semibold tracking-widest text-[#D96B6B]">
+        <p className="mt-6 text-sm font-semibold tracking-widest text-error">
           {t("code")}
         </p>
-        <h1 className="mt-2 text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="mt-3 text-sm leading-6 text-gray-600">
+        <h1 className="mt-2 text-2xl font-bold text-text">{t("title")}</h1>
+        <p className="mt-3 text-sm leading-6 text-text-light">
           {t("description")}
         </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

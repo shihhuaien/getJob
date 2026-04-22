@@ -79,7 +79,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/cover-letter"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-text-light hover:text-text transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("backToList")}
@@ -121,7 +121,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
             >
               {tc("cancel")}
             </button>
@@ -130,29 +130,29 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       )}
 
       {/* 標題 */}
-      <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-        <label className="block text-sm font-medium text-gray-700">
+      <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+        <label className="block text-sm font-medium text-text">
           {t("coverLetterTitle")}
         </label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           placeholder={t("titlePlaceholder")}
         />
       </div>
 
       {/* 內容編輯 */}
-      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-        <label className="block text-sm font-medium text-gray-700">
+      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+        <label className="block text-sm font-medium text-text">
           {t("content")}
         </label>
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={20}
-          className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm leading-relaxed focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm leading-relaxed focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           placeholder={t("contentPlaceholder")}
         />
       </div>

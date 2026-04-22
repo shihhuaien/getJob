@@ -87,16 +87,16 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="w-full max-w-2xl rounded-xl bg-white shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-brand-100 px-6 py-4">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-brand-600" />
-            <h3 className="text-lg font-semibold text-gray-900">
+            <h3 className="text-lg font-semibold text-text">
               {t("parseTitle")}
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-1 text-text-placeholder hover:bg-brand-50 hover:text-text-light"
           >
             <X className="h-5 w-5" />
           </button>
@@ -111,10 +111,10 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
 
           {step === "input" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("description")}
               </label>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-text-light">
                 {t("parseDesc")}
               </p>
               <textarea
@@ -122,17 +122,17 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                 onChange={(e) => setRawText(e.target.value)}
                 rows={12}
                 maxLength={10000}
-                className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-2 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("parsePlaceholder")}
                 autoFocus
               />
-              <div className="mt-1 text-right text-xs text-gray-400">
+              <div className="mt-1 text-right text-xs text-text-placeholder">
                 {t("parseCharCount", { count: rawText.length })}
               </div>
               <div className="mt-4 flex justify-end gap-3">
                 <button
                   onClick={onClose}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
                 >
                   {tc("cancel")}
                 </button>
@@ -150,18 +150,18 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
           {step === "loading" && (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
-              <p className="mt-3 text-sm text-gray-500">{t("parsing")}</p>
+              <p className="mt-3 text-sm text-text-light">{t("parsing")}</p>
             </div>
           )}
 
           {step === "review" && result && (
             <div className="space-y-4">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-text-light">
                 {t("parseConfirm")}
               </p>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("companyName")}
                   </label>
                   <input
@@ -170,11 +170,11 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                     onChange={(e) =>
                       setResult({ ...result, company_name: e.target.value })
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("jobTitle")}
                   </label>
                   <input
@@ -183,11 +183,11 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                     onChange={(e) =>
                       setResult({ ...result, job_title: e.target.value })
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("minSalary")}
                   </label>
                   <input
@@ -199,12 +199,12 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                         salary_min: e.target.value ? Number(e.target.value) : null,
                       })
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder={t("salaryMinPlaceholder")}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("maxSalary")}
                   </label>
                   <input
@@ -216,25 +216,25 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                         salary_max: e.target.value ? Number(e.target.value) : null,
                       })
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder={t("salaryMaxPlaceholder")}
                   />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("jobUrl")}
                   </label>
                   <input
                     type="url"
                     value={jobUrl}
                     onChange={(e) => setJobUrl(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder="https://..."
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-text">
                   {t("description")}
                 </label>
                 <textarea
@@ -243,7 +243,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                     setResult({ ...result, job_description: e.target.value })
                   }
                   rows={6}
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
               </div>
               <div className="flex justify-end gap-3">
@@ -252,7 +252,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
                     setStep("input");
                     setResult(null);
                   }}
-                  className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
                 >
                   {t("reParse")}
                 </button>

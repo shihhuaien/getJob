@@ -51,14 +51,14 @@ export default async function SettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="mt-1 text-sm text-gray-500">{t("subtitle")}</p>
+        <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+        <p className="mt-1 text-sm text-text-light">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-6">
         {/* Profile section */}
         <div className="rounded-2xl bg-white p-6 shadow-neu">
-          <h2 className="text-lg font-semibold text-gray-900">{t("profile")}</h2>
+          <h2 className="text-lg font-semibold text-text">{t("profile")}</h2>
           <div className="mt-4">
             <ProfileForm
               email={user.email || ""}
@@ -69,16 +69,16 @@ export default async function SettingsPage() {
 
         {/* Subscription section */}
         <div className="rounded-2xl bg-white p-6 shadow-neu">
-          <h2 className="text-lg font-semibold text-gray-900">{t("subscription")}</h2>
+          <h2 className="text-lg font-semibold text-text">{t("subscription")}</h2>
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-text">
                   {profile?.subscription_tier === "pro"
                     ? t("proPlan")
                     : t("freePlan")}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="mt-0.5 text-xs text-text-light">
                   {cancelAtPeriodEnd && periodEndDate
                     ? t("cancelScheduled", { date: periodEndDate })
                     : profile?.subscription_tier === "pro"
@@ -108,10 +108,10 @@ export default async function SettingsPage() {
           <div className="mt-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-text">
                   {t("deleteAccount")}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-500">
+                <p className="mt-0.5 text-xs text-text-light">
                   {t("deleteAccountDesc")}
                 </p>
               </div>

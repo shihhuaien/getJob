@@ -95,10 +95,10 @@ export default function InterviewTriggerBanner({
           <Mic className="h-5 w-5" />
         </div>
         <div className="flex-1">
-          <h3 className="text-sm font-semibold text-gray-900">
+          <h3 className="text-sm font-semibold text-text">
             {t("bannerTitle")}
           </h3>
-          <p className="mt-0.5 text-sm text-gray-700">
+          <p className="mt-0.5 text-sm text-text">
             {t("bannerDescription", { company: companyName })}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -116,7 +116,7 @@ export default function InterviewTriggerBanner({
             </button>
             <button
               onClick={handleDismiss}
-              className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-white/60 transition-colors"
+              className="rounded-lg px-3 py-1.5 text-sm font-medium text-text-light hover:bg-white/60 transition-colors"
             >
               {t("bannerDismiss")}
             </button>
@@ -124,7 +124,7 @@ export default function InterviewTriggerBanner({
         </div>
         <button
           onClick={handleDismiss}
-          className="shrink-0 rounded-lg p-1 text-gray-400 hover:bg-white/60 hover:text-gray-600 transition-colors"
+          className="shrink-0 rounded-lg p-1 text-text-placeholder hover:bg-white/60 hover:text-text-light transition-colors"
           aria-label={t("bannerDismiss")}
         >
           <X className="h-4 w-4" />

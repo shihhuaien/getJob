@@ -23,7 +23,7 @@ export default function LocaleSwitcher() {
   return (
     <button
       onClick={handleSwitch}
-      className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+      className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-text-light hover:bg-brand-50 hover:text-text transition-colors"
       aria-label="Switch language"
     >
       <Globe className="h-4 w-4" />

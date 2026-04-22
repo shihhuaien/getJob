@@ -28,12 +28,12 @@ function ScoreBar({ label, score }: { label: string; score: number }) {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-gray-700">{label}</span>
+        <span className="text-sm font-medium text-text">{label}</span>
         <span className={`text-sm font-semibold ${scoreColor(score)}`}>
           {score}
         </span>
       </div>
-      <div className="mt-1 h-1.5 w-full rounded-full bg-gray-200">
+      <div className="mt-1 h-1.5 w-full rounded-full bg-brand-100">
         <div
           className={`h-full rounded-full transition-all ${
             score >= 80
@@ -67,10 +67,10 @@ export default function InterviewReport({
   return (
     <div className="space-y-6">
       {/* Scorecard */}
-      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
         <div className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-brand-600" />
-          <h2 className="text-lg font-semibold text-gray-900">
+          <h2 className="text-lg font-semibold text-text">
             {t("scorecardTitle")}
           </h2>
         </div>
@@ -78,21 +78,21 @@ export default function InterviewReport({
           <span className={`text-5xl font-bold ${scoreColor(report.scorecard.overall)}`}>
             {report.scorecard.overall}
           </span>
-          <span className="text-sm text-gray-500">{t("overallScore")}</span>
+          <span className="text-sm text-text-light">{t("overallScore")}</span>
         </div>
         <div className="mt-6 space-y-4">
           <ScoreBar label={t("scoreRelevance")} score={report.scorecard.relevance} />
           <ScoreBar label={t("scoreLogic")} score={report.scorecard.logic} />
           <ScoreBar label={t("scoreConfidence")} score={report.scorecard.confidence} />
         </div>
-        <div className="mt-5 rounded-lg bg-gray-50 p-4 text-sm leading-relaxed text-gray-700">
+        <div className="mt-5 rounded-lg bg-[color:var(--color-bg)] p-4 text-sm leading-relaxed text-text">
           {report.summary}
         </div>
       </div>
 
       {/* 逐題 Before/After */}
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">
+        <h2 className="mb-3 text-lg font-semibold text-text">
           {t("perQuestionTitle")}
         </h2>
         <div className="space-y-4">
@@ -102,7 +102,7 @@ export default function InterviewReport({
             return (
               <div
                 key={q.id}
-                className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+                className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
               >
                 <div className="flex items-start justify-between gap-3">
                   <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
@@ -116,14 +116,14 @@ export default function InterviewReport({
                     initiallySaved={savedQuestionTexts.has(q.text)}
                   />
                 </div>
-                <p className="mt-2 font-medium text-gray-900">{q.text}</p>
+                <p className="mt-2 font-medium text-text">{q.text}</p>
 
                 <div className="mt-4 space-y-3">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-text-light">
                       {t("rewriteBefore")}
                     </p>
-                    <p className="mt-1 whitespace-pre-wrap rounded-lg bg-gray-50 p-3 text-sm text-gray-700">
+                    <p className="mt-1 whitespace-pre-wrap rounded-lg bg-[color:var(--color-bg)] p-3 text-sm text-text">
                       {ans?.answer_text?.trim() || t("noAnswer")}
                     </p>
                   </div>
@@ -133,13 +133,13 @@ export default function InterviewReport({
                       <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
                         {t("drillDownBannerTitle")}
                       </p>
-                      <p className="mt-1 text-sm text-gray-800">
+                      <p className="mt-1 text-sm text-text">
                         {ans.drill_down.question}
                       </p>
-                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-gray-500">
+                      <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-text-light">
                         {t("yourAnswer")}
                       </p>
-                      <p className="mt-1 whitespace-pre-wrap text-sm text-gray-700">
+                      <p className="mt-1 whitespace-pre-wrap text-sm text-text">
                         {ans.drill_down.answer?.trim() || t("noAnswer")}
                       </p>
                     </div>
@@ -151,7 +151,7 @@ export default function InterviewReport({
                         <p className="text-xs font-semibold uppercase tracking-wide text-amber-700">
                           {t("diagnosis")}
                         </p>
-                        <p className="mt-1 text-sm text-gray-700">
+                        <p className="mt-1 text-sm text-text">
                           {fb.diagnosis}
                         </p>
                       </div>
@@ -159,16 +159,16 @@ export default function InterviewReport({
                         <p className="text-xs font-semibold uppercase tracking-wide text-green-700">
                           {t("rewriteAfter")}
                         </p>
-                        <p className="mt-1 whitespace-pre-wrap rounded-lg bg-green-50 p-3 text-sm text-gray-800">
+                        <p className="mt-1 whitespace-pre-wrap rounded-lg bg-green-50 p-3 text-sm text-text">
                           {fb.rewritten_answer}
                         </p>
                       </div>
                       {fb.follow_up_predictions.length > 0 && (
                         <div>
-                          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          <p className="text-xs font-semibold uppercase tracking-wide text-text-light">
                             {t("followUpPredictions")}
                           </p>
-                          <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-gray-700">
+                          <ul className="mt-1 list-disc space-y-1 pl-5 text-sm text-text">
                             {fb.follow_up_predictions.map((fp, idx) => (
                               <li key={idx}>{fp}</li>
                             ))}
@@ -184,7 +184,7 @@ export default function InterviewReport({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-gray-400">
+      <div className="flex items-center gap-2 text-xs text-text-placeholder">
         <CheckCircle2 className="h-3.5 w-3.5" />
         {tc("aiDisclaimer")}
       </div>

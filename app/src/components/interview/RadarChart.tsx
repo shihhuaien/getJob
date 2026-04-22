@@ -43,12 +43,12 @@ export default function RadarChart({
   const t = useTranslations("interview");
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+    <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-brand-100">
       <div className="mb-2 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-text">
           {t("radarTitle")}
         </h2>
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-text-light">
           {t("radarBasis", { count: sessionCount })}
         </span>
       </div>
@@ -94,8 +94,8 @@ export default function RadarChart({
           {average && (
             <polygon
               points={polygonPoints(average)}
-              fill="rgba(107, 114, 128, 0.1)"
-              stroke="#9CA3AF"
+              fill="rgba(122, 127, 136, 0.1)"
+              stroke="var(--color-text-placeholder)"
               strokeWidth={1.5}
               strokeDasharray="4 3"
             />
@@ -137,13 +137,13 @@ export default function RadarChart({
             score={latest?.overall}
           />
           <Legend
-            swatchClass="bg-gray-400"
+            swatchClass="bg-text-placeholder"
             dashed
             label={t("radarLegendAverage")}
             score={average?.overall}
           />
           {latest && average && (
-            <p className="mt-2 max-w-xs text-xs text-gray-500">
+            <p className="mt-2 max-w-xs text-xs text-text-light">
               {latest.overall >= average.overall
                 ? t("radarTrendUp", {
                     delta: latest.overall - average.overall,
@@ -177,9 +177,9 @@ function Legend({
           dashed ? "opacity-50" : ""
         }`}
       />
-      <span className="text-gray-700">{label}</span>
+      <span className="text-text">{label}</span>
       {typeof score === "number" && (
-        <span className="text-sm font-semibold text-gray-900">{score}</span>
+        <span className="text-sm font-semibold text-text">{score}</span>
       )}
     </div>
   );

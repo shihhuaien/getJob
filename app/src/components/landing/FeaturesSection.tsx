@@ -26,10 +26,10 @@ export default function FeaturesSection() {
     <section id="features" className="bg-[var(--color-bg)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
             {t("featuresTitle")}
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-text-light">
             {t("featuresSubtitle")}
           </p>
         </div>
@@ -43,10 +43,10 @@ export default function FeaturesSection() {
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-100 text-brand-600 group-hover:bg-brand-600 group-hover:text-white transition-colors">
                 <feature.icon className="h-6 w-6" />
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-gray-900">
+              <h3 className="mt-4 text-lg font-semibold text-text">
                 {t(feature.titleKey)}
               </h3>
-              <p className="mt-2 text-sm leading-6 text-gray-600">
+              <p className="mt-2 text-sm leading-6 text-text-light">
                 {t(feature.descKey)}
               </p>
             </div>

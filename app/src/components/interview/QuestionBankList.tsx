@@ -83,18 +83,18 @@ function BankRow({ item }: { item: BankItem }) {
   };
 
   return (
-    <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-200">
+    <div className="rounded-xl bg-white p-5 shadow-sm ring-1 ring-brand-100">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1">
           {item.category && (
-            <span className="inline-block rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+            <span className="inline-block rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-text">
               {item.category}
             </span>
           )}
-          <p className="mt-2 text-sm font-medium text-gray-900">
+          <p className="mt-2 text-sm font-medium text-text">
             {item.question_text}
           </p>
-          <p className="mt-1 text-xs text-gray-400">
+          <p className="mt-1 text-xs text-text-placeholder">
             {new Date(item.created_at).toLocaleDateString()}
           </p>
         </div>
@@ -104,7 +104,7 @@ function BankRow({ item }: { item: BankItem }) {
               <button
                 type="button"
                 onClick={() => setEditing(true)}
-                className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                className="rounded-lg p-1.5 text-text-placeholder hover:bg-brand-50 hover:text-text transition-colors"
                 aria-label={t("bankEditNotes")}
               >
                 <Pencil className="h-4 w-4" />
@@ -112,7 +112,7 @@ function BankRow({ item }: { item: BankItem }) {
               <button
                 type="button"
                 onClick={() => setConfirmDelete(true)}
-                className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                className="rounded-lg p-1.5 text-text-placeholder hover:bg-red-50 hover:text-red-600 transition-colors"
                 aria-label={tc("delete")}
               >
                 <Trash2 className="h-4 w-4" />
@@ -129,7 +129,7 @@ function BankRow({ item }: { item: BankItem }) {
             onChange={(e) => setNotes(e.target.value)}
             rows={4}
             placeholder={t("bankNotesPlaceholder")}
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
           {error && <p className="text-xs text-red-600">{error}</p>}
           <div className="flex gap-2">
@@ -159,7 +159,7 @@ function BankRow({ item }: { item: BankItem }) {
                 setError(null);
               }}
               disabled={isSaving}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
             >
               <X className="h-3.5 w-3.5" />
               {tc("cancel")}
@@ -167,7 +167,7 @@ function BankRow({ item }: { item: BankItem }) {
           </div>
         </div>
       ) : item.user_notes ? (
-        <p className="mt-3 whitespace-pre-wrap rounded-lg bg-gray-50 p-3 text-sm text-gray-700">
+        <p className="mt-3 whitespace-pre-wrap rounded-lg bg-[color:var(--color-bg)] p-3 text-sm text-text">
           {item.user_notes}
         </p>
       ) : null}
@@ -199,7 +199,7 @@ function BankRow({ item }: { item: BankItem }) {
                 setError(null);
               }}
               disabled={isDeleting}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
             >
               {tc("cancel")}
             </button>

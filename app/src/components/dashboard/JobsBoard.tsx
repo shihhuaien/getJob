@@ -34,7 +34,7 @@ type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
 
 const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }[] = [
-  { key: "saved", labelKey: "saved", color: "bg-gray-100 text-gray-700" },
+  { key: "saved", labelKey: "saved", color: "bg-brand-50 text-text" },
   { key: "applied", labelKey: "applied", color: "bg-blue-100 text-blue-700" },
   { key: "interview", labelKey: "interview", color: "bg-yellow-100 text-yellow-700" },
   { key: "offer", labelKey: "offer", color: "bg-green-100 text-green-700" },
@@ -63,7 +63,7 @@ function SortableJobCard({ job }: { job: JobApplication }) {
       style={style}
       {...attributes}
       {...listeners}
-      className={`rounded-lg bg-white p-3 shadow-sm ring-1 ring-gray-200 cursor-grab active:cursor-grabbing touch-none ${
+      className={`rounded-lg bg-white p-3 shadow-sm ring-1 ring-brand-100 cursor-grab active:cursor-grabbing touch-none ${
         isDragging ? "opacity-50 shadow-lg ring-brand-300" : ""
       }`}
     >
@@ -76,10 +76,10 @@ function SortableJobCard({ job }: { job: JobApplication }) {
             if (isDragging) e.preventDefault();
           }}
         >
-          <p className="truncate text-sm font-medium text-gray-900">
+          <p className="truncate text-sm font-medium text-text">
             {job.job_title}
           </p>
-          <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+          <div className="mt-1 flex items-center gap-1 text-xs text-text-light">
             <Building2 className="h-3 w-3" />
             {job.company_name}
           </div>
@@ -89,7 +89,7 @@ function SortableJobCard({ job }: { job: JobApplication }) {
             href={job.job_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 text-gray-400 hover:text-gray-600"
+            className="flex-shrink-0 text-text-placeholder hover:text-text-light"
             onClick={(e) => e.stopPropagation()}
           >
             <ExternalLink className="h-3.5 w-3.5" />
@@ -105,10 +105,10 @@ function DragOverlayCard({ job }: { job: JobApplication }) {
   return (
     <div className="w-56 rounded-lg bg-white p-3 shadow-xl ring-1 ring-brand-300 rotate-[2deg] scale-105">
       <div className="min-w-0">
-        <p className="truncate text-sm font-medium text-gray-900">
+        <p className="truncate text-sm font-medium text-text">
           {job.job_title}
         </p>
-        <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
+        <div className="mt-1 flex items-center gap-1 text-xs text-text-light">
           <Building2 className="h-3 w-3" />
           {job.company_name}
         </div>
@@ -137,7 +137,7 @@ function DroppableColumn({
     <div
       ref={setNodeRef}
       className={`rounded-xl p-3 transition-colors duration-200 ${
-        isOver ? "bg-brand-50 ring-2 ring-brand-300" : "bg-gray-100/50"
+        isOver ? "bg-brand-50 ring-2 ring-brand-300" : "bg-brand-50/50"
       }`}
     >
       <div className="mb-3 flex items-center justify-between">
@@ -146,7 +146,7 @@ function DroppableColumn({
         >
           {label}
         </span>
-        <span className="text-xs text-gray-500">{jobs.length}</span>
+        <span className="text-xs text-text-light">{jobs.length}</span>
       </div>
       <SortableContext
         items={jobs.map((j) => j.id)}
@@ -157,7 +157,7 @@ function DroppableColumn({
             <SortableJobCard key={job.id} job={job} />
           ))}
           {jobs.length === 0 && !isOver && (
-            <p className="py-4 text-center text-xs text-gray-400">{noJobsText}</p>
+            <p className="py-4 text-center text-xs text-text-placeholder">{noJobsText}</p>
           )}
         </div>
       </SortableContext>
@@ -399,18 +399,18 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       {/* 搜尋與篩選 */}
       <div className="mb-6 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-placeholder" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full rounded-lg border border-gray-300 py-2 pl-9 pr-9 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="block w-full rounded-lg border border-brand-200 py-2 pl-9 pr-9 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             placeholder={t("searchPlaceholder")}
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-placeholder hover:text-text-light"
             >
               <X className="h-4 w-4" />
             </button>
@@ -421,7 +421,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           onChange={(e) =>
             setStatusFilter(e.target.value as ApplicationStatus | "all")
           }
-          className="rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
         >
           <option value="all">{t("allStatuses")}</option>
           {statusColumns.map((s) => (
@@ -435,11 +435,11 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       {showAddForm && (
         <form
           onSubmit={handleAddJob}
-          className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+          className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
         >
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("companyName")}
               </label>
               <input
@@ -449,12 +449,12 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                 onChange={(e) =>
                   setNewJob({ ...newJob, company_name: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("companyPlaceholder")}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("jobTitle")}
               </label>
               <input
@@ -464,12 +464,12 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                 onChange={(e) =>
                   setNewJob({ ...newJob, job_title: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("jobTitlePlaceholder")}
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("jobUrl")}
               </label>
               <input
@@ -478,7 +478,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                 onChange={(e) =>
                   setNewJob({ ...newJob, job_url: e.target.value })
                 }
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="https://..."
               />
             </div>
@@ -497,7 +497,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
             <button
               type="button"
               onClick={() => setShowAddForm(false)}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
             >
               {tc("cancel")}
             </button>

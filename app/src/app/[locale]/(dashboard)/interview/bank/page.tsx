@@ -27,26 +27,26 @@ export default async function InterviewBankPage() {
       <div className="mb-6">
         <Link
           href="/interview"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-text-light hover:text-text transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("backToList")}
         </Link>
-        <h1 className="mt-3 text-2xl font-bold text-gray-900">
+        <h1 className="mt-3 text-2xl font-bold text-text">
           {t("bankTitle")}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">{t("bankSubtitle")}</p>
+        <p className="mt-1 text-sm text-text-light">{t("bankSubtitle")}</p>
       </div>
 
       {items && items.length > 0 ? (
         <QuestionBankList items={items} />
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white py-16">
-          <BookOpen className="h-12 w-12 text-gray-300" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
+          <BookOpen className="h-12 w-12 text-text-placeholder" />
+          <h3 className="mt-4 text-lg font-medium text-text">
             {t("bankEmpty")}
           </h3>
-          <p className="mt-1 max-w-md text-center text-sm text-gray-500">
+          <p className="mt-1 max-w-md text-center text-sm text-text-light">
             {t("bankEmptyDesc")}
           </p>
         </div>

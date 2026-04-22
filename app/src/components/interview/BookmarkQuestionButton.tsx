@@ -62,7 +62,7 @@ export default function BookmarkQuestionButton({
         className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-medium transition-colors ${
           saved
             ? "border-brand-300 bg-brand-50 text-brand-700 cursor-default"
-            : "border-gray-300 text-gray-700 hover:bg-gray-50"
+            : "border-brand-200 text-text hover:bg-[color:var(--color-bg)]"
         } disabled:opacity-70`}
       >
         {isLoading ? (

@@ -27,7 +27,7 @@ export default function CountdownTimer({ durationSec }: Props) {
   return (
     <div
       className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium ${
-        warn ? "bg-red-50 text-red-700" : "bg-gray-100 text-gray-700"
+        warn ? "bg-red-50 text-red-700" : "bg-brand-50 text-text"
       }`}
     >
       <Clock className="h-3.5 w-3.5" />

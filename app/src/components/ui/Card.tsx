@@ -18,8 +18,9 @@ const paddingClass: Record<Padding, string> = {
 
 const variantClass: Record<Variant, string> = {
   default: "bg-white shadow-neu",
+  // hoverable：卡片級互動比按鈕更明顯（-translate-y-1），形成三級語彙
   hoverable:
-    "bg-white shadow-neu transition-shadow duration-150 ease-out hover:shadow-neu-hover",
+    "bg-white shadow-neu cursor-pointer transition-all duration-base ease-out-quart hover:shadow-neu-hover hover:-translate-y-1 motion-reduce:transform-none",
   inset: "bg-[var(--color-bg)] shadow-neu-inset",
 };
 
@@ -72,7 +73,7 @@ export function CardTitle({
 }: HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h2
-      className={`text-lg font-semibold text-gray-900 ${className}`.trim()}
+      className={`text-lg font-semibold text-text ${className}`.trim()}
       {...rest}
     >
       {children}
@@ -86,7 +87,7 @@ export function CardDescription({
   ...rest
 }: HTMLAttributes<HTMLParagraphElement>) {
   return (
-    <p className={`mt-1 text-xs text-gray-500 ${className}`.trim()} {...rest}>
+    <p className={`mt-1 text-xs text-text-light ${className}`.trim()} {...rest}>
       {children}
     </p>
   );

@@ -54,13 +54,13 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4">
         <div className="w-full max-w-md text-center">
           <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">
+          <h1 className="mt-4 text-2xl font-bold text-text">
             {t("confirmEmail")}
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-text-light">
             {t("confirmEmailDesc", { email })}
           </p>
           <Link
@@ -75,17 +75,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4">
       <div className="w-full max-w-md">
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
             <Briefcase className="h-8 w-8 text-brand-600" />
-            <span className="text-2xl font-bold text-gray-900">Offery</span>
+            <span className="text-2xl font-bold text-text">Offery</span>
           </Link>
-          <h1 className="mt-6 text-2xl font-bold text-gray-900">
+          <h1 className="mt-6 text-2xl font-bold text-text">
             {t("registerTitle")}
           </h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-text-light">
             {t("hasAccount")}{" "}
             <Link
               href="/login"
@@ -96,10 +96,10 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <div className="mt-8 rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-200">
+        <div className="mt-8 rounded-xl bg-white p-8 shadow-sm ring-1 ring-brand-100">
           <button
             onClick={handleGoogleLogin}
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex w-full items-center justify-center gap-3 rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -124,10 +124,10 @@ export default function RegisterPage() {
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+              <div className="w-full border-t border-brand-100" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-500">{t("orEmail")}</span>
+              <span className="bg-white px-4 text-text-light">{t("orEmail")}</span>
             </div>
           </div>
 
@@ -141,7 +141,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-text"
               >
                 {t("name")}
               </label>
@@ -151,7 +151,7 @@ export default function RegisterPage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("namePlaceholder")}
               />
             </div>
@@ -159,7 +159,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-text"
               >
                 {t("email")}
               </label>
@@ -169,7 +169,7 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="you@example.com"
               />
             </div>
@@ -177,7 +177,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-text"
               >
                 {t("password")}
               </label>
@@ -188,7 +188,7 @@ export default function RegisterPage() {
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("passwordHint")}
               />
             </div>

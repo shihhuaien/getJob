@@ -68,12 +68,12 @@ export default async function InterviewPage() {
     <div>
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-          <p className="mt-1 text-sm text-gray-500">{t("subtitle")}</p>
+          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <p className="mt-1 text-sm text-text-light">{t("subtitle")}</p>
         </div>
         <Link
           href="/interview/bank"
-          className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+          className="inline-flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
         >
           <BookOpen className="h-4 w-4" />
           {t("bankLink")}
@@ -108,12 +108,12 @@ export default async function InterviewPage() {
       )}
 
       {sessions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white py-16">
-          <Mic className="h-12 w-12 text-gray-300" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
+          <Mic className="h-12 w-12 text-text-placeholder" />
+          <h3 className="mt-4 text-lg font-medium text-text">
             {t("emptyTitle")}
           </h3>
-          <p className="mt-1 max-w-md text-center text-sm text-gray-500">
+          <p className="mt-1 max-w-md text-center text-sm text-text-light">
             {t("emptyDesc")}
           </p>
         </div>

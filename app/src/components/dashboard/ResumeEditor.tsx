@@ -234,7 +234,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/resume"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-text-light hover:text-text transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("backToList")}
@@ -256,7 +256,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           <Link
             href={`/resume/${resume.id}/preview`}
             target="_blank"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
           >
             <Eye className="h-4 w-4" />
             {t("preview")}
@@ -293,7 +293,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
             >
               {tc("cancel")}
             </button>
@@ -302,29 +302,29 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       )}
 
       {/* 履歷標題 */}
-      <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+      <div className="mb-6 rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-text">
               {t("resumeTitle")}
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               placeholder={t("titlePlaceholder")}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-text">
               {t("targetJobTitle")}
             </label>
             <input
               type="text"
               value={targetJobTitle}
               onChange={(e) => setTargetJobTitle(e.target.value)}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               placeholder={t("targetJobPlaceholder")}
             />
           </div>
@@ -332,15 +332,15 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       </div>
 
       {/* 分頁標籤 */}
-      <div className="mb-6 flex gap-1 rounded-lg bg-gray-100 p-1">
+      <div className="mb-6 flex gap-1 rounded-lg bg-brand-50 p-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors ${
               activeTab === tab.key
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
+                ? "bg-white text-text shadow-sm"
+                : "text-text-light hover:text-text"
             }`}
           >
             {tab.label}
@@ -350,63 +350,63 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
 
       {/* 個人資訊 */}
       {activeTab === "personal" && (
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("personal")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("personal")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("name")}
               </label>
               <input
                 type="text"
                 value={content.personal.name}
                 onChange={(e) => updatePersonal("name", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("email")}
               </label>
               <input
                 type="email"
                 value={content.personal.email}
                 onChange={(e) => updatePersonal("email", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("phone")}
               </label>
               <input
                 type="tel"
                 value={content.personal.phone}
                 onChange={(e) => updatePersonal("phone", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("location")}
               </label>
               <input
                 type="text"
                 value={content.personal.location}
                 onChange={(e) => updatePersonal("location", e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("locationPlaceholder")}
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("summary")}
               </label>
               <textarea
                 value={content.personal.summary}
                 onChange={(e) => updatePersonal("summary", e.target.value)}
                 rows={4}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("summaryPlaceholder")}
               />
             </div>
@@ -420,22 +420,22 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           {content.education.map((edu) => (
             <div
               key={edu.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-text">
                   {edu.school || t("newEducation")}
                 </h3>
                 <button
                   onClick={() => removeEducation(edu.id)}
-                  className="text-gray-400 hover:text-red-600 transition-colors"
+                  className="text-text-placeholder hover:text-red-600 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("school")}
                   </label>
                   <input
@@ -444,11 +444,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     onChange={(e) =>
                       updateEducation(edu.id, "school", e.target.value)
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("degree")}
                   </label>
                   <input
@@ -457,12 +457,12 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     onChange={(e) =>
                       updateEducation(edu.id, "degree", e.target.value)
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder={t("degreePlaceholder")}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("field")}
                   </label>
                   <input
@@ -471,13 +471,13 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     onChange={(e) =>
                       updateEducation(edu.id, "field", e.target.value)
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder={t("fieldPlaceholder")}
                   />
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-text">
                       {t("startDate")}
                     </label>
                     <input
@@ -486,11 +486,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       onChange={(e) =>
                         updateEducation(edu.id, "start_date", e.target.value)
                       }
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-text">
                       {t("endDate")}
                     </label>
                     <input
@@ -499,7 +499,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       onChange={(e) =>
                         updateEducation(edu.id, "end_date", e.target.value)
                       }
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     />
                   </div>
                 </div>
@@ -508,7 +508,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           ))}
           <button
             onClick={addEducation}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 py-4 text-sm font-medium text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-200 py-4 text-sm font-medium text-text-light hover:border-brand-500 hover:text-text transition-colors"
           >
             <Plus className="h-4 w-4" />
             {t("addEducation")}
@@ -522,22 +522,22 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           {content.experience.map((exp) => (
             <div
               key={exp.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200"
+              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-text">
                   {exp.company || t("newExperience")}
                 </h3>
                 <button
                   onClick={() => removeExperience(exp.id)}
-                  className="text-gray-400 hover:text-red-600 transition-colors"
+                  className="text-text-placeholder hover:text-red-600 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
               <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("company")}
                   </label>
                   <input
@@ -546,11 +546,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     onChange={(e) =>
                       updateExperience(exp.id, "company", e.target.value)
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("jobTitleLabel")}
                   </label>
                   <input
@@ -559,12 +559,12 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     onChange={(e) =>
                       updateExperience(exp.id, "title", e.target.value)
                     }
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   />
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-text">
                       {t("startDate")}
                     </label>
                     <input
@@ -573,11 +573,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       onChange={(e) =>
                         updateExperience(exp.id, "start_date", e.target.value)
                       }
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     />
                   </div>
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-text">
                       {t("endDate")}
                     </label>
                     <input
@@ -586,12 +586,12 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       onChange={(e) =>
                         updateExperience(exp.id, "end_date", e.target.value)
                       }
-                      className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     />
                   </div>
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-text">
                     {t("workDescription")}
                   </label>
                   <textarea
@@ -600,7 +600,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                       updateExperience(exp.id, "description", e.target.value)
                     }
                     rows={4}
-                    className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                     placeholder={t("workDescPlaceholder")}
                   />
                 </div>
@@ -609,7 +609,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           ))}
           <button
             onClick={addExperience}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 py-4 text-sm font-medium text-gray-500 hover:border-gray-400 hover:text-gray-700 transition-colors"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-200 py-4 text-sm font-medium text-text-light hover:border-brand-500 hover:text-text transition-colors"
           >
             <Plus className="h-4 w-4" />
             {t("addExperience")}
@@ -619,8 +619,8 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
 
       {/* 技能 */}
       {activeTab === "skills" && (
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("skills")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("skills")}</h2>
           <div className="mt-4">
             <div className="flex gap-2">
               <input
@@ -633,7 +633,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                     addSkill();
                   }
                 }}
-                className="block flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block flex-1 rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("skillPlaceholder")}
               />
               <button
@@ -661,7 +661,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 ))}
               </div>
             ) : (
-              <p className="mt-4 text-sm text-gray-400">{t("noSkills")}</p>
+              <p className="mt-4 text-sm text-text-placeholder">{t("noSkills")}</p>
             )}
           </div>
         </div>

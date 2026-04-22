@@ -34,8 +34,8 @@ export default async function ResumePage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <p className="mt-1 text-sm text-text-light">
             {t("subtitle")}
           </p>
         </div>
@@ -55,15 +55,15 @@ export default async function ResumePage() {
                   <FileText className="h-5 w-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <h3 className="truncate text-sm font-semibold text-gray-900">
+                  <h3 className="truncate text-sm font-semibold text-text">
                     {resume.title}
                   </h3>
                   {resume.target_job_title && (
-                    <p className="mt-0.5 text-xs text-gray-500">
+                    <p className="mt-0.5 text-xs text-text-light">
                       {t("targetJob", { title: resume.target_job_title })}
                     </p>
                   )}
-                  <p className="mt-1 text-xs text-gray-400">
+                  <p className="mt-1 text-xs text-text-placeholder">
                     {tCommon("updatedAt", {
                       date: new Date(resume.updated_at).toLocaleDateString("zh-TW"),
                     })}
@@ -74,12 +74,12 @@ export default async function ResumePage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white py-16">
-          <FileText className="h-12 w-12 text-gray-300" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">
+        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
+          <FileText className="h-12 w-12 text-text-placeholder" />
+          <h3 className="mt-4 text-lg font-medium text-text">
             {t("noResumes")}
           </h3>
-          <p className="mt-1 text-sm text-gray-500">
+          <p className="mt-1 text-sm text-text-light">
             {t("noResumesDesc")}
           </p>
           <div className="mt-4">

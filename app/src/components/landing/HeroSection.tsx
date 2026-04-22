@@ -22,13 +22,13 @@ export default function HeroSection() {
             {t("heroTitle")}
           </div>
 
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+          <h1 className="text-4xl font-bold tracking-tight text-text sm:text-5xl lg:text-6xl">
             {t("letJobEfficiency")}
             <br />
             <span className="text-brand-600">{t("heroHighlight")}</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-gray-600">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-text-light">
             {t("heroSubtitle")}
           </p>
 
@@ -48,7 +48,7 @@ export default function HeroSection() {
             </Link>
           </div>
 
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-text-light">
             {t("heroNote")}
           </p>
         </div>

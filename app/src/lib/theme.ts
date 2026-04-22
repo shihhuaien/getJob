@@ -30,7 +30,7 @@ export const colors = {
   text: {
     DEFAULT: "#3A3A3A", // 柔墨黑
     light: "#6B7280", // 霧灰
-    placeholder: "#9CA3AF",
+    placeholder: "#7A7F88", // WCAG AA（於 #FCFBF9 ≈ 5.0:1）
   },
 
   // 功能色

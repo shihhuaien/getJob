@@ -54,10 +54,10 @@ export default function PricingSection() {
     <section id="pricing" className="bg-[var(--color-bg)] py-20 sm:py-28">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-text sm:text-4xl">
             {t("pricingTitle")}
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-gray-600">
+          <p className="mx-auto mt-4 max-w-xl text-lg text-text-light">
             {t("pricingSubtitle")}
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function PricingSection() {
               className={`rounded-2xl p-8 ${
                 plan.highlighted
                   ? "bg-brand-600 text-white ring-2 ring-brand-600 shadow-xl"
-                  : "bg-white text-gray-900 ring-1 ring-gray-200"
+                  : "bg-white text-text ring-1 ring-brand-100"
               }`}
             >
               <h3
@@ -80,13 +80,13 @@ export default function PricingSection() {
               <div className="mt-4 flex items-baseline gap-1">
                 <span className="text-4xl font-bold">{t(plan.priceKey)}</span>
                 <span
-                  className={`text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
+                  className={`text-sm ${plan.highlighted ? "text-brand-200" : "text-text-light"}`}
                 >
                   {t(plan.periodKey)}
                 </span>
               </div>
               <p
-                className={`mt-2 text-sm ${plan.highlighted ? "text-brand-200" : "text-gray-500"}`}
+                className={`mt-2 text-sm ${plan.highlighted ? "text-brand-200" : "text-text-light"}`}
               >
                 {t(plan.descKey)}
               </p>

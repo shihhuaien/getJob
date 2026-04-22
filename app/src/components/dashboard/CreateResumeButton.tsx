@@ -155,18 +155,18 @@ export default function CreateResumeButton({
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
-            <h3 className="text-lg font-semibold text-gray-900">{t("addResume")}</h3>
+            <h3 className="text-lg font-semibold text-text">{t("addResume")}</h3>
 
             {/* 履歷標題（兩種方式共用） */}
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("resumeTitle")}
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("titlePlaceholder")}
                 disabled={isSubmitting || isUploading}
               />
@@ -202,16 +202,16 @@ export default function CreateResumeButton({
             {/* 分隔線 */}
             <div className="relative my-5">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200" />
+                <div className="w-full border-t border-brand-100" />
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="bg-white px-3 text-gray-400">{tc("or")}</span>
+                <span className="bg-white px-3 text-text-placeholder">{tc("or")}</span>
               </div>
             </div>
 
             {/* 方式二：PDF 上傳 */}
-            <div className="rounded-lg border border-dashed border-gray-300 p-4">
-              <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
+            <div className="rounded-lg border border-dashed border-brand-200 p-4">
+              <div className="flex items-center gap-2 text-sm font-medium text-text">
                 <Sparkles className="h-4 w-4 text-brand-600" />
                 {t("aiParsePdf")}
                 {!isPro && (
@@ -220,12 +220,12 @@ export default function CreateResumeButton({
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-text-light">
                 {t("pdfDesc")}
               </p>
 
               {!isPro ? (
-                <p className="mt-3 text-xs text-gray-400">
+                <p className="mt-3 text-xs text-text-placeholder">
                   {tc("proUpgrade")}
                 </p>
               ) : (
@@ -241,9 +241,9 @@ export default function CreateResumeButton({
                   />
 
                   {pdfFile ? (
-                    <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2">
-                      <FileText className="h-4 w-4 text-gray-500" />
-                      <span className="flex-1 truncate text-sm text-gray-700">
+                    <div className="flex items-center gap-2 rounded-lg bg-[color:var(--color-bg)] px-3 py-2">
+                      <FileText className="h-4 w-4 text-text-light" />
+                      <span className="flex-1 truncate text-sm text-text">
                         {pdfFile.name}
                       </span>
                       <button
@@ -254,7 +254,7 @@ export default function CreateResumeButton({
                             fileInputRef.current.value = "";
                         }}
                         disabled={isUploading}
-                        className="text-xs text-gray-400 hover:text-gray-600"
+                        className="text-xs text-text-placeholder hover:text-text-light"
                       >
                         {t("remove")}
                       </button>
@@ -264,7 +264,7 @@ export default function CreateResumeButton({
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       disabled={isUploading || isSubmitting}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm text-text-light hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
                     >
                       <Upload className="h-4 w-4" />
                       {t("selectPdf")}

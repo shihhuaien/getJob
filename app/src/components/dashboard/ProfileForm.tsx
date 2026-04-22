@@ -57,16 +57,16 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">
+        <label className="block text-sm font-medium text-text">
           {t("email")}
         </label>
-        <p className="mt-1 text-sm text-gray-900">{email}</p>
+        <p className="mt-1 text-sm text-text">{email}</p>
       </div>
 
       <div>
         <label
           htmlFor="full_name"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-text"
         >
           {t("name")}
         </label>
@@ -77,7 +77,7 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
               placeholder={t("namePlaceholder")}
               maxLength={100}
             />
@@ -102,7 +102,7 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
           </div>
         ) : (
           <div className="mt-1 flex items-center gap-3">
-            <p className="text-sm text-gray-900">
+            <p className="text-sm text-text">
               {fullName || tc("notSet")}
             </p>
             <button

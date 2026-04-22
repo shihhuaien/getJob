@@ -136,7 +136,7 @@ export default function JobDetail({ job }: Props) {
       <div className="mb-6 flex items-center justify-between">
         <Link
           href="/jobs"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-text-light hover:text-text transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           {t("backToList")}
@@ -174,7 +174,7 @@ export default function JobDetail({ job }: Props) {
               </button>
               <button
                 onClick={handleCancel}
-                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
               >
                 {tc("cancel")}
               </button>
@@ -199,7 +199,7 @@ export default function JobDetail({ job }: Props) {
             </button>
             <button
               onClick={() => setShowDeleteConfirm(false)}
-              className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-lg border border-brand-200 px-3 py-1.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
             >
               {tc("cancel")}
             </button>
@@ -229,11 +229,11 @@ export default function JobDetail({ job }: Props) {
 
       <div className="space-y-6">
         {/* 基本資訊 */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("basicInfo")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("basicInfo")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("companyName")}
               </label>
               {isEditing ? (
@@ -244,16 +244,16 @@ export default function JobDetail({ job }: Props) {
                     setForm({ ...form, company_name: e.target.value })
                   }
                   required
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
               ) : (
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-text">
                   {job.company_name}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("jobTitle")}
               </label>
               {isEditing ? (
@@ -264,14 +264,14 @@ export default function JobDetail({ job }: Props) {
                     setForm({ ...form, job_title: e.target.value })
                   }
                   required
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
               ) : (
-                <p className="mt-1 text-sm text-gray-900">{job.job_title}</p>
+                <p className="mt-1 text-sm text-text">{job.job_title}</p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("status")}
               </label>
               {isEditing ? (
@@ -283,7 +283,7 @@ export default function JobDetail({ job }: Props) {
                       status: e.target.value as ApplicationStatus,
                     })
                   }
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 >
                   {statusKeys.map((s) => (
                     <option key={s.key} value={s.key}>
@@ -292,13 +292,13 @@ export default function JobDetail({ job }: Props) {
                   ))}
                 </select>
               ) : (
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-text">
                   {t(statusKeys.find((s) => s.key === job.status)?.labelKey ?? "saved")}
                 </p>
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("applyDate")}
               </label>
               {isEditing ? (
@@ -308,10 +308,10 @@ export default function JobDetail({ job }: Props) {
                   onChange={(e) =>
                     setForm({ ...form, applied_at: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 />
               ) : (
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-text">
                   {job.applied_at
                     ? new Date(job.applied_at).toLocaleDateString("zh-TW")
                     : tc("notSet")}
@@ -319,7 +319,7 @@ export default function JobDetail({ job }: Props) {
               )}
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("jobUrl")}
               </label>
               {isEditing ? (
@@ -329,7 +329,7 @@ export default function JobDetail({ job }: Props) {
                   onChange={(e) =>
                     setForm({ ...form, job_url: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   placeholder="https://..."
                 />
               ) : job.job_url ? (
@@ -344,21 +344,21 @@ export default function JobDetail({ job }: Props) {
                     <ExternalLink className="h-3.5 w-3.5" />
                   </a>
                 ) : (
-                  <p className="mt-1 text-sm text-gray-900">{job.job_url}</p>
+                  <p className="mt-1 text-sm text-text">{job.job_url}</p>
                 )
               ) : (
-                <p className="mt-1 text-sm text-gray-400">{tc("notSet")}</p>
+                <p className="mt-1 text-sm text-text-placeholder">{tc("notSet")}</p>
               )}
             </div>
           </div>
         </div>
 
         {/* 薪資範圍 */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("salary")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("salary")}</h2>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("salaryMin")}
               </label>
               {isEditing ? (
@@ -368,11 +368,11 @@ export default function JobDetail({ job }: Props) {
                   onChange={(e) =>
                     setForm({ ...form, salary_min: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   placeholder={t("salaryMinPlaceholder")}
                 />
               ) : (
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-text">
                   {job.salary_min
                     ? `NT$ ${job.salary_min.toLocaleString()}`
                     : tc("notSet")}
@@ -380,7 +380,7 @@ export default function JobDetail({ job }: Props) {
               )}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text">
                 {t("salaryMax")}
               </label>
               {isEditing ? (
@@ -390,11 +390,11 @@ export default function JobDetail({ job }: Props) {
                   onChange={(e) =>
                     setForm({ ...form, salary_max: e.target.value })
                   }
-                  className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                   placeholder={t("salaryMaxPlaceholder")}
                 />
               ) : (
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-text">
                   {job.salary_max
                     ? `NT$ ${job.salary_max.toLocaleString()}`
                     : tc("notSet")}
@@ -405,8 +405,8 @@ export default function JobDetail({ job }: Props) {
         </div>
 
         {/* 職缺描述 */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("description")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("description")}</h2>
           <div className="mt-4">
             {isEditing ? (
               <textarea
@@ -415,11 +415,11 @@ export default function JobDetail({ job }: Props) {
                   setForm({ ...form, job_description: e.target.value })
                 }
                 rows={6}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("descriptionPlaceholder")}
               />
             ) : (
-              <p className="whitespace-pre-wrap text-sm text-gray-700">
+              <p className="whitespace-pre-wrap text-sm text-text">
                 {job.job_description || t("noDescription")}
               </p>
             )}
@@ -427,8 +427,8 @@ export default function JobDetail({ job }: Props) {
         </div>
 
         {/* 備註 */}
-        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
-          <h2 className="text-lg font-semibold text-gray-900">{t("notes")}</h2>
+        <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
+          <h2 className="text-lg font-semibold text-text">{t("notes")}</h2>
           <div className="mt-4">
             {isEditing ? (
               <textarea
@@ -437,11 +437,11 @@ export default function JobDetail({ job }: Props) {
                   setForm({ ...form, notes: e.target.value })
                 }
                 rows={4}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("notesPlaceholder")}
               />
             ) : (
-              <p className="whitespace-pre-wrap text-sm text-gray-700">
+              <p className="whitespace-pre-wrap text-sm text-text">
                 {job.notes || t("noNotes")}
               </p>
             )}

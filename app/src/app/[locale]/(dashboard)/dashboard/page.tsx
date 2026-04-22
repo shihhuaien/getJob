@@ -59,7 +59,7 @@ export default async function DashboardPage() {
   };
 
   const statusDotColors: Record<string, string> = {
-    saved: "text-gray-400",
+    saved: "text-text-placeholder",
     applied: "text-blue-500",
     interview: "text-yellow-500",
     offer: "text-green-500",
@@ -110,10 +110,10 @@ export default async function DashboardPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-bold text-text">
           {t("welcome")}
         </h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <p className="mt-1 text-sm text-text-light">
           {t("subtitle")}
         </p>
       </div>
@@ -131,8 +131,8 @@ export default async function DashboardPage() {
                 <stat.icon className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">{stat.label}</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-text-light">{stat.label}</p>
+                <p className="text-2xl font-bold text-text">
                   {stat.value}
                 </p>
               </div>
@@ -143,23 +143,23 @@ export default async function DashboardPage() {
 
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div className="rounded-2xl bg-white p-6 shadow-neu">
-          <h2 className="text-lg font-semibold text-gray-900">{t("quickActions")}</h2>
+          <h2 className="text-lg font-semibold text-text">{t("quickActions")}</h2>
           <div className="mt-4 grid grid-cols-2 gap-3">
             <Link
               href="/jobs"
-              className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 rounded-lg border border-brand-100 p-4 hover:bg-[color:var(--color-bg)] transition-colors"
             >
               <Briefcase className="h-5 w-5 text-brand-600" />
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-text">
                 {t("addJob")}
               </span>
             </Link>
             <Link
               href="/resume"
-              className="flex items-center gap-3 rounded-lg border border-gray-200 p-4 hover:bg-gray-50 transition-colors"
+              className="flex items-center gap-3 rounded-lg border border-brand-100 p-4 hover:bg-[color:var(--color-bg)] transition-colors"
             >
               <FileText className="h-5 w-5 text-brand-600" />
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium text-text">
                 {t("createResume")}
               </span>
             </Link>
@@ -167,34 +167,34 @@ export default async function DashboardPage() {
         </div>
 
         <div className="rounded-2xl bg-white p-6 shadow-neu">
-          <h2 className="text-lg font-semibold text-gray-900">{t("recentActivity")}</h2>
+          <h2 className="text-lg font-semibold text-text">{t("recentActivity")}</h2>
           {recentJobs && recentJobs.length > 0 ? (
             <div className="mt-4 space-y-3">
               {recentJobs.map((job) => (
                 <Link
                   key={job.id}
                   href={`/jobs/${job.id}`}
-                  className="flex items-center gap-3 rounded-lg p-2 -mx-2 hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-3 rounded-lg p-2 -mx-2 hover:bg-[color:var(--color-bg)] transition-colors"
                 >
                   <Circle
                     className={`h-2.5 w-2.5 flex-shrink-0 fill-current ${statusDotColors[job.status]}`}
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-gray-900">
+                    <p className="truncate text-sm font-medium text-text">
                       {job.job_title}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-text-light">
                       {job.company_name} · {statusLabels[job.status]}
                     </p>
                   </div>
-                  <span className="flex-shrink-0 text-xs text-gray-400">
+                  <span className="flex-shrink-0 text-xs text-text-placeholder">
                     {timeAgo(job.updated_at)}
                   </span>
                 </Link>
               ))}
             </div>
           ) : (
-            <div className="mt-4 flex items-center justify-center py-8 text-sm text-gray-400">
+            <div className="mt-4 flex items-center justify-center py-8 text-sm text-text-placeholder">
               {t("noActivity")}
             </div>
           )}

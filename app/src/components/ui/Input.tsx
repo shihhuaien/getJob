@@ -12,14 +12,14 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
   BaseFieldProps;
 
 const fieldBase =
-  "w-full rounded-xl bg-[var(--color-bg)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-placeholder)] shadow-neu-inset transition-shadow duration-150 ease-out focus:outline-none focus:shadow-neu-pressed disabled:opacity-50 disabled:cursor-not-allowed";
-const fieldError = "ring-1 ring-[#D96B6B] focus:ring-[#D96B6B]";
+  "w-full rounded-xl bg-[var(--color-bg)] px-4 py-2.5 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:outline-none focus:shadow-neu-pressed disabled:opacity-50 disabled:cursor-not-allowed";
+const fieldError = "ring-1 ring-error focus:ring-error";
 
 function Label({ htmlFor, children }: { htmlFor: string; children: string }) {
   return (
     <label
       htmlFor={htmlFor}
-      className="mb-1.5 block text-sm font-medium text-[var(--color-text)]"
+      className="mb-1.5 block text-sm font-medium text-text"
     >
       {children}
     </label>
@@ -28,9 +28,9 @@ function Label({ htmlFor, children }: { htmlFor: string; children: string }) {
 
 function Helper({ hint, error }: { hint?: string; error?: string }) {
   if (error)
-    return <p className="mt-1.5 text-xs text-[#D96B6B]">{error}</p>;
+    return <p className="mt-1.5 text-xs text-error">{error}</p>;
   if (hint)
-    return <p className="mt-1.5 text-xs text-[var(--color-text-light)]">{hint}</p>;
+    return <p className="mt-1.5 text-xs text-text-light">{hint}</p>;
   return null;
 }
 

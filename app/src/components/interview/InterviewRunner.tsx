@@ -196,7 +196,7 @@ export default function InterviewRunner({
   };
 
   if (!current) {
-    return <p className="text-sm text-gray-500">{tc("loadFailed")}</p>;
+    return <p className="text-sm text-text-light">{tc("loadFailed")}</p>;
   }
 
   const progress = ((currentIdx + 1) / questions.length) * 100;
@@ -205,7 +205,7 @@ export default function InterviewRunner({
   return (
     <div className="space-y-6">
       <div>
-        <div className="mb-2 flex items-center justify-between text-sm text-gray-600">
+        <div className="mb-2 flex items-center justify-between text-sm text-text-light">
           <span>
             {t("progressLabel", {
               current: currentIdx + 1,
@@ -217,7 +217,7 @@ export default function InterviewRunner({
             durationSec={current.expected_duration_sec}
           />
         </div>
-        <div className="h-1.5 w-full rounded-full bg-gray-200">
+        <div className="h-1.5 w-full rounded-full bg-brand-100">
           <div
             className="h-full rounded-full bg-brand-600 transition-all"
             style={{ width: `${progress}%` }}
@@ -225,11 +225,11 @@ export default function InterviewRunner({
         </div>
       </div>
 
-      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-gray-200">
+      <div className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100">
         <span className="inline-block rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700">
           {current.category}
         </span>
-        <p className="mt-3 text-base font-medium text-gray-900">
+        <p className="mt-3 text-base font-medium text-text">
           {current.text}
         </p>
       </div>
@@ -237,7 +237,7 @@ export default function InterviewRunner({
       {!inDrillDown ? (
         <>
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-text">
               {t("yourAnswer")}
             </label>
             <textarea
@@ -245,7 +245,7 @@ export default function InterviewRunner({
               onChange={(e) => setAnswer(e.target.value)}
               rows={8}
               placeholder={t("answerPlaceholder")}
-              className="mt-2 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="mt-2 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
             <div className="mt-2 flex items-start justify-between gap-3">
               <div className="flex-1">
@@ -255,7 +255,7 @@ export default function InterviewRunner({
                   currentAnswer={answer}
                 />
               </div>
-              <p className="shrink-0 text-xs text-gray-400">
+              <p className="shrink-0 text-xs text-text-placeholder">
                 {t("charCount", { count: answer.length })}
               </p>
             </div>
@@ -287,7 +287,7 @@ export default function InterviewRunner({
                 }
               }}
               disabled={currentIdx === 0 || isSubmitting || isCompleting}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
             >
               {tc("back")}
             </button>
@@ -339,13 +339,13 @@ export default function InterviewRunner({
               {t("drillDownBannerTitle")}
             </span>
           </div>
-          <p className="text-sm text-gray-800">{drillDownQuestion}</p>
+          <p className="text-sm text-text">{drillDownQuestion}</p>
           <textarea
             value={drillDownAnswer}
             onChange={(e) => setDrillDownAnswer(e.target.value)}
             rows={6}
             placeholder={t("drillDownPlaceholder")}
-            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+            className="block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
           />
 
           {mode === "voice" && (
@@ -367,7 +367,7 @@ export default function InterviewRunner({
             <button
               onClick={handleSkipDrillDown}
               disabled={isSubmitting || isCompleting}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-brand-200 px-4 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
             >
               <SkipForward className="h-4 w-4" />
               {t("drillDownSkip")}

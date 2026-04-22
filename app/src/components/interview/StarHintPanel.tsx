@@ -74,7 +74,7 @@ export default function StarHintPanel({
             type="button"
             onClick={handleFetch}
             disabled={isLoading}
-            className="text-xs text-gray-500 hover:text-gray-700 transition-colors"
+            className="text-xs text-text-light hover:text-text transition-colors"
           >
             {t("hintRefresh")}
           </button>
@@ -90,7 +90,7 @@ export default function StarHintPanel({
           <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">
             {t("hintTitle")}
           </p>
-          <div className="space-y-2 text-sm text-gray-700">
+          <div className="space-y-2 text-sm text-text">
             <HintLine label={t("starSituation")} text={hint.situation} />
             <HintLine label={t("starTask")} text={hint.task} />
             <HintLine label={t("starAction")} text={hint.action} />

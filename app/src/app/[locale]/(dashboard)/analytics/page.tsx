@@ -38,7 +38,7 @@ export default async function AnalyticsPage() {
   const total = allJobs.length;
 
   const statusConfig: Record<ApplicationStatus, { label: string; color: string; bgColor: string }> = {
-    saved: { label: tJobs("saved"), color: "bg-gray-500", bgColor: "bg-gray-100" },
+    saved: { label: tJobs("saved"), color: "bg-text-light", bgColor: "bg-brand-50" },
     applied: { label: tJobs("applied"), color: "bg-blue-500", bgColor: "bg-blue-100" },
     interview: { label: tJobs("interview"), color: "bg-yellow-500", bgColor: "bg-yellow-100" },
     offer: { label: tJobs("offer"), color: "bg-green-500", bgColor: "bg-green-100" },
@@ -67,7 +67,7 @@ export default async function AnalyticsPage() {
   const offerRate = interviewOrBeyond > 0 ? Math.round((statusCounts.offer / interviewOrBeyond) * 100) : 0;
 
   const funnel = [
-    { label: t("totalCount"), value: total, rate: null as number | null, color: "bg-gray-500" },
+    { label: t("totalCount"), value: total, rate: null as number | null, color: "bg-text-light" },
     { label: t("appliedCount"), value: appliedOrBeyond, rate: applyRate, color: "bg-blue-500" },
     { label: t("interviewCount"), value: interviewOrBeyond, rate: interviewRate, color: "bg-yellow-500" },
     { label: t("offerCount"), value: statusCounts.offer, rate: offerRate, color: "bg-green-500" },
@@ -106,16 +106,16 @@ export default async function AnalyticsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+        <p className="mt-1 text-sm text-text-light">
           {t("subtitle")}
         </p>
       </div>
 
       {isEmpty ? (
         <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 shadow-neu">
-          <BarChart3 className="h-12 w-12 text-gray-300" />
-          <p className="mt-4 text-sm text-gray-400">
+          <BarChart3 className="h-12 w-12 text-text-placeholder" />
+          <p className="mt-4 text-sm text-text-placeholder">
             {t("noData")}
           </p>
         </div>
@@ -125,8 +125,8 @@ export default async function AnalyticsPage() {
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* 狀態分佈 */}
             <div className="rounded-2xl bg-white p-6 shadow-neu">
-              <h2 className="text-lg font-semibold text-gray-900">{t("statusDistribution")}</h2>
-              <p className="mt-1 text-xs text-gray-500">
+              <h2 className="text-lg font-semibold text-text">{t("statusDistribution")}</h2>
+              <p className="mt-1 text-xs text-text-light">
                 {t("totalJobs", { total })}
               </p>
               <div className="mt-5 space-y-3">
@@ -137,10 +137,10 @@ export default async function AnalyticsPage() {
                   return (
                     <div key={status}>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">{config.label}</span>
-                        <span className="font-medium text-gray-900">
+                        <span className="text-text">{config.label}</span>
+                        <span className="font-medium text-text">
                           {count}
-                          <span className="ml-1 text-xs text-gray-400">
+                          <span className="ml-1 text-xs text-text-placeholder">
                             ({pct}%)
                           </span>
                         </span>
@@ -159,8 +159,8 @@ export default async function AnalyticsPage() {
 
             {/* 轉換漏斗 */}
             <div className="rounded-2xl bg-white p-6 shadow-neu">
-              <h2 className="text-lg font-semibold text-gray-900">{t("conversionRate")}</h2>
-              <p className="mt-1 text-xs text-gray-500">
+              <h2 className="text-lg font-semibold text-text">{t("conversionRate")}</h2>
+              <p className="mt-1 text-xs text-text-light">
                 {t("conversionDesc")}
               </p>
               <div className="mt-5 space-y-4">
@@ -169,13 +169,13 @@ export default async function AnalyticsPage() {
                   return (
                     <div key={step.label}>
                       <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-700">{step.label}</span>
+                        <span className="text-text">{step.label}</span>
                         <div className="flex items-center gap-2">
-                          <span className="font-medium text-gray-900">
+                          <span className="font-medium text-text">
                             {step.value}
                           </span>
                           {step.rate !== null && (
-                            <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-600">
+                            <span className="rounded bg-brand-50 px-1.5 py-0.5 text-xs text-text-light">
                               {step.rate}%
                             </span>
                           )}
@@ -188,7 +188,7 @@ export default async function AnalyticsPage() {
                         />
                       </div>
                       {i < funnel.length - 1 && (
-                        <div className="mt-1 text-center text-[10px] text-gray-400">▼</div>
+                        <div className="mt-1 text-center text-[10px] text-text-placeholder">▼</div>
                       )}
                     </div>
                   );
@@ -199,8 +199,8 @@ export default async function AnalyticsPage() {
 
           {/* 第二排：每週活動時間軸 */}
           <div className="rounded-2xl bg-white p-6 shadow-neu">
-            <h2 className="text-lg font-semibold text-gray-900">{t("weeklyActivity")}</h2>
-            <p className="mt-1 text-xs text-gray-500">
+            <h2 className="text-lg font-semibold text-text">{t("weeklyActivity")}</h2>
+            <p className="mt-1 text-xs text-text-light">
               {t("weeklyActivityDesc")}
             </p>
             <div className="mt-5 flex items-end gap-2" style={{ height: 160 }}>
@@ -209,18 +209,18 @@ export default async function AnalyticsPage() {
                   key={week.label}
                   className="flex flex-1 flex-col items-center gap-1"
                 >
-                  <span className="text-xs font-medium text-gray-700">
+                  <span className="text-xs font-medium text-text">
                     {week.count > 0 ? week.count : ""}
                   </span>
                   <div
-                    className={`w-full rounded-t ${week.count > 0 ? "bg-brand-500" : "bg-gray-100"} transition-all`}
+                    className={`w-full rounded-t ${week.count > 0 ? "bg-brand-500" : "bg-brand-50"} transition-all`}
                     style={{
                       height: week.count > 0
                         ? `${Math.max((week.count / maxWeekCount) * 120, 8)}px`
                         : "4px",
                     }}
                   />
-                  <span className="text-[10px] text-gray-400">{week.label}</span>
+                  <span className="text-[10px] text-text-placeholder">{week.label}</span>
                 </div>
               ))}
             </div>

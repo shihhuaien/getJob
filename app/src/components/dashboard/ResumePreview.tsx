@@ -45,18 +45,18 @@ export default function ResumePreview({ resume }: Props) {
     skills.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="print:hidden sticky top-0 z-10 border-b border-gray-200 bg-white">
+    <div className="min-h-screen bg-brand-50">
+      <div className="print:hidden sticky top-0 z-10 border-b border-brand-100 bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
           <Link
             href={`/resume/${resume.id}`}
-            className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="inline-flex items-center gap-1.5 text-sm text-text-light hover:text-text transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("backToEdit")}
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-gray-500">{resume.title}</span>
+            <span className="text-sm text-text-light">{resume.title}</span>
             <button
               onClick={handlePrint}
               className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
@@ -72,7 +72,7 @@ export default function ResumePreview({ resume }: Props) {
         <div className="bg-white shadow-sm print:shadow-none">
           <div className="px-12 py-10 print:px-16 print:py-12">
             {!hasContent ? (
-              <p className="text-center text-gray-400">
+              <p className="text-center text-text-placeholder">
                 {t("emptyContent")}
               </p>
             ) : (
@@ -80,11 +80,11 @@ export default function ResumePreview({ resume }: Props) {
                 {hasPersonalInfo && (
                   <header className="text-center">
                     {personal.name && (
-                      <h1 className="text-2xl font-bold text-gray-900">
+                      <h1 className="text-2xl font-bold text-text">
                         {personal.name}
                       </h1>
                     )}
-                    <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-gray-600">
+                    <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-text-light">
                       {personal.email && (
                         <span className="inline-flex items-center gap-1">
                           <Mail className="h-3.5 w-3.5" />
@@ -109,10 +109,10 @@ export default function ResumePreview({ resume }: Props) {
 
                 {personal.summary && (
                   <section>
-                    <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+                    <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("summary")}
                     </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+                    <p className="mt-3 text-sm leading-relaxed text-text whitespace-pre-wrap">
                       {personal.summary}
                     </p>
                   </section>
@@ -120,7 +120,7 @@ export default function ResumePreview({ resume }: Props) {
 
                 {experience.length > 0 && (
                   <section>
-                    <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+                    <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("experience")}
                     </h2>
                     <div className="mt-3 space-y-4">
@@ -128,15 +128,15 @@ export default function ResumePreview({ resume }: Props) {
                         <div key={exp.id}>
                           <div className="flex items-start justify-between">
                             <div>
-                              <h3 className="text-sm font-semibold text-gray-900">
+                              <h3 className="text-sm font-semibold text-text">
                                 {exp.title}
                               </h3>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-sm text-text-light">
                                 {exp.company}
                               </p>
                             </div>
                             {(exp.start_date || exp.end_date) && (
-                              <span className="flex-shrink-0 text-xs text-gray-500">
+                              <span className="flex-shrink-0 text-xs text-text-light">
                                 {formatDate(exp.start_date)}
                                 {exp.start_date && " — "}
                                 {exp.end_date
@@ -146,7 +146,7 @@ export default function ResumePreview({ resume }: Props) {
                             )}
                           </div>
                           {exp.description && (
-                            <p className="mt-1.5 text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+                            <p className="mt-1.5 text-sm leading-relaxed text-text whitespace-pre-wrap">
                               {exp.description}
                             </p>
                           )}
@@ -158,7 +158,7 @@ export default function ResumePreview({ resume }: Props) {
 
                 {education.length > 0 && (
                   <section>
-                    <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+                    <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("education")}
                     </h2>
                     <div className="mt-3 space-y-3">
@@ -168,17 +168,17 @@ export default function ResumePreview({ resume }: Props) {
                           className="flex items-start justify-between"
                         >
                           <div>
-                            <h3 className="text-sm font-semibold text-gray-900">
+                            <h3 className="text-sm font-semibold text-text">
                               {edu.school}
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-text-light">
                               {[edu.degree, edu.field]
                                 .filter(Boolean)
                                 .join(" — ")}
                             </p>
                           </div>
                           {(edu.start_date || edu.end_date) && (
-                            <span className="flex-shrink-0 text-xs text-gray-500">
+                            <span className="flex-shrink-0 text-xs text-text-light">
                               {formatDate(edu.start_date)}
                               {edu.start_date && " — "}
                               {edu.end_date
@@ -194,14 +194,14 @@ export default function ResumePreview({ resume }: Props) {
 
                 {skills.length > 0 && (
                   <section>
-                    <h2 className="border-b border-gray-300 pb-1 text-sm font-bold uppercase tracking-wider text-gray-700">
+                    <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("skills")}
                     </h2>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {skills.map((skill) => (
                         <span
                           key={skill}
-                          className="rounded bg-gray-100 px-2.5 py-1 text-sm text-gray-700 print:border print:border-gray-300 print:bg-transparent"
+                          className="rounded bg-brand-50 px-2.5 py-1 text-sm text-text print:border print:border-brand-200 print:bg-transparent"
                         >
                           {skill}
                         </span>

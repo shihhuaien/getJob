@@ -46,7 +46,7 @@ export default function GlobalError({
               fontSize: "0.875rem",
               fontWeight: 600,
               letterSpacing: "0.15em",
-              color: "#D96B6B",
+              color: "var(--color-error)",
               margin: 0,
             }}
           >
