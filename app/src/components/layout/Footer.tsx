@@ -11,28 +11,33 @@ export default function Footer() {
   const tMeta = useTranslations("metadata");
 
   return (
-    <footer className="border-t border-gray-200 bg-gray-50">
+    <footer className="border-t border-brand-100/60 bg-[var(--color-bg)]">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <I18nLink href="/" className="flex items-center gap-2">
+            <I18nLink
+              href="/"
+              className="flex items-center gap-2 transition-opacity hover:opacity-80"
+            >
               <Briefcase className="h-5 w-5 text-brand-600" />
-              <span className="text-lg font-bold text-gray-900">
+              <span className="text-lg font-bold text-[color:var(--color-text)]">
                 Offery
               </span>
             </I18nLink>
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-3 text-sm leading-6 text-[color:var(--color-text-light)]">
               {tMeta("description")}
             </p>
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">{tFooter("product")}</h3>
+            <h3 className="text-sm font-semibold text-[color:var(--color-text)]">
+              {tFooter("product")}
+            </h3>
             <ul className="mt-3 space-y-2">
               <li>
                 <Link
                   href="#features"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tNav("features")}
                 </Link>
@@ -40,7 +45,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#pricing"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tNav("pricing")}
                 </Link>
@@ -49,12 +54,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">{tFooter("resources")}</h3>
+            <h3 className="text-sm font-semibold text-[color:var(--color-text)]">
+              {tFooter("resources")}
+            </h3>
             <ul className="mt-3 space-y-2">
               <li>
                 <Link
                   href="#"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tFooter("jobGuide")}
                 </Link>
@@ -62,7 +69,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tFooter("resumeTemplate")}
                 </Link>
@@ -70,7 +77,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="#"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tFooter("interviewTips")}
                 </Link>
@@ -79,12 +86,14 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">{tFooter("legal")}</h3>
+            <h3 className="text-sm font-semibold text-[color:var(--color-text)]">
+              {tFooter("legal")}
+            </h3>
             <ul className="mt-3 space-y-2">
               <li>
                 <I18nLink
                   href="/privacy"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tFooter("privacy")}
                 </I18nLink>
@@ -92,7 +101,7 @@ export default function Footer() {
               <li>
                 <I18nLink
                   href="/terms"
-                  className="text-sm text-gray-500 hover:text-gray-700"
+                  className="text-sm text-[color:var(--color-text-light)] transition-colors duration-150 hover:text-[color:var(--color-text)]"
                 >
                   {tFooter("terms")}
                 </I18nLink>
@@ -101,8 +110,8 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-200 pt-8">
-          <p className="text-center text-sm text-gray-400">
+        <div className="mt-8 border-t border-brand-100/60 pt-8">
+          <p className="text-center text-sm text-[color:var(--color-text-placeholder)]">
             {tFooter("copyright", { year: new Date().getFullYear() })}
           </p>
         </div>

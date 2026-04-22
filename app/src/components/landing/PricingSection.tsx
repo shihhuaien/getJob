@@ -62,7 +62,7 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-8 lg:grid-cols-2 lg:max-w-4xl lg:mx-auto">
+        <div className="mx-auto mt-16 grid max-w-md grid-cols-1 gap-8 sm:max-w-2xl lg:max-w-4xl lg:grid-cols-2">
           {plans.map((plan) => (
             <div
               key={plan.nameKey}
@@ -104,7 +104,7 @@ export default function PricingSection() {
 
               <Link
                 href={plan.href}
-                className={`mt-8 block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors ${
+                className={`mt-8 block w-full rounded-xl py-3 text-center text-sm font-semibold shadow-neu transition-all duration-150 hover:shadow-neu-hover active:shadow-neu-pressed ${
                   plan.highlighted
                     ? "bg-white text-brand-600 hover:bg-brand-50"
                     : "bg-brand-600 text-white hover:bg-brand-700"

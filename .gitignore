@@ -16,3 +16,6 @@ out/
 # IDE
 .vscode/
 .idea/
+
+# Aider tool artifacts
+.aider*

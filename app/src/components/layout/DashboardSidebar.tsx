@@ -44,10 +44,12 @@ export default function DashboardSidebar({
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r border-gray-200 bg-white">
-      <div className="flex h-16 items-center gap-2 border-b border-gray-200 px-6">
+    <div className="flex h-full w-64 flex-col border-r border-brand-100/60 bg-[var(--color-bg-card)]">
+      <div className="flex h-16 items-center gap-2 border-b border-brand-100/60 px-6">
         <Logo className="h-5 w-5 text-brand-600" />
-        <span className="text-lg font-bold text-gray-900">Offery</span>
+        <span className="text-lg font-bold text-[color:var(--color-text)]">
+          Offery
+        </span>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-4">
@@ -58,10 +60,10 @@ export default function DashboardSidebar({
               key={item.href}
               href={item.href}
               onClick={() => onNavigate?.()}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                 isActive
-                  ? "bg-brand-50 text-brand-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-brand-50 text-brand-700 shadow-neu-inset"
+                  : "text-[color:var(--color-text-light)] hover:bg-brand-50/60 hover:text-[color:var(--color-text)]"
               }`}
             >
               <item.icon className="h-5 w-5" />
@@ -71,13 +73,13 @@ export default function DashboardSidebar({
         })}
       </nav>
 
-      <div className="border-t border-gray-200 p-3">
+      <div className="border-t border-brand-100/60 p-3">
         <div className="mb-1 px-3">
           <LocaleSwitcher />
         </div>
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-[color:var(--color-text-light)] transition-colors duration-150 hover:bg-brand-50/60 hover:text-[color:var(--color-text)]"
         >
           <LogOut className="h-5 w-5" />
           {t("logout")}

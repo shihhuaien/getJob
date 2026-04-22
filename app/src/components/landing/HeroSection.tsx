@@ -35,14 +35,14 @@ export default function HeroSection() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <I18nLink
               href="/register"
-              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-brand-700 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-base font-semibold text-white shadow-neu transition-all duration-150 hover:bg-brand-700 hover:shadow-neu-hover active:shadow-neu-pressed"
             >
               {t("heroCta")}
               <ArrowRight className="h-5 w-5" />
             </I18nLink>
             <Link
               href="#features"
-              className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl border border-brand-100/80 bg-white px-6 py-3 text-base font-semibold text-[color:var(--color-text)] shadow-neu transition-all duration-150 hover:bg-brand-50 hover:shadow-neu-hover active:shadow-neu-pressed"
             >
               {t("heroSecondary")}
             </Link>

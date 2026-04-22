@@ -19,7 +19,7 @@ export default function CTASection() {
           </p>
           <Link
             href="/register"
-            className="mt-8 inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-base font-semibold text-brand-600 shadow-sm hover:bg-brand-50 transition-colors"
+            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-base font-semibold text-brand-600 shadow-neu transition-all duration-150 hover:bg-brand-50 hover:shadow-neu-hover active:shadow-neu-pressed"
           >
             {t("heroCta")}
             <ArrowRight className="h-5 w-5" />

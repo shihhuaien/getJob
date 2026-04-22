@@ -1,10 +1,17 @@
 import { ImageResponse } from "next/og";
+import fs from "node:fs";
+import path from "node:path";
 
 export const alt = "Offery — 智慧求職平台";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 export default function OpenGraphImage() {
+  const logo = fs.readFileSync(
+    path.join(process.cwd(), "public/brand/logo-mark.png"),
+  );
+  const logoSrc = `data:image/png;base64,${logo.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -41,23 +48,7 @@ export default function OpenGraphImage() {
             marginBottom: 40,
           }}
         >
-          <div
-            style={{
-              width: 64,
-              height: 64,
-              borderRadius: 16,
-              background: "#688F79",
-              color: "#FFFFFF",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 44,
-              fontWeight: 700,
-              letterSpacing: "-0.05em",
-            }}
-          >
-            O
-          </div>
+          <img src={logoSrc} width={64} height={74} alt="" />
           <span
             style={{
               fontSize: 40,

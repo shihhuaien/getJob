@@ -29,16 +29,18 @@ export default function DashboardShell({
 
   return (
     <div className="flex h-screen flex-col md:flex-row">
-      <header className="flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 md:hidden">
+      <header className="flex h-14 items-center justify-between border-b border-brand-100/60 bg-[var(--color-bg-card)] px-4 md:hidden">
         <Link href="/dashboard" className="flex items-center gap-2">
           <Briefcase className="h-5 w-5 text-brand-600" />
-          <span className="text-lg font-bold text-gray-900">Offery</span>
+          <span className="text-lg font-bold text-[color:var(--color-text)]">
+            Offery
+          </span>
         </Link>
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label={t("toggleMenu")}
-          className="rounded-lg p-2 text-gray-600 hover:bg-gray-100 transition-colors"
+          className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-xl text-[color:var(--color-text-light)] transition-colors hover:bg-brand-50 hover:text-[color:var(--color-text)]"
         >
           <Menu className="h-5 w-5" />
         </button>
@@ -48,27 +50,33 @@ export default function DashboardShell({
         <DashboardSidebar />
       </aside>
 
-      {open && (
-        <div className="fixed inset-0 z-40 md:hidden" role="dialog" aria-modal="true">
+      <div className="md:hidden" role="dialog" aria-modal="true" aria-hidden={!open}>
+        <button
+          type="button"
+          aria-label={t("closeMenu")}
+          tabIndex={open ? 0 : -1}
+          onClick={() => setOpen(false)}
+          className={`fixed inset-0 z-40 bg-black/30 backdrop-blur-sm motion-safe:transition-opacity motion-safe:duration-300 ${
+            open ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+        />
+        <div
+          className={`fixed inset-y-0 left-0 z-50 flex h-full w-72 max-w-[80vw] flex-col bg-[var(--color-bg-card)] shadow-neu motion-safe:transition-transform motion-safe:duration-[280ms] motion-safe:ease-[cubic-bezier(0.32,0.72,0,1)] ${
+            open ? "translate-x-0" : "pointer-events-none -translate-x-full"
+          }`}
+        >
           <button
             type="button"
-            aria-label={t("closeMenu")}
             onClick={() => setOpen(false)}
-            className="absolute inset-0 bg-black/40"
-          />
-          <div className="relative z-50 flex h-full w-72 max-w-[80vw] flex-col bg-white shadow-xl">
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label={t("closeMenu")}
-              className="absolute right-3 top-3 rounded-lg p-2 text-gray-600 hover:bg-gray-100 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-            <DashboardSidebar onNavigate={() => setOpen(false)} />
-          </div>
+            aria-label={t("closeMenu")}
+            tabIndex={open ? 0 : -1}
+            className="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-xl text-[color:var(--color-text-light)] transition-colors hover:bg-brand-50 hover:text-[color:var(--color-text)]"
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <DashboardSidebar onNavigate={() => setOpen(false)} />
         </div>
-      )}
+      </div>
 
       <main className="flex-1 overflow-y-auto bg-[var(--color-bg)] p-4 sm:p-6 lg:p-8">
         {children}
