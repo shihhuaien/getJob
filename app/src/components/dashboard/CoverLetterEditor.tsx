@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { coverLetterUpdateSchema } from "@/lib/validations";
 import type { Database } from "@/types/database";
@@ -23,16 +24,11 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
-    setError(null);
-    setSuccess(false);
-
     const validation = coverLetterUpdateSchema.safeParse({ title, content });
     if (!validation.success) {
-      setError(validation.error.issues[0].message);
+      toast.error(validation.error.issues[0].message);
       return;
     }
 
@@ -49,10 +45,9 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       .eq("id", coverLetter.id);
 
     if (dbError) {
-      setError(tc("saveFailed"));
+      toast.error(tc("saveFailed"));
     } else {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 2000);
+      toast.success(tc("saved"));
     }
     setIsSaving(false);
   };
@@ -66,9 +61,10 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
       .eq("id", coverLetter.id);
 
     if (dbError) {
-      setError(tc("deleteFailed"));
+      toast.error(tc("deleteFailed"));
       setIsDeleting(false);
     } else {
+      toast.success(tc("deleted"));
       router.push("/cover-letter");
     }
   };
@@ -85,10 +81,6 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
           {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
-          {success && (
-            <span className="text-sm text-green-600">{tc("saved")}</span>
-          )}
-          {error && <span className="text-sm text-red-600">{error}</span>}
           <button
             onClick={handleSave}
             disabled={isSaving}

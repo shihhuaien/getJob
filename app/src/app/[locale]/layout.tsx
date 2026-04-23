@@ -4,6 +4,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import { Toaster } from "@/components/ui/Toaster";
 import "../globals.css";
 
 const notoSansTC = Noto_Sans_TC({
@@ -100,6 +101,7 @@ export default async function LocaleLayout({
       <body className="min-h-full flex flex-col font-[family-name:var(--font-noto-sans-tc)]">
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

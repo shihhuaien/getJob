@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-21
+**最後更新**：2026-04-22
 **收費模式**：免費 + 訂閱制（Stripe，US$9.99/月）
 
 ---
@@ -185,6 +185,19 @@
 - [x] 隱私權政策頁面
 - [x] 服務條款頁面
 - [x] 新增 loading 動畫，結合進 button
+
+---
+
+## UI/UX 審查批次
+
+### ✅ 批次 2：狀態回饋與空狀態（2026-04-22）
+
+- [x] 引入 Sonner Toast 系統（`src/components/ui/Toaster.tsx`，已掛載於 locale layout）
+- [x] inline success/error 狀態改為 toast（CoverLetterEditor、ResumeEditor、JobDetail、ProfileForm、JobsBoard）
+- [x] 表單驗證改 onBlur（login / register 的 email；register 的 password）
+- [x] `<EmptyState>` 套用於 6 個主要畫面（resume、cover-letter、interview、interview/bank、analytics、jobs）
+- [x] Dashboard stats cards 色彩對齊品牌色階（brand / accent / secondary / success + shadow-neu-inset）
+- [x] 新增路由骨架屏 loading.tsx（jobs、resume、cover-letter、interview、analytics、settings）
 
 ---
 

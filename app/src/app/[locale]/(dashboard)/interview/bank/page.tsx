@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { BookOpen, ArrowLeft } from "lucide-react";
 import QuestionBankList from "@/components/interview/QuestionBankList";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default async function InterviewBankPage() {
   const t = await getTranslations("interview");
@@ -41,15 +42,11 @@ export default async function InterviewBankPage() {
       {items && items.length > 0 ? (
         <QuestionBankList items={items} />
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
-          <BookOpen className="h-12 w-12 text-text-placeholder" />
-          <h3 className="mt-4 text-lg font-medium text-text">
-            {t("bankEmpty")}
-          </h3>
-          <p className="mt-1 max-w-md text-center text-sm text-text-light">
-            {t("bankEmptyDesc")}
-          </p>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title={t("bankEmpty")}
+          description={t("bankEmptyDesc")}
+        />
       )}
     </div>
   );

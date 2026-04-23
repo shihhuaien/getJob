@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { FileText } from "lucide-react";
 import CreateResumeButton from "@/components/dashboard/CreateResumeButton";
+import EmptyState from "@/components/ui/EmptyState";
 export default async function ResumePage() {
   const t = await getTranslations("resume");
   const tCommon = await getTranslations("common");
@@ -74,18 +75,12 @@ export default async function ResumePage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
-          <FileText className="h-12 w-12 text-text-placeholder" />
-          <h3 className="mt-4 text-lg font-medium text-text">
-            {t("noResumes")}
-          </h3>
-          <p className="mt-1 text-sm text-text-light">
-            {t("noResumesDesc")}
-          </p>
-          <div className="mt-4">
-            <CreateResumeButton userId={user.id} isPro={isPro} />
-          </div>
-        </div>
+        <EmptyState
+          icon={FileText}
+          title={t("noResumes")}
+          description={t("noResumesDesc")}
+          action={<CreateResumeButton userId={user.id} isPro={isPro} />}
+        />
       )}
     </div>
   );

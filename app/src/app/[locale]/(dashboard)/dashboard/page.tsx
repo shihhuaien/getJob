@@ -85,25 +85,25 @@ export default async function DashboardPage() {
       label: t("trackingJobs"),
       value: jobCount ?? 0,
       icon: Briefcase,
-      color: "text-blue-600 bg-blue-100",
+      color: "text-brand-600 bg-brand-50",
     },
     {
       label: t("resumeCount"),
       value: resumeCount ?? 0,
       icon: FileText,
-      color: "text-green-600 bg-green-100",
+      color: "text-[color:var(--color-accent)] bg-[color:var(--color-accent)]/10",
     },
     {
       label: t("coverLetterCount"),
       value: coverLetterCount ?? 0,
       icon: Mail,
-      color: "text-purple-600 bg-purple-100",
+      color: "text-[color:var(--color-secondary)] bg-[color:var(--color-secondary)]/15",
     },
     {
       label: t("interviewing"),
       value: interviewCount ?? 0,
       icon: TrendingUp,
-      color: "text-orange-600 bg-orange-100",
+      color: "text-[color:var(--color-success)] bg-[color:var(--color-success)]/15",
     },
   ];
 
@@ -126,7 +126,7 @@ export default async function DashboardPage() {
           >
             <div className="flex items-center gap-4">
               <div
-                className={`flex h-12 w-12 items-center justify-center rounded-lg ${stat.color}`}
+                className={`flex h-12 w-12 items-center justify-center rounded-lg shadow-neu-inset ${stat.color}`}
               >
                 <stat.icon className="h-6 w-6" />
               </div>

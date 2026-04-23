@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { Mic, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import InterviewSessionCard from "@/components/interview/InterviewSessionCard";
 import RadarChart from "@/components/interview/RadarChart";
+import EmptyState from "@/components/ui/EmptyState";
 import type { InterviewReport, Scorecard } from "@/types/interview";
 
 function averageScorecard(list: Scorecard[]): Scorecard {
@@ -108,15 +109,11 @@ export default async function InterviewPage() {
       )}
 
       {sessions.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
-          <Mic className="h-12 w-12 text-text-placeholder" />
-          <h3 className="mt-4 text-lg font-medium text-text">
-            {t("emptyTitle")}
-          </h3>
-          <p className="mt-1 max-w-md text-center text-sm text-text-light">
-            {t("emptyDesc")}
-          </p>
-        </div>
+        <EmptyState
+          icon={Mic}
+          title={t("emptyTitle")}
+          description={t("emptyDesc")}
+        />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {sessions.map((s) => {

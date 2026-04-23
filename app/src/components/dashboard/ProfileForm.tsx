@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 
 interface ProfileFormProps {
@@ -17,18 +18,14 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(fullName || "");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const handleSave = async () => {
     if (!name.trim()) {
-      setError(tc("saveFailed"));
+      toast.error(tc("saveFailed"));
       return;
     }
 
     setIsLoading(true);
-    setError(null);
-    setSuccess(false);
     try {
       const res = await fetch("/api/profile", {
         method: "PATCH",
@@ -37,11 +34,11 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || tc("saveFailed"));
-      setSuccess(true);
+      toast.success(tc("updated"));
       setIsEditing(false);
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : tc("saveFailed"));
+      toast.error(err instanceof Error ? err.message : tc("saveFailed"));
     } finally {
       setIsLoading(false);
     }
@@ -49,8 +46,6 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
 
   const handleCancel = () => {
     setName(fullName || "");
-    setError(null);
-    setSuccess(false);
     setIsEditing(false);
   };
 
@@ -115,12 +110,6 @@ export default function ProfileForm({ email, fullName }: ProfileFormProps) {
         )}
       </div>
 
-      {error && (
-        <p className="text-sm text-red-600">{error}</p>
-      )}
-      {success && (
-        <p className="text-sm text-green-600">{tc("updated")}</p>
-      )}
     </div>
   );
 }

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Plus, Building2, ExternalLink, Search, X, Sparkles } from "lucide-react";
+import { Plus, Building2, ExternalLink, Search, X, Sparkles, Briefcase } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 import {
   DndContext,
   DragOverlay,
@@ -25,6 +26,7 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { jobInsertSchema, isValidHttpUrl } from "@/lib/validations";
 import ParseJobModal from "./ParseJobModal";
@@ -245,8 +247,11 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       );
       setNewJob({ company_name: "", job_title: "", job_url: "", status: "saved" });
       setShowAddForm(false);
+      toast.success(tc("created"));
     } catch {
-      setFormError(tc("saveFailed"));
+      const msg = tc("saveFailed");
+      setFormError(msg);
+      toast.error(msg);
     } finally {
       setIsSubmitting(false);
     }
@@ -505,34 +510,51 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
         </form>
       )}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-          {statusColumns.map((col) => {
-            const columnJobs = filteredJobs.filter(
-              (job) => job.status === col.key
-            );
-            return (
-              <DroppableColumn
-                key={col.key}
-                col={col}
-                jobs={columnJobs}
-                isOver={overColumnId === col.key}
-                label={t(col.labelKey)}
-                noJobsText={t("noJobs")}
-              />
-            );
-          })}
-        </div>
-        <DragOverlay dropAnimation={dropAnimation}>
-          {activeJob ? <DragOverlayCard job={activeJob} /> : null}
-        </DragOverlay>
-      </DndContext>
+      {jobs.length === 0 && !showAddForm ? (
+        <EmptyState
+          icon={Briefcase}
+          title={t("emptyTitle")}
+          description={t("emptyDesc")}
+          action={
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="inline-flex items-center gap-2 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-700 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              {t("addJob")}
+            </button>
+          }
+        />
+      ) : (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCorners}
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+            {statusColumns.map((col) => {
+              const columnJobs = filteredJobs.filter(
+                (job) => job.status === col.key
+              );
+              return (
+                <DroppableColumn
+                  key={col.key}
+                  col={col}
+                  jobs={columnJobs}
+                  isOver={overColumnId === col.key}
+                  label={t(col.labelKey)}
+                  noJobsText={t("noJobs")}
+                />
+              );
+            })}
+          </div>
+          <DragOverlay dropAnimation={dropAnimation}>
+            {activeJob ? <DragOverlayCard job={activeJob} /> : null}
+          </DragOverlay>
+        </DndContext>
+      )}
 
       {showParseModal && (
         <ParseJobModal

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
@@ -33,8 +34,6 @@ export default function JobDetail({ job }: Props) {
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
   const [form, setForm] = useState({
     company_name: job.company_name,
@@ -49,9 +48,6 @@ export default function JobDetail({ job }: Props) {
   });
 
   const handleSave = async () => {
-    setError(null);
-    setSuccess(false);
-
     const validation = jobUpdateSchema.safeParse({
       company_name: form.company_name,
       job_title: form.job_title,
@@ -64,7 +60,7 @@ export default function JobDetail({ job }: Props) {
     });
 
     if (!validation.success) {
-      setError(validation.error.issues[0].message);
+      toast.error(validation.error.issues[0].message);
       return;
     }
 
@@ -88,9 +84,9 @@ export default function JobDetail({ job }: Props) {
       .eq("id", job.id);
 
     if (dbError) {
-      setError(tc("saveFailed"));
+      toast.error(tc("saveFailed"));
     } else {
-      setSuccess(true);
+      toast.success(tc("updated"));
       setIsEditing(false);
       router.refresh();
     }
@@ -106,9 +102,10 @@ export default function JobDetail({ job }: Props) {
       .eq("id", job.id);
 
     if (dbError) {
-      setError(tc("deleteFailed"));
+      toast.error(tc("deleteFailed"));
       setIsDeleting(false);
     } else {
+      toast.success(tc("deleted"));
       router.push("/jobs");
     }
   };
@@ -125,8 +122,6 @@ export default function JobDetail({ job }: Props) {
       notes: job.notes || "",
       applied_at: job.applied_at?.split("T")[0] || "",
     });
-    setError(null);
-    setSuccess(false);
     setIsEditing(false);
   };
 
@@ -204,17 +199,6 @@ export default function JobDetail({ job }: Props) {
               {tc("cancel")}
             </button>
           </div>
-        </div>
-      )}
-
-      {error && (
-        <div className="mb-6 rounded-lg bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </div>
-      )}
-      {success && (
-        <div className="mb-6 rounded-lg bg-green-50 p-3 text-sm text-green-700">
-          {tc("updated")}
         </div>
       )}
 

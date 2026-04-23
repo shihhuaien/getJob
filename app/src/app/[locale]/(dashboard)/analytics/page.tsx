@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { BarChart3 } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 
 type ApplicationStatus = "saved" | "applied" | "interview" | "offer" | "rejected";
 
@@ -113,12 +114,11 @@ export default async function AnalyticsPage() {
       </div>
 
       {isEmpty ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-12 shadow-neu">
-          <BarChart3 className="h-12 w-12 text-text-placeholder" />
-          <p className="mt-4 text-sm text-text-placeholder">
-            {t("noData")}
-          </p>
-        </div>
+        <EmptyState
+          icon={BarChart3}
+          title={t("emptyTitle")}
+          description={t("noData")}
+        />
       ) : (
         <div className="space-y-6">
           {/* 第一排：狀態分佈 + 轉換漏斗 */}

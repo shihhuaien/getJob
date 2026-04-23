@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import ResumeOptimizeModal from "./ResumeOptimizeModal";
 import { createClient } from "@/lib/supabase/client";
 import { resumeUpdateSchema } from "@/lib/validations";
@@ -58,8 +59,6 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
     parseContent(resume.content)
   );
   const [isSaving, setIsSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "personal" | "education" | "experience" | "skills"
   >("personal");
@@ -76,24 +75,22 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       .eq("id", resume.id);
 
     if (dbError) {
-      setError(tc("deleteFailed"));
+      toast.error(tc("deleteFailed"));
       setIsDeleting(false);
       return;
     }
 
+    toast.success(tc("deleted"));
     router.push("/resume");
   };
 
   const handleSave = async () => {
-    setError(null);
-    setSuccess(false);
-
     const validation = resumeUpdateSchema.safeParse({
       title,
       target_job_title: targetJobTitle || "",
     });
     if (!validation.success) {
-      setError(validation.error.issues[0].message);
+      toast.error(validation.error.issues[0].message);
       return;
     }
 
@@ -111,10 +108,9 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       .eq("id", resume.id);
 
     if (dbError) {
-      setError(tc("saveFailed"));
+      toast.error(tc("saveFailed"));
     } else {
-      setSuccess(true);
-      setTimeout(() => setSuccess(false), 2000);
+      toast.success(tc("saved"));
     }
     setIsSaving(false);
   };
@@ -240,10 +236,6 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
-          {success && (
-            <span className="text-sm text-green-600">{tc("saved")}</span>
-          )}
-          {error && <span className="text-sm text-red-600">{error}</span>}
           {isPro && (
             <button
               onClick={() => setShowOptimize(true)}

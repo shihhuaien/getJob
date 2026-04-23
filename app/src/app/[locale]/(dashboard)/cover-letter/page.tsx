@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Mail } from "lucide-react";
 import CreateCoverLetterButton from "@/components/dashboard/CreateCoverLetterButton";
+import EmptyState from "@/components/ui/EmptyState";
 
 export default async function CoverLetterPage() {
   const t = await getTranslations("coverLetter");
@@ -91,18 +92,19 @@ export default async function CoverLetterPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-brand-200 bg-white py-16">
-          <Mail className="h-12 w-12 text-text-placeholder" />
-          <h3 className="mt-4 text-lg font-medium text-text">
-            {t("noCoverLetters")}
-          </h3>
-          <p className="mt-1 text-sm text-text-light">
-            {t("noCoverLettersDesc")}
-          </p>
-          <div className="mt-4">
-            <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />
-          </div>
-        </div>
+        <EmptyState
+          icon={Mail}
+          title={t("noCoverLetters")}
+          description={t("noCoverLettersDesc")}
+          action={
+            <CreateCoverLetterButton
+              userId={user.id}
+              isPro={isPro}
+              resumes={resumes}
+              jobs={jobs}
+            />
+          }
+        />
       )}
     </div>
   );

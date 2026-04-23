@@ -6,18 +6,39 @@ import { Briefcase } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useTranslations } from "next-intl";
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export default function RegisterPage() {
   const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const validateEmail = (value: string) => {
+    if (!value) return "";
+    return EMAIL_RE.test(value) ? "" : t("invalidEmail");
+  };
+
+  const validatePassword = (value: string) => {
+    if (!value) return "";
+    return value.length >= 6 ? "" : t("passwordTooShort");
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    const emailIssue = validateEmail(email);
+    const passwordIssue = validatePassword(password);
+    if (emailIssue || passwordIssue) {
+      setEmailError(emailIssue);
+      setPasswordError(passwordIssue);
+      return;
+    }
     setLoading(true);
 
     const supabase = createClient();
@@ -168,10 +189,21 @@ export default function RegisterPage() {
                 type="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(validateEmail(e.target.value));
+                }}
+                onBlur={(e) => setEmailError(validateEmail(e.target.value))}
+                aria-invalid={Boolean(emailError)}
+                aria-describedby={emailError ? "email-error" : undefined}
                 className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder="you@example.com"
               />
+              {emailError && (
+                <p id="email-error" className="mt-1 text-xs text-error">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <div>
@@ -187,10 +219,22 @@ export default function RegisterPage() {
                 required
                 minLength={6}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (passwordError)
+                    setPasswordError(validatePassword(e.target.value));
+                }}
+                onBlur={(e) => setPasswordError(validatePassword(e.target.value))}
+                aria-invalid={Boolean(passwordError)}
+                aria-describedby={passwordError ? "password-error" : undefined}
                 className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
                 placeholder={t("passwordHint")}
               />
+              {passwordError && (
+                <p id="password-error" className="mt-1 text-xs text-error">
+                  {passwordError}
+                </p>
+              )}
             </div>
 
             <button
