@@ -48,3 +48,32 @@ export async function generateCoverLetter(
 
   return result.response.text().trim();
 }
+
+export async function* generateCoverLetterStream(
+  resumeContent: ResumeContent,
+  jobDescription: string,
+  companyName: string,
+  jobTitle: string,
+  locale?: string
+): AsyncGenerator<string, void, unknown> {
+  const genAI = getGemini();
+  const model = genAI.getGenerativeModel({
+    model: process.env.GEMINI_MODEL || "gemini-2.5-flash",
+  });
+
+  const resumeText = resumeToText(resumeContent);
+
+  const result = await withGeminiRetry(() =>
+    model.generateContentStream([
+      { text: getSystemPrompt(locale) },
+      {
+        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
+      },
+    ]),
+  );
+
+  for await (const chunk of result.stream) {
+    const text = chunk.text();
+    if (text) yield text;
+  }
+}

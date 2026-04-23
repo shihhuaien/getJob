@@ -32,7 +32,7 @@ export default async function JobsPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <h1 className="text-2xl font-bold text-text vt-page-title">{t("title")}</h1>
           <p className="mt-1 text-sm text-text-light">
             {t("subtitle")}
           </p>

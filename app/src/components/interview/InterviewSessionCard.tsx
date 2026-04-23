@@ -19,6 +19,7 @@ interface Props {
   report: InterviewReport | null;
   createdAt: string;
   job: JobSummary | null;
+  index?: number;
 }
 
 export default function InterviewSessionCard({
@@ -29,6 +30,7 @@ export default function InterviewSessionCard({
   report,
   createdAt,
   job,
+  index,
 }: Props) {
   const router = useRouter();
   const t = useTranslations("interview");
@@ -61,7 +63,10 @@ export default function InterviewSessionCard({
   };
 
   return (
-    <div className="group relative rounded-xl bg-white shadow-sm ring-1 ring-brand-100 hover:shadow-md transition-shadow">
+    <div
+      style={typeof index === "number" ? ({ "--i": index } as React.CSSProperties) : undefined}
+      className={`group relative rounded-xl bg-white shadow-sm ring-1 ring-brand-100 hover:shadow-md transition-shadow${typeof index === "number" ? " stagger-item" : ""}`}
+    >
       <Link href={href} className="block p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1 pr-8">

@@ -30,7 +30,7 @@ export default function InfoTooltip({ label, content }: Props) {
       {open && (
         <span
           role="tooltip"
-          className="pointer-events-none absolute bottom-full left-1/2 z-20 mb-2 w-64 -translate-x-1/2 rounded-lg bg-text px-3 py-2 text-xs leading-relaxed text-white shadow-neu"
+          className="pointer-events-none absolute bottom-full left-0 z-20 mb-2 w-60 max-w-[min(16rem,70vw)] rounded-lg bg-text px-3 py-2 text-xs leading-relaxed text-white shadow-neu"
         >
           {content}
         </span>

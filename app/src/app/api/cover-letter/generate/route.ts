@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { generateCoverLetterSchema } from "@/lib/validations";
-import { generateCoverLetter } from "@/lib/generate-cover-letter";
+import { generateCoverLetterStream } from "@/lib/generate-cover-letter";
 import type { ResumeContent } from "@/types/resume";
+
+export const DONE_SENTINEL = "\n---OFFERY_DONE---\n";
+export const ERROR_SENTINEL = "\n---OFFERY_ERROR---\n";
 
 export async function POST(request: Request) {
   try {
@@ -75,39 +78,74 @@ export async function POST(request: Request) {
     const resumeContent = resumeResult.data
       .content as unknown as ResumeContent;
     const { job_description, company_name, job_title } = jobResult.data;
-
     const locale = body.locale;
-    const content = await generateCoverLetter(
-      resumeContent,
-      job_description,
-      company_name,
-      job_title,
-      locale
-    );
 
     const titleText = locale === "en"
       ? `Cover Letter for ${company_name}`
       : `致${company_name}的求職信`;
 
-    const { data: coverLetter, error: dbError } = await supabase
-      .from("cover_letters")
-      .insert({
-        user_id: user.id,
-        title: titleText,
-        content,
-        job_application_id: job_id,
-      })
-      .select("id")
-      .single();
+    const encoder = new TextEncoder();
+    const userId = user.id;
 
-    if (dbError) {
-      return NextResponse.json(
-        { error: "Failed to create cover letter" },
-        { status: 500 }
-      );
-    }
+    const stream = new ReadableStream<Uint8Array>({
+      async start(controller) {
+        let fullText = "";
+        try {
+          for await (const chunk of generateCoverLetterStream(
+            resumeContent,
+            job_description,
+            company_name,
+            job_title,
+            locale
+          )) {
+            fullText += chunk;
+            controller.enqueue(encoder.encode(chunk));
+          }
 
-    return NextResponse.json({ data: { id: coverLetter.id } });
+          const content = fullText.trim();
+          const serverSupabase = await createClient();
+          const { data: coverLetter, error: dbError } = await serverSupabase
+            .from("cover_letters")
+            .insert({
+              user_id: userId,
+              title: titleText,
+              content,
+              job_application_id: job_id,
+            })
+            .select("id")
+            .single();
+
+          if (dbError || !coverLetter) {
+            controller.enqueue(
+              encoder.encode(
+                ERROR_SENTINEL +
+                  JSON.stringify({ error: "Failed to create cover letter" })
+              )
+            );
+          } else {
+            controller.enqueue(
+              encoder.encode(DONE_SENTINEL + JSON.stringify({ id: coverLetter.id }))
+            );
+          }
+        } catch (err) {
+          const message =
+            err instanceof Error ? err.message : "Failed to generate cover letter";
+          controller.enqueue(
+            encoder.encode(ERROR_SENTINEL + JSON.stringify({ error: message }))
+          );
+        } finally {
+          controller.close();
+        }
+      },
+    });
+
+    return new Response(stream, {
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+        "Cache-Control": "no-store",
+        "X-Accel-Buffering": "no",
+      },
+    });
   } catch (err) {
     console.error("[/api/cover-letter/generate] Error:", err);
     const message =

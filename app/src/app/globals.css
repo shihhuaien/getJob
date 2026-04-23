@@ -102,3 +102,79 @@ body {
     box-shadow: var(--shadow-neu-pressed);
   }
 }
+
+/* ─── 動效 ─── */
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes radar-expand {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes celebration-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@layer utilities {
+  .vt-page-title {
+    view-transition-name: page-title;
+  }
+
+  .stagger-item {
+    animation: stagger-in var(--duration-slow) var(--ease-out-quart) both;
+    animation-delay: calc(min(var(--i, 0), 10) * 40ms);
+  }
+
+  .radar-expand {
+    transform-origin: 140px 140px;
+    transform-box: fill-box;
+    animation: radar-expand 600ms var(--ease-spring) both;
+  }
+
+  .celebration-check-path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: celebration-check 600ms var(--ease-out-quart) 150ms forwards;
+  }
+}
+
+/* View Transitions — Next.js 16 */
+::view-transition-old(page-title),
+::view-transition-new(page-title) {
+  animation-duration: var(--duration-base);
+  animation-timing-function: var(--ease-out-quart);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-item,
+  .radar-expand,
+  .celebration-check-path {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+    stroke-dashoffset: 0;
+  }
+
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}

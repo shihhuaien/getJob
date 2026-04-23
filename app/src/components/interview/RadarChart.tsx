@@ -90,26 +90,29 @@ export default function RadarChart({
             );
           })}
 
-          {/* 平均（虛線灰色多邊形） */}
-          {average && (
-            <polygon
-              points={polygonPoints(average)}
-              fill="rgba(122, 127, 136, 0.1)"
-              stroke="var(--color-text-placeholder)"
-              strokeWidth={1.5}
-              strokeDasharray="4 3"
-            />
-          )}
+          {/* 資料多邊形：從中心點擴張登場 */}
+          <g className="radar-expand">
+            {/* 平均（虛線灰色多邊形） */}
+            {average && (
+              <polygon
+                points={polygonPoints(average)}
+                fill="rgba(122, 127, 136, 0.1)"
+                stroke="var(--color-text-placeholder)"
+                strokeWidth={1.5}
+                strokeDasharray="4 3"
+              />
+            )}
 
-          {/* 最新（實心品牌色多邊形） */}
-          {latest && (
-            <polygon
-              points={polygonPoints(latest)}
-              fill="rgba(104, 143, 121, 0.25)"
-              stroke="#688F79"
-              strokeWidth={2}
-            />
-          )}
+            {/* 最新（實心品牌色多邊形） */}
+            {latest && (
+              <polygon
+                points={polygonPoints(latest)}
+                fill="rgba(104, 143, 121, 0.25)"
+                stroke="#688F79"
+                strokeWidth={2}
+              />
+            )}
+          </g>
 
           {/* 軸標籤 */}
           {AXES.map((a) => {

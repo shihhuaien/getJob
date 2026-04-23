@@ -196,6 +196,10 @@
 - [ ]
 - [ ]
 
+## 行銷
+
+- [ ] 建立行銷計劃與代辦事項
+
 ## UI/UX 審查批次
 
 ### ✅ 批次 2：狀態回饋與空狀態（2026-04-22）
@@ -215,8 +219,6 @@
 - [x] 進度徽章 `MilestoneBadge`（4 項：追蹤首份職缺 / 建立履歷 / 產生求職信 / 完成一場面試）
 - [x] AI 面試 prep 資訊區塊（時長 / 麥克風 / 隱私）＋ 情境 Tooltip（`InfoTooltip`，套用於 Persona / 追問模式）
 - [x] Resume / Cover Letter Autosave（`useAutosave` hook + `AutosaveIndicator`，5s debounce、beforeunload 未儲存提示）
-
-> ⚠️ 部署提醒：新 migration 需於 Supabase Dashboard 執行（或 `npx supabase db push`）後才能生效。
 
 ---
 

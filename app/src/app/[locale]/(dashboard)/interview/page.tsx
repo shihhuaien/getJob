@@ -69,7 +69,7 @@ export default async function InterviewPage() {
     <div>
       <div className="mb-8 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <h1 className="text-2xl font-bold text-text vt-page-title">{t("title")}</h1>
           <p className="mt-1 text-sm text-text-light">{t("subtitle")}</p>
         </div>
         <Link
@@ -116,7 +116,7 @@ export default async function InterviewPage() {
         />
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {sessions.map((s) => {
+          {sessions.map((s, index) => {
             const report = s.report as unknown as InterviewReport | null;
             const job = Array.isArray(s.job_applications)
               ? s.job_applications[0]
@@ -131,6 +131,7 @@ export default async function InterviewPage() {
                 report={report}
                 createdAt={s.created_at}
                 job={job ?? null}
+                index={index}
               />
             );
           })}

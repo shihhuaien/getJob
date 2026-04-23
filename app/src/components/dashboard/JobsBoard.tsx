@@ -534,19 +534,24 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           onDragEnd={handleDragEnd}
         >
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-            {statusColumns.map((col) => {
+            {statusColumns.map((col, index) => {
               const columnJobs = filteredJobs.filter(
                 (job) => job.status === col.key
               );
               return (
-                <DroppableColumn
+                <div
                   key={col.key}
-                  col={col}
-                  jobs={columnJobs}
-                  isOver={overColumnId === col.key}
-                  label={t(col.labelKey)}
-                  noJobsText={t("noJobs")}
-                />
+                  style={{ "--i": index } as React.CSSProperties}
+                  className="stagger-item"
+                >
+                  <DroppableColumn
+                    col={col}
+                    jobs={columnJobs}
+                    isOver={overColumnId === col.key}
+                    label={t(col.labelKey)}
+                    noJobsText={t("noJobs")}
+                  />
+                </div>
               );
             })}
           </div>

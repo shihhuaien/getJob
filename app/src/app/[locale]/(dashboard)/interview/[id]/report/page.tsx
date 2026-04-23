@@ -65,7 +65,7 @@ export default async function InterviewReportPage({
           <ArrowLeft className="h-4 w-4" />
           {t("backToList")}
         </Link>
-        <h1 className="mt-3 text-2xl font-bold text-text">
+        <h1 className="mt-3 text-2xl font-bold text-text vt-page-title">
           {t("reportTitle")}
         </h1>
         <p className="mt-1 text-sm text-text-light">

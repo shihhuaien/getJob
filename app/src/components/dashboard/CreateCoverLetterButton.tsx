@@ -44,6 +44,7 @@ export default function CreateCoverLetterButton({
   const [selectedJobId, setSelectedJobId] = useState("");
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [streamingText, setStreamingText] = useState("");
 
   const resetState = () => {
     setTitle("");
@@ -52,6 +53,7 @@ export default function CreateCoverLetterButton({
     setSelectedResumeId("");
     setIsGenerating(false);
     setIsSubmitting(false);
+    setStreamingText("");
   };
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -95,6 +97,7 @@ export default function CreateCoverLetterButton({
 
     setError(null);
     setIsGenerating(true);
+    setStreamingText("");
 
     try {
       const res = await fetch("/api/cover-letter/generate", {
@@ -107,17 +110,70 @@ export default function CreateCoverLetterButton({
         }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
+      if (!res.ok || !res.body) {
+        const data = await res.json().catch(() => ({ error: t("generateFailed") }));
         setError(data.error || t("generateFailed"));
+        setIsGenerating(false);
+        return;
+      }
+
+      const DONE_SENTINEL = "\n---OFFERY_DONE---\n";
+      const ERROR_SENTINEL = "\n---OFFERY_ERROR---\n";
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let finalId: string | null = null;
+      let streamError: string | null = null;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        const errorIdx = buffer.indexOf(ERROR_SENTINEL);
+        if (errorIdx !== -1) {
+          const visible = buffer.slice(0, errorIdx);
+          setStreamingText(visible);
+          const payload = buffer.slice(errorIdx + ERROR_SENTINEL.length).trim();
+          try {
+            streamError = JSON.parse(payload).error as string;
+          } catch {
+            streamError = t("generateFailed");
+          }
+          break;
+        }
+
+        const doneIdx = buffer.indexOf(DONE_SENTINEL);
+        if (doneIdx !== -1) {
+          const visible = buffer.slice(0, doneIdx);
+          setStreamingText(visible);
+          const payload = buffer.slice(doneIdx + DONE_SENTINEL.length).trim();
+          try {
+            finalId = JSON.parse(payload).id as string;
+          } catch {
+            streamError = t("generateFailed");
+          }
+          break;
+        }
+
+        setStreamingText(buffer);
+      }
+
+      if (streamError) {
+        setError(streamError);
+        setIsGenerating(false);
+        return;
+      }
+
+      if (!finalId) {
+        setError(t("generateFailedRetry"));
         setIsGenerating(false);
         return;
       }
 
       resetState();
       setShowForm(false);
-      router.push(`/cover-letter/${data.data.id}`);
+      router.push(`/cover-letter/${finalId}`);
     } catch {
       setError(t("generateFailedRetry"));
       setIsGenerating(false);
@@ -258,6 +314,18 @@ export default function CreateCoverLetterButton({
                   <p className="text-xs text-text-placeholder">
                     {tc("aiDisclaimer")}
                   </p>
+
+                  {/* 串流預覽 */}
+                  {isGenerating && streamingText && (
+                    <div className="rounded-lg border border-brand-100 bg-[color:var(--color-bg)] p-3">
+                      <p className="mb-1.5 text-xs font-medium text-brand-700">
+                        {t("streamingLabel")}
+                      </p>
+                      <pre className="max-h-48 overflow-y-auto whitespace-pre-wrap text-xs leading-relaxed text-text">
+                        {streamingText}
+                      </pre>
+                    </div>
+                  )}
 
                   {/* 生成按鈕 */}
                   <Button

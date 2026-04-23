@@ -57,7 +57,7 @@ export default async function CoverLetterPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-text">{t("title")}</h1>
+          <h1 className="text-2xl font-bold text-text vt-page-title">{t("title")}</h1>
           <p className="mt-1 text-sm text-text-light">
             {t("subtitle")}
           </p>
@@ -67,11 +67,12 @@ export default async function CoverLetterPage() {
 
       {coverLetters && coverLetters.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {coverLetters.map((letter: { id: string; title: string; updated_at: string }) => (
+          {coverLetters.map((letter: { id: string; title: string; updated_at: string }, index: number) => (
             <Link
               href={`/cover-letter/${letter.id}`}
               key={letter.id}
-              className="block rounded-2xl bg-white p-6 shadow-neu hover:shadow-neu-hover transition-shadow"
+              style={{ "--i": index } as React.CSSProperties}
+              className="stagger-item block rounded-2xl bg-white p-6 shadow-neu hover:shadow-neu-hover transition-shadow"
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">

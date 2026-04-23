@@ -1,9 +1,10 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Loader2, ChevronRight, Flag, AlertTriangle, SkipForward } from "lucide-react";
+import CelebrationOverlay from "./CelebrationOverlay";
 import CountdownTimer from "./CountdownTimer";
 import StarHintPanel from "./StarHintPanel";
 import VoiceRecorder from "./VoiceRecorder";
@@ -47,7 +48,25 @@ export default function InterviewRunner({
   const [pendingAdvance, setPendingAdvance] = useState<"next" | "complete" | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [phaseIdx, setPhaseIdx] = useState(0);
+
+  const generatingPhases = t.raw("generatingPhases") as string[];
+  const generatingLabel = isCompleting
+    ? generatingPhases[phaseIdx % generatingPhases.length]
+    : t("generatingReport");
+
+  useEffect(() => {
+    if (!isCompleting) {
+      setPhaseIdx(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setPhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isCompleting]);
 
   const handleVoiceAppend = useCallback(
     (text: string, durationSec: number, target: "answer" | "drill") => {
@@ -124,6 +143,8 @@ export default function InterviewRunner({
       if (!res.ok) {
         throw new Error(json.error || t("completeFailed"));
       }
+      setShowCelebration(true);
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       router.push(`/interview/${sessionId}/report`);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("completeFailed"));
@@ -204,6 +225,7 @@ export default function InterviewRunner({
 
   return (
     <div className="space-y-6">
+      {showCelebration && <CelebrationOverlay />}
       <div>
         <div className="mb-2 flex items-center justify-between text-sm text-text-light">
           <span>
@@ -319,7 +341,7 @@ export default function InterviewRunner({
                 {isSubmitting || isCompleting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    {isCompleting ? t("generatingReport") : tc("saving")}
+                    {isCompleting ? generatingLabel : tc("saving")}
                   </>
                 ) : (
                   <>
