@@ -43,6 +43,14 @@ export interface Database {
           avatar_url: string | null;
           subscription_tier: "free" | "pro";
           stripe_customer_id: string | null;
+          onboarding_completed_at: string | null;
+          target_role: string | null;
+          job_search_status:
+            | "actively_looking"
+            | "passively_open"
+            | "new_grad"
+            | "career_change"
+            | null;
           created_at: string;
           updated_at: string;
         };
@@ -53,6 +61,14 @@ export interface Database {
           avatar_url?: string | null;
           subscription_tier?: "free" | "pro";
           stripe_customer_id?: string | null;
+          onboarding_completed_at?: string | null;
+          target_role?: string | null;
+          job_search_status?:
+            | "actively_looking"
+            | "passively_open"
+            | "new_grad"
+            | "career_change"
+            | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -63,6 +79,14 @@ export interface Database {
           avatar_url?: string | null;
           subscription_tier?: "free" | "pro";
           stripe_customer_id?: string | null;
+          onboarding_completed_at?: string | null;
+          target_role?: string | null;
+          job_search_status?:
+            | "actively_looking"
+            | "passively_open"
+            | "new_grad"
+            | "career_change"
+            | null;
           created_at?: string;
           updated_at?: string;
         };

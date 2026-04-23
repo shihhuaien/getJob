@@ -19,6 +19,24 @@ export const profileUpdateSchema = z.object({
     .max(100, "Name must be 100 characters or less"),
 });
 
+export const JOB_SEARCH_STATUSES = [
+  "actively_looking",
+  "passively_open",
+  "new_grad",
+  "career_change",
+] as const;
+
+export type JobSearchStatus = (typeof JOB_SEARCH_STATUSES)[number];
+
+export const onboardingSubmitSchema = z.object({
+  job_search_status: z.enum(JOB_SEARCH_STATUSES),
+  target_role: z
+    .string()
+    .trim()
+    .min(1, "Target role is required")
+    .max(120, "Target role must be 120 characters or less"),
+});
+
 // ── Jobs ──
 
 export const jobInsertSchema = z.object({

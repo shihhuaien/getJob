@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles } from "lucide-react";
@@ -8,6 +8,8 @@ import { toast } from "sonner";
 import ResumeOptimizeModal from "./ResumeOptimizeModal";
 import { createClient } from "@/lib/supabase/client";
 import { resumeUpdateSchema } from "@/lib/validations";
+import { useAutosave } from "@/hooks/useAutosave";
+import AutosaveIndicator from "@/components/ui/AutosaveIndicator";
 import type { Database } from "@/types/database";
 import type {
   ResumeContent,
@@ -58,13 +60,50 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
   const [content, setContent] = useState<ResumeContent>(
     parseContent(resume.content)
   );
-  const [isSaving, setIsSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<
     "personal" | "education" | "experience" | "skills"
   >("personal");
   const [showOptimize, setShowOptimize] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const formData = useMemo(
+    () => ({ title, targetJobTitle, content }),
+    [title, targetJobTitle, content]
+  );
+
+  const persist = useCallback(
+    async (data: {
+      title: string;
+      targetJobTitle: string;
+      content: ResumeContent;
+    }) => {
+      const validation = resumeUpdateSchema.safeParse({
+        title: data.title,
+        target_job_title: data.targetJobTitle || "",
+      });
+      if (!validation.success) {
+        throw new Error(validation.error.issues[0].message);
+      }
+      const supabase = createClient();
+      const { error: dbError } = await supabase
+        .from("resumes")
+        .update({
+          title: validation.data.title,
+          target_job_title: data.targetJobTitle || null,
+          content: data.content as unknown as Database["public"]["Tables"]["resumes"]["Update"]["content"],
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", resume.id);
+      if (dbError) throw new Error(tc("saveFailed"));
+    },
+    [resume.id, tc]
+  );
+
+  const { status, savedAt, flush } = useAutosave({
+    data: formData,
+    onSave: persist,
+  });
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -84,35 +123,13 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
     router.push("/resume");
   };
 
-  const handleSave = async () => {
-    const validation = resumeUpdateSchema.safeParse({
-      title,
-      target_job_title: targetJobTitle || "",
-    });
-    if (!validation.success) {
-      toast.error(validation.error.issues[0].message);
-      return;
-    }
-
-    setIsSaving(true);
-
-    const supabase = createClient();
-    const { error: dbError } = await supabase
-      .from("resumes")
-      .update({
-        title: validation.data.title,
-        target_job_title: targetJobTitle || null,
-        content: content as unknown as Database["public"]["Tables"]["resumes"]["Update"]["content"],
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", resume.id);
-
-    if (dbError) {
-      toast.error(tc("saveFailed"));
-    } else {
+  const handleManualSave = async () => {
+    try {
+      await flush();
       toast.success(tc("saved"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : tc("saveFailed"));
     }
-    setIsSaving(false);
   };
 
   // 個人資訊
@@ -236,6 +253,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
+          <AutosaveIndicator status={status} savedAt={savedAt} />
           {isPro && (
             <button
               onClick={() => setShowOptimize(true)}
@@ -260,11 +278,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
             <Trash2 className="h-4 w-4" />
           </button>
           <button
-            onClick={handleSave}
-            disabled={isSaving}
+            onClick={handleManualSave}
+            disabled={status === "saving"}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
           >
-            {isSaving ? tc("saving") : tc("save")}
+            {status === "saving" ? tc("saving") : tc("save")}
           </button>
         </div>
       </div>

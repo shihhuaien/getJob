@@ -9,6 +9,9 @@ import {
   TrendingUp,
   Circle,
 } from "lucide-react";
+import OnboardingModal from "@/components/dashboard/OnboardingModal";
+import NextStepCards from "@/components/dashboard/NextStepCards";
+import MilestoneBadge from "@/components/dashboard/MilestoneBadge";
 
 export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
@@ -20,6 +23,14 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("onboarding_completed_at")
+    .eq("id", user.id)
+    .single();
+
+  const showOnboarding = !profile?.onboarding_completed_at;
 
   const { count: jobCount } = await supabase
     .from("job_applications")
@@ -41,6 +52,17 @@ export default async function DashboardPage() {
     .select("*", { count: "exact", head: true })
     .eq("user_id", user.id)
     .eq("status", "interview");
+
+  const { count: completedInterviewCount } = await supabase
+    .from("interview_sessions")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .eq("status", "completed");
+
+  const hasJob = (jobCount ?? 0) > 0;
+  const hasResume = (resumeCount ?? 0) > 0;
+  const hasCoverLetter = (coverLetterCount ?? 0) > 0;
+  const hasCompletedInterview = (completedInterviewCount ?? 0) > 0;
 
   // 最近活動：最近更新的職缺
   const { data: recentJobs } = await supabase
@@ -109,6 +131,8 @@ export default async function DashboardPage() {
 
   return (
     <div>
+      {showOnboarding && <OnboardingModal />}
+
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-text">
           {t("welcome")}
@@ -200,6 +224,19 @@ export default async function DashboardPage() {
           )}
         </div>
       </div>
+
+      <NextStepCards
+        hasJob={hasJob}
+        hasResume={hasResume}
+        hasInterview={hasCompletedInterview}
+      />
+
+      <MilestoneBadge
+        hasJob={hasJob}
+        hasResume={hasResume}
+        hasCoverLetter={hasCoverLetter}
+        hasInterview={hasCompletedInterview}
+      />
     </div>
   );
 }

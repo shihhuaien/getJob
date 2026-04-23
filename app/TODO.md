@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-22
+**最後更新**：2026-04-23
 **收費模式**：免費 + 訂閱制（Stripe，US$9.99/月）
 
 ---
@@ -188,6 +188,14 @@
 
 ---
 
+## QA 新增待辦
+
+- [ ] 防止儲存職缺、求職信和履歷等功能重複儲存的問題
+- [ ] 在設定中，新增一個選項，讓使用者自訂 AI 產出內容為英文或是中文（只控制 prompt 中的語言，不改變系統語系）
+- [ ]
+- [ ]
+- [ ]
+
 ## UI/UX 審查批次
 
 ### ✅ 批次 2：狀態回饋與空狀態（2026-04-22）
@@ -198,6 +206,17 @@
 - [x] `<EmptyState>` 套用於 6 個主要畫面（resume、cover-letter、interview、interview/bank、analytics、jobs）
 - [x] Dashboard stats cards 色彩對齊品牌色階（brand / accent / secondary / success + shadow-neu-inset）
 - [x] 新增路由骨架屏 loading.tsx（jobs、resume、cover-letter、interview、analytics、settings）
+
+### ✅ 批次 3：Onboarding 完整流程（2026-04-23）
+
+- [x] Supabase migration `00006_onboarding_fields.sql`（`profiles.onboarding_completed_at` / `target_role` / `job_search_status`），同步 `src/types/database.ts`
+- [x] 三步驟 Welcome Modal（`OnboardingModal`）＋ `/api/profile/onboarding`（POST 完成、PATCH 跳過）
+- [x] Dashboard 首登條件渲染 Modal、完成後顯示 Next-step 卡片（追蹤職缺 / 建立履歷 / 模擬面試）
+- [x] 進度徽章 `MilestoneBadge`（4 項：追蹤首份職缺 / 建立履歷 / 產生求職信 / 完成一場面試）
+- [x] AI 面試 prep 資訊區塊（時長 / 麥克風 / 隱私）＋ 情境 Tooltip（`InfoTooltip`，套用於 Persona / 追問模式）
+- [x] Resume / Cover Letter Autosave（`useAutosave` hook + `AutosaveIndicator`，5s debounce、beforeunload 未儲存提示）
+
+> ⚠️ 部署提醒：新 migration 需於 Supabase Dashboard 執行（或 `npx supabase db push`）後才能生效。
 
 ---
 

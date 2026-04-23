@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Sparkles, X, Loader2, Mic, Keyboard } from "lucide-react";
+import { Sparkles, X, Loader2, Mic, Keyboard, Clock, Lock } from "lucide-react";
+import InfoTooltip from "@/components/ui/InfoTooltip";
 import type {
   InterviewType,
   Persona,
@@ -119,6 +120,26 @@ export default function StartInterviewModal({
             {t("startSubtitle", { company: companyName, title: jobTitle })}
           </p>
 
+          <div className="rounded-lg bg-brand-50 p-4">
+            <p className="text-xs font-semibold text-brand-700">
+              {t("prepTitle")}
+            </p>
+            <ul className="mt-2 space-y-1.5 text-xs text-text">
+              <li className="flex items-start gap-2">
+                <Clock className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-brand-600" />
+                <span>{t("prepDuration")}</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Mic className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-brand-600" />
+                <span>{t("prepMic")}</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Lock className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 text-brand-600" />
+                <span>{t("prepPrivacy")}</span>
+              </li>
+            </ul>
+          </div>
+
           {!hasDescription && (
             <div className="rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
               {t("requireJobDescription")}
@@ -153,9 +174,15 @@ export default function StartInterviewModal({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text">
-              {t("selectPersona")}
-            </label>
+            <div className="flex items-center gap-1.5">
+              <label className="block text-sm font-medium text-text">
+                {t("selectPersona")}
+              </label>
+              <InfoTooltip
+                label={t("selectPersona")}
+                content={t("tooltipPersona")}
+              />
+            </div>
             <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
               {PERSONAS.map((p) => (
                 <button
@@ -251,6 +278,10 @@ export default function StartInterviewModal({
                 className="h-4 w-4 rounded border-brand-200 text-brand-600 focus:ring-brand-500"
               />
               <span>{t("drillDownLabel")}</span>
+              <InfoTooltip
+                label={t("drillDownLabel")}
+                content={t("tooltipDrillDown")}
+              />
             </label>
             <p className="mt-1 text-xs text-text-light pl-6">
               {t("drillDownNote")}

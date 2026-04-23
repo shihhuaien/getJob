@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { coverLetterUpdateSchema } from "@/lib/validations";
+import { useAutosave } from "@/hooks/useAutosave";
+import AutosaveIndicator from "@/components/ui/AutosaveIndicator";
 import type { Database } from "@/types/database";
 
 type CoverLetter = Database["public"]["Tables"]["cover_letters"]["Row"];
@@ -21,35 +23,43 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
   const tc = useTranslations("common");
   const [title, setTitle] = useState(coverLetter.title);
   const [content, setContent] = useState(coverLetter.content);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleSave = async () => {
-    const validation = coverLetterUpdateSchema.safeParse({ title, content });
-    if (!validation.success) {
-      toast.error(validation.error.issues[0].message);
-      return;
-    }
+  const formData = useMemo(() => ({ title, content }), [title, content]);
 
-    setIsSaving(true);
+  const persist = useCallback(
+    async (data: { title: string; content: string }) => {
+      const validation = coverLetterUpdateSchema.safeParse(data);
+      if (!validation.success) {
+        throw new Error(validation.error.issues[0].message);
+      }
+      const supabase = createClient();
+      const { error: dbError } = await supabase
+        .from("cover_letters")
+        .update({
+          title: validation.data.title,
+          content: validation.data.content,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", coverLetter.id);
+      if (dbError) throw new Error(tc("saveFailed"));
+    },
+    [coverLetter.id, tc]
+  );
 
-    const supabase = createClient();
-    const { error: dbError } = await supabase
-      .from("cover_letters")
-      .update({
-        title: validation.data.title,
-        content: validation.data.content,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", coverLetter.id);
+  const { status, savedAt, flush } = useAutosave({
+    data: formData,
+    onSave: persist,
+  });
 
-    if (dbError) {
-      toast.error(tc("saveFailed"));
-    } else {
+  const handleManualSave = async () => {
+    try {
+      await flush();
       toast.success(tc("saved"));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : tc("saveFailed"));
     }
-    setIsSaving(false);
   };
 
   const handleDelete = async () => {
@@ -81,12 +91,13 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
           {t("backToList")}
         </Link>
         <div className="flex items-center gap-3">
+          <AutosaveIndicator status={status} savedAt={savedAt} />
           <button
-            onClick={handleSave}
-            disabled={isSaving}
+            onClick={handleManualSave}
+            disabled={status === "saving"}
             className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white hover:bg-brand-700 transition-colors disabled:opacity-50"
           >
-            {isSaving ? tc("saving") : tc("save")}
+            {status === "saving" ? tc("saving") : tc("save")}
           </button>
           <button
             onClick={() => setShowDeleteConfirm(true)}
