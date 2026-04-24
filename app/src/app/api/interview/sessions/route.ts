@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single();
 
@@ -41,7 +41,10 @@ export async function POST(request: Request) {
 
     const { job_id, resume_id, persona, interview_type, mode, drill_down_enabled } =
       validation.data;
-    const locale = typeof body.locale === "string" ? body.locale : "zh-TW";
+    const requestLocale = typeof body.locale === "string" ? body.locale : "zh-TW";
+    // AI 產出語言偏好優先於介面語系；未設定時跟隨介面語系。此處解析一次後存入 session，
+    // 供後續 hint/answer/complete 沿用（避免中途切換造成同一場面試中英混雜）
+    const locale = profile?.ai_output_language ?? requestLocale;
 
     const [resumeResult, jobResult] = await Promise.all([
       supabase

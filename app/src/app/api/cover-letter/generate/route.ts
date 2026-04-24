@@ -18,10 +18,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // 檢查訂閱狀態
+    // 檢查訂閱狀態與 AI 產出語言偏好
     const { data: profile } = await supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single();
 
@@ -75,10 +75,25 @@ export async function POST(request: Request) {
       );
     }
 
+    // 去重：同一職缺若已有求職信，直接回傳 409（避免浪費 AI token）
+    const { data: existingCoverLetter } = await supabase
+      .from("cover_letters")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("job_application_id", job_id)
+      .maybeSingle();
+
+    if (existingCoverLetter) {
+      return NextResponse.json(
+        { error: "Duplicate cover letter", existing_id: existingCoverLetter.id },
+        { status: 409 }
+      );
+    }
+
     const resumeContent = resumeResult.data
       .content as unknown as ResumeContent;
     const { job_description, company_name, job_title } = jobResult.data;
-    const locale = body.locale;
+    const locale = profile?.ai_output_language ?? body.locale;
 
     const titleText = locale === "en"
       ? `Cover Letter for ${company_name}`

@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single();
 
@@ -75,7 +75,26 @@ export async function POST(request: Request) {
     const resumeContent = resumeResult.data
       .content as unknown as ResumeContent;
     const jobDescription = jobResult.data.job_description;
-    const locale = body.locale;
+    const locale = profile?.ai_output_language ?? body.locale;
+
+    const titleText = locale === "en"
+      ? `Resume for ${jobResult.data.company_name}`
+      : `針對${jobResult.data.company_name}的履歷`;
+
+    // 去重：同名履歷若已存在，直接回傳 409（避免浪費 AI token）
+    const { data: existingResume } = await supabase
+      .from("resumes")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("title", titleText)
+      .maybeSingle();
+
+    if (existingResume) {
+      return NextResponse.json(
+        { error: "Duplicate resume", existing_id: existingResume.id },
+        { status: 409 }
+      );
+    }
 
     const analysis = await analyzeResume(resumeContent, jobDescription, locale);
     const optimizedContent = await generateOptimizedResume(
@@ -84,10 +103,6 @@ export async function POST(request: Request) {
       analysis,
       locale
     );
-
-    const titleText = locale === "en"
-      ? `Resume for ${jobResult.data.company_name}`
-      : `針對${jobResult.data.company_name}的履歷`;
 
     const { data: newResume, error: dbError } = await supabase
       .from("resumes")
@@ -102,6 +117,13 @@ export async function POST(request: Request) {
       .single();
 
     if (dbError) {
+      // 競態：pre-check 後另一請求已建立
+      if (dbError.code === "23505") {
+        return NextResponse.json(
+          { error: "Duplicate resume" },
+          { status: 409 }
+        );
+      }
       return NextResponse.json(
         { error: "Failed to create resume" },
         { status: 500 }

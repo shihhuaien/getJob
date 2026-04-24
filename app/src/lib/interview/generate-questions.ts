@@ -8,7 +8,7 @@ import type {
   Persona,
 } from "@/types/interview";
 
-const QUESTION_COUNT = 8;
+const QUESTION_COUNT = 5;
 
 const personaInstructions: Record<Persona, { zh: string; en: string }> = {
   hr_friendly: {

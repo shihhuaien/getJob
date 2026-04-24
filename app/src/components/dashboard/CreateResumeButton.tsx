@@ -66,8 +66,9 @@ export default function CreateResumeButton({
       resetState();
       setShowForm(false);
       router.push(`/resume/${data.id}`);
-    } catch {
-      setError(tc("createFailed"));
+    } catch (err) {
+      const code = (err as { code?: string } | null)?.code;
+      setError(code === "23505" ? tc("duplicateResume") : tc("createFailed"));
     } finally {
       setIsSubmitting(false);
     }
@@ -128,7 +129,9 @@ export default function CreateResumeButton({
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || t("pdfParseFailed"));
+        setError(
+          res.status === 409 ? tc("duplicateResume") : (data.error || t("pdfParseFailed"))
+        );
         return;
       }
 

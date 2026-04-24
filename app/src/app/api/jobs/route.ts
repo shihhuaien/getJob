@@ -43,6 +43,13 @@ export async function POST(request: Request) {
       .single();
 
     if (dbError) {
+      // Postgres unique violation：已儲存過同一 URL 的職缺
+      if (dbError.code === "23505") {
+        return NextResponse.json(
+          { error: "Duplicate job" },
+          { status: 409 }
+        );
+      }
       return NextResponse.json(
         { error: "Save failed" },
         { status: 500 }

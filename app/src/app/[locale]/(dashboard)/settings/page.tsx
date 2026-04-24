@@ -7,7 +7,7 @@ import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionB
 import ResumeSubscriptionButton from "@/components/dashboard/ResumeSubscriptionButton";
 import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
 import ProfileForm from "@/components/dashboard/ProfileForm";
-import ApiTokenManager from "@/components/dashboard/ApiTokenManager";
+import AiLanguageForm from "@/components/dashboard/AiLanguageForm";
 export default async function SettingsPage() {
   const t = await getTranslations("settings");
   const supabase = await createClient();
@@ -99,8 +99,13 @@ export default async function SettingsPage() {
           </div>
         </div>
 
-        {/* API Token */}
-        <ApiTokenManager />
+        {/* AI 產出語言 */}
+        <div className="rounded-2xl bg-white p-6 shadow-neu">
+          <h2 className="text-lg font-semibold text-text">{t("aiLanguage")}</h2>
+          <div className="mt-4">
+            <AiLanguageForm initialValue={profile?.ai_output_language ?? null} />
+          </div>
+        </div>
 
         {/* Danger zone */}
         <div className="rounded-2xl bg-white p-6 shadow-neu ring-1 ring-red-200">

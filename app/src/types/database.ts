@@ -51,6 +51,7 @@ export interface Database {
             | "new_grad"
             | "career_change"
             | null;
+          ai_output_language: "zh-TW" | "en" | null;
           created_at: string;
           updated_at: string;
         };
@@ -69,6 +70,7 @@ export interface Database {
             | "new_grad"
             | "career_change"
             | null;
+          ai_output_language?: "zh-TW" | "en" | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -87,6 +89,7 @@ export interface Database {
             | "new_grad"
             | "career_change"
             | null;
+          ai_output_language?: "zh-TW" | "en" | null;
           created_at?: string;
           updated_at?: string;
         };

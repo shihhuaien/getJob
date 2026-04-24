@@ -260,8 +260,9 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       setNewJob({ company_name: "", job_title: "", job_url: "", status: "saved" });
       setShowAddForm(false);
       toast.success(tc("created"));
-    } catch {
-      const msg = tc("saveFailed");
+    } catch (err) {
+      const code = (err as { code?: string } | null)?.code;
+      const msg = code === "23505" ? tc("duplicateJob") : tc("saveFailed");
       setFormError(msg);
       toast.error(msg);
     } finally {
@@ -612,6 +613,13 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                     : j
                 ),
               ]);
+              toast.success(tc("created"));
+            } else if (error) {
+              toast.error(
+                error.code === "23505"
+                  ? tc("duplicateJob")
+                  : tc("saveFailed")
+              );
             }
             setShowParseModal(false);
           }}

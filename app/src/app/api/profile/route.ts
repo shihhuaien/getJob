@@ -23,12 +23,31 @@ export async function PATCH(request: Request) {
       );
     }
 
+    const updates: {
+      full_name?: string;
+      ai_output_language?: "zh-TW" | "en" | null;
+    } = {};
+    if (result.data.full_name !== undefined) {
+      updates.full_name = result.data.full_name;
+    }
+    if (result.data.ai_output_language !== undefined) {
+      updates.ai_output_language = result.data.ai_output_language;
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return NextResponse.json(
+        { error: "No fields to update" },
+        { status: 400 }
+      );
+    }
+
     const { error: dbError } = await supabase
       .from("profiles")
-      .update({ full_name: result.data.full_name })
+      .update(updates)
       .eq("id", user.id);
 
     if (dbError) {
+      console.error("[/api/profile] DB error:", dbError);
       return NextResponse.json(
         { error: "Update failed" },
         { status: 500 }
@@ -36,7 +55,8 @@ export async function PATCH(request: Request) {
     }
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("[/api/profile] Error:", err);
     return NextResponse.json(
       { error: "Update failed" },
       { status: 500 }

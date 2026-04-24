@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single();
 
@@ -72,10 +72,11 @@ export async function POST(request: Request) {
     }
 
     const resumeContent = resumeResult.data.content as unknown as ResumeContent;
+    const locale = profile?.ai_output_language ?? body.locale;
     const analysis = await analyzeResume(
       resumeContent,
       jobResult.data.job_description,
-      body.locale
+      locale
     );
 
     return NextResponse.json({ data: analysis });

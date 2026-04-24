@@ -188,10 +188,10 @@
 
 ## QA 新增待辦
 
-- [ ] 防止儲存職缺、求職信和履歷等功能重複儲存的問題
-- [ ] 在設定中，新增一個選項，讓使用者自訂 AI 產出內容為英文或是中文（只控制 prompt 中的語言，不改變系統語系）
-- [ ] 移除 Chrome 擴充套件功能
-- [ ] 模擬面試從八題改成五題
+- [x] 防止儲存職缺、求職信和履歷等功能重複儲存的問題
+- [x] 在設定中，新增一個選項，讓使用者自訂 AI 產出內容為英文或是中文（只控制 prompt 中的語言，不改變系統語系）
+- [x] 前端隱藏 Chrome 擴充套件功能（保留後端 `/api/tokens` 與 `verifyRequest` Bearer 認證路徑，避免現有擴充使用者斷線）
+- [x] 模擬面試從八題改成五題
 - [ ] 模擬面試最後一題完成送出時，題目倒數計時要暫停
 - [ ] 導入 Joyride 新手教學
 - [ ] google 登入與 email 登入完整測試
@@ -242,6 +242,27 @@
   - `>=xl` 維持 5 欄 grid；`<xl` 改為 `flex snap-x snap-mandatory`，欄寬 78vw → 60vw → 340px
   - 卡片顯示相對時間「更新於 X 分鐘前」（`src/lib/relative-time.ts` 新增 helper，絕對時間保留於 tooltip）
   - 新增翻譯：`commandPalette`、`relativeTime`、`jobsBoard`（zh-TW + en）
+
+### ✅ 批次 7：QA 收尾（2026-04-24）
+
+- [x] 防止重複儲存：職缺／求職信／履歷
+  - `supabase/migrations/00007_prevent_duplicate_saves.sql`：三條 partial unique index
+    - `job_applications (user_id, job_url) WHERE job_url IS NOT NULL`
+    - `cover_letters (user_id, job_application_id) WHERE job_application_id IS NOT NULL`
+    - `resumes (user_id, title)`
+  - API 層回傳 409 + `existing_id`：求職信／履歷 pre-check 避免浪費 AI token
+  - 前端 UX：409 時自動跳轉至既有版本；其餘顯示本地化 toast（`common.duplicateJob/CoverLetter/Resume`）
+- [x] AI 產出語言設定（只影響 prompt，不動介面語系）
+  - `supabase/migrations/00008_ai_output_language.sql`：`profiles.ai_output_language TEXT`（CHECK NULL｜zh-TW｜en）
+  - `profileUpdateSchema` 改 partial + 新增 `ai_output_language`；`/api/profile` PATCH 支援 partial 更新
+  - Settings 新區塊 `AiLanguageForm`（radio：跟隨介面 / 繁中 / English，即時儲存 + toast）
+  - 接入 7+ 個 AI 呼叫點（資源順序：`profile.ai_output_language ?? body.locale`）
+    - `/api/interview/sessions`（解析後存入 `session.locale`，下游 hint/answer/complete 自動沿用）
+    - `/api/cover-letter/generate`、`/api/resume/generate`、`/api/resume/optimize`、`/api/resume/parse-pdf`、`/api/jobs/parse`（後者用 admin client 支援 Bearer token 路徑）
+- [x] 前端隱藏 Chrome 擴充套件
+  - Settings 移除 `<ApiTokenManager />` 渲染與 import；保留元件檔、`/api/tokens` 與 `verifyRequest` Bearer 路徑，讓既有擴充使用者不中斷
+- [x] 模擬面試題數 8 → 5
+  - `src/lib/interview/generate-questions.ts` `QUESTION_COUNT` 常數
 
 ---
 

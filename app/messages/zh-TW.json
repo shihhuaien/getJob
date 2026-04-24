@@ -29,7 +29,10 @@
     "notSet": "未設定",
     "or": "或",
     "proRequired": "此功能需要 Pro 方案",
-    "fileReadError": "讀取檔案失敗"
+    "fileReadError": "讀取檔案失敗",
+    "duplicateJob": "你已儲存過相同網址的職缺",
+    "duplicateCoverLetter": "你已為此職缺產生過求職信",
+    "duplicateResume": "已存在相同標題的履歷，請先改名或刪除舊版"
   },
   "legal": {
     "privacyTitle": "隱私權政策",
@@ -393,6 +396,12 @@
     "resumeSub": "恢復訂閱",
     "cancelConfirm": "確定要取消訂閱嗎？取消後你仍可使用 Pro 功能至本帳期結束。",
     "confirmCancel": "確認取消",
+    "aiLanguage": "AI 產出語言",
+    "aiLanguageDesc": "控制 AI（履歷優化、求職信、面試）產出內容的語言。不影響介面語系。",
+    "aiLanguageFollowLocale": "跟隨介面語言",
+    "aiLanguageZh": "繁體中文",
+    "aiLanguageEn": "English",
+    "aiLanguageSaved": "AI 產出語言已更新",
     "apiKeys": "API 金鑰",
     "apiKeysDesc": "用於 Chrome 擴充套件連接你的帳號",
     "keyGenerated": "金鑰已產生，請立即複製（此金鑰只會顯示一次）",

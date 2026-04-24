@@ -112,7 +112,16 @@ export default function CreateCoverLetterButton({
 
       if (!res.ok || !res.body) {
         const data = await res.json().catch(() => ({ error: t("generateFailed") }));
-        setError(data.error || t("generateFailed"));
+        // 同一職缺已有求職信：直接跳轉至既有紀錄
+        if (res.status === 409 && data.existing_id) {
+          resetState();
+          setShowForm(false);
+          router.push(`/cover-letter/${data.existing_id}`);
+          return;
+        }
+        setError(
+          res.status === 409 ? tc("duplicateCoverLetter") : (data.error || t("generateFailed"))
+        );
         setIsGenerating(false);
         return;
       }

@@ -11,12 +11,20 @@ export function isValidHttpUrl(url: string): boolean {
 
 // ── API Routes ──
 
+export const AI_OUTPUT_LANGUAGES = ["zh-TW", "en"] as const;
+export type AiOutputLanguage = (typeof AI_OUTPUT_LANGUAGES)[number];
+
 export const profileUpdateSchema = z.object({
   full_name: z
     .string()
     .trim()
     .min(1, "Name is required")
-    .max(100, "Name must be 100 characters or less"),
+    .max(100, "Name must be 100 characters or less")
+    .optional(),
+  ai_output_language: z
+    .enum(AI_OUTPUT_LANGUAGES)
+    .nullable()
+    .optional(),
 });
 
 export const JOB_SEARCH_STATUSES = [

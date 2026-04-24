@@ -111,7 +111,14 @@ export default function ResumeOptimizeModal({
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || t("generateFailed"));
+        // 同名履歷已存在：自動跳轉至既有版本
+        if (res.status === 409 && data.existing_id) {
+          router.push(`/resume/${data.existing_id}`);
+          return;
+        }
+        setError(
+          res.status === 409 ? tc("duplicateResume") : (data.error || t("generateFailed"))
+        );
         setIsGenerating(false);
         return;
       }

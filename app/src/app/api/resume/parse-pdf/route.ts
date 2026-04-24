@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
     const { data: profile } = await supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single();
 
@@ -39,8 +39,9 @@ export async function POST(request: Request) {
     }
 
     const { pdf_base64, title } = validation.data;
+    const locale = profile?.ai_output_language ?? body.locale;
 
-    const content = await parseResumePdf(pdf_base64, body.locale);
+    const content = await parseResumePdf(pdf_base64, locale);
 
     // 建立履歷
     const { data: resume, error: dbError } = await supabase
@@ -54,6 +55,12 @@ export async function POST(request: Request) {
       .single();
 
     if (dbError) {
+      if (dbError.code === "23505") {
+        return NextResponse.json(
+          { error: "Duplicate resume" },
+          { status: 409 }
+        );
+      }
       return NextResponse.json(
         { error: "Failed to create resume" },
         { status: 500 }
