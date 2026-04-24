@@ -29,6 +29,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { jobInsertSchema, isValidHttpUrl } from "@/lib/validations";
+import { formatRelativeTime } from "@/lib/relative-time";
 import ParseJobModal from "./ParseJobModal";
 import type { Database } from "@/types/database";
 
@@ -45,6 +46,8 @@ const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }
 
 // 可排序的職缺卡片
 function SortableJobCard({ job }: { job: JobApplication }) {
+  const tRel = useTranslations("relativeTime");
+  const tBoard = useTranslations("jobsBoard");
   const {
     attributes,
     listeners,
@@ -58,6 +61,8 @@ function SortableJobCard({ job }: { job: JobApplication }) {
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const relative = formatRelativeTime(job.updated_at, tRel);
 
   return (
     <div
@@ -83,8 +88,14 @@ function SortableJobCard({ job }: { job: JobApplication }) {
           </p>
           <div className="mt-1 flex items-center gap-1 text-xs text-text-light">
             <Building2 className="h-3 w-3" />
-            {job.company_name}
+            <span className="truncate">{job.company_name}</span>
           </div>
+          <p
+            className="mt-1.5 text-[11px] text-text-placeholder"
+            title={new Date(job.updated_at).toLocaleString()}
+          >
+            {tBoard("lastUpdated", { time: relative })}
+          </p>
         </Link>
         {job.job_url && isValidHttpUrl(job.job_url) && (
           <a
@@ -138,7 +149,7 @@ function DroppableColumn({
   return (
     <div
       ref={setNodeRef}
-      className={`rounded-xl p-3 transition-colors duration-200 ${
+      className={`h-full rounded-xl p-3 transition-colors duration-200 ${
         isOver ? "bg-brand-50 ring-2 ring-brand-300" : "bg-brand-50/50"
       }`}
     >
@@ -176,6 +187,7 @@ interface Props {
 export default function JobsBoard({ initialJobs, userId, isPro = false }: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
+  const tBoard = useTranslations("jobsBoard");
   const [jobs, setJobs] = useState(initialJobs);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newJob, setNewJob] = useState({
@@ -533,27 +545,36 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
-            {statusColumns.map((col, index) => {
-              const columnJobs = filteredJobs.filter(
-                (job) => job.status === col.key
-              );
-              return (
-                <div
-                  key={col.key}
-                  style={{ "--i": index } as React.CSSProperties}
-                  className="stagger-item"
-                >
-                  <DroppableColumn
-                    col={col}
-                    jobs={columnJobs}
-                    isOver={overColumnId === col.key}
-                    label={t(col.labelKey)}
-                    noJobsText={t("noJobs")}
-                  />
-                </div>
-              );
-            })}
+          <p
+            className="mb-2 text-xs text-text-placeholder xl:hidden"
+            aria-hidden="true"
+          >
+            {tBoard("scrollHint")}
+          </p>
+          {/* <xl：水平滑動 + snap；>=xl：5 欄 grid */}
+          <div className="-mx-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
+            <div className="flex snap-x snap-mandatory gap-4 xl:grid xl:grid-cols-5 xl:snap-none">
+              {statusColumns.map((col, index) => {
+                const columnJobs = filteredJobs.filter(
+                  (job) => job.status === col.key
+                );
+                return (
+                  <div
+                    key={col.key}
+                    style={{ "--i": index } as React.CSSProperties}
+                    className="stagger-item w-[78vw] max-w-[320px] flex-shrink-0 snap-start sm:w-[60vw] md:w-[340px] xl:w-auto xl:max-w-none"
+                  >
+                    <DroppableColumn
+                      col={col}
+                      jobs={columnJobs}
+                      isOver={overColumnId === col.key}
+                      label={t(col.labelKey)}
+                      noJobsText={t("noJobs")}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
           <DragOverlay dropAnimation={dropAnimation}>
             {activeJob ? <DragOverlayCard job={activeJob} /> : null}

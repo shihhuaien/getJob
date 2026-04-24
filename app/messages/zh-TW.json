@@ -622,5 +622,33 @@
     "materials": "求職素材",
     "interview": "面試準備",
     "account": "帳戶"
+  },
+  "commandPalette": {
+    "openShortcut": "搜尋",
+    "placeholder": "搜尋職缺、履歷、頁面…",
+    "loading": "載入中…",
+    "noResults": "找不到符合的結果",
+    "emptyHint": "開始輸入以搜尋職缺、履歷或快速跳轉",
+    "groupPages": "頁面",
+    "groupJobs": "職缺",
+    "groupResumes": "履歷",
+    "groupCoverLetters": "自傳",
+    "close": "關閉",
+    "shortcutKey": "⌘",
+    "shortcutKeyAlt": "Ctrl"
+  },
+  "relativeTime": {
+    "justNow": "剛剛",
+    "secondsAgo": "{count} 秒前",
+    "minutesAgo": "{count} 分鐘前",
+    "hoursAgo": "{count} 小時前",
+    "daysAgo": "{count} 天前",
+    "weeksAgo": "{count} 週前",
+    "monthsAgo": "{count} 個月前",
+    "yearsAgo": "{count} 年前"
+  },
+  "jobsBoard": {
+    "lastUpdated": "更新於 {time}",
+    "scrollHint": "左右滑動以查看全部欄位"
   }
 }

@@ -622,5 +622,33 @@
     "materials": "Materials",
     "interview": "Interview Prep",
     "account": "Account"
+  },
+  "commandPalette": {
+    "openShortcut": "Search",
+    "placeholder": "Search jobs, resumes, pages…",
+    "loading": "Loading…",
+    "noResults": "No matching results",
+    "emptyHint": "Start typing to search jobs, resumes, or jump to any page",
+    "groupPages": "Pages",
+    "groupJobs": "Jobs",
+    "groupResumes": "Resumes",
+    "groupCoverLetters": "Cover letters",
+    "close": "Close",
+    "shortcutKey": "⌘",
+    "shortcutKeyAlt": "Ctrl"
+  },
+  "relativeTime": {
+    "justNow": "just now",
+    "secondsAgo": "{count}s ago",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago",
+    "weeksAgo": "{count}w ago",
+    "monthsAgo": "{count}mo ago",
+    "yearsAgo": "{count}y ago"
+  },
+  "jobsBoard": {
+    "lastUpdated": "Updated {time}",
+    "scrollHint": "Swipe to see all columns"
   }
 }

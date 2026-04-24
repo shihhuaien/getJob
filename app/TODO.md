@@ -231,6 +231,18 @@
 - [x] `<SkipToContent>` 連結（locale layout 首個節點），各頁面 `<main id="main-content">`
 - [x] Logo 多版本資產：`logo-mark-white.svg`、`logo-mark-mono.svg`、`logo-lockup.svg`，同步更新 `BRAND_GUIDELINES.md` 9.1 Clear-space / 最小尺寸
 
+### ✅ 批次 6：Cmd+K 與 JobsBoard 響應式（2026-04-24）
+
+- [x] Cmd+K / Ctrl+K 全站搜尋（`src/components/ui/CommandPalette.tsx`，自建、不引入 cmdk）
+  - 支援鍵盤 ↑↓/Enter/Esc、滑鼠 hover 同步指標、路由變動自動關閉
+  - 動態資料：Supabase 拉最近 50 職缺 / 30 履歷 / 30 自傳，依分組顯示（頁面 / 職缺 / 履歷 / 自傳）
+  - 觸發：全域 keydown + `offery:open-command-palette` CustomEvent（提供 `openCommandPalette()` helper）
+  - 入口：`DashboardShell` 手機 header 🔍 按鈕 + `DashboardSidebar` 桌機搜尋觸發鈕（顯示 ⌘K / CtrlK 提示）
+- [x] JobsBoard <xl 水平 snap scroll（`JobsBoard.tsx`）
+  - `>=xl` 維持 5 欄 grid；`<xl` 改為 `flex snap-x snap-mandatory`，欄寬 78vw → 60vw → 340px
+  - 卡片顯示相對時間「更新於 X 分鐘前」（`src/lib/relative-time.ts` 新增 helper，絕對時間保留於 tooltip）
+  - 新增翻譯：`commandPalette`、`relativeTime`、`jobsBoard`（zh-TW + en）
+
 ---
 
 ## 畫面開發進度

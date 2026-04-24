@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { ComponentType, SVGProps } from "react";
 import {
@@ -12,11 +13,13 @@ import {
   Mic,
   Settings,
   LogOut,
+  Search,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/ui/LocaleSwitcher";
+import { openCommandPalette } from "@/components/ui/CommandPalette";
 
 type NavLabelKey =
   | "overview"
@@ -89,6 +92,12 @@ export default function DashboardSidebar({
   const router = useRouter();
   const t = useTranslations("nav");
   const tGroup = useTranslations("sidebarGroups");
+  const tCmd = useTranslations("commandPalette");
+  const isMac = useSyncExternalStore(
+    () => () => {},
+    () => /Mac|iPhone|iPad|iPod/.test(navigator.platform),
+    () => false
+  );
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -110,6 +119,29 @@ export default function DashboardSidebar({
         <span className="text-lg font-bold text-[color:var(--color-text)]">
           Offery
         </span>
+      </div>
+
+      <div className="px-3 pt-3">
+        <button
+          type="button"
+          onClick={() => {
+            onNavigate?.();
+            openCommandPalette();
+          }}
+          className="flex w-full items-center gap-2 rounded-xl border border-brand-100 bg-white/60 px-3 py-2 text-sm text-[color:var(--color-text-light)] transition-colors hover:border-brand-200 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg-card)]"
+          aria-label={tCmd("openShortcut")}
+        >
+          <Search className="h-4 w-4" aria-hidden="true" />
+          <span className="flex-1 text-left">{tCmd("openShortcut")}</span>
+          <span className="flex items-center gap-1">
+            <kbd className="rounded border border-brand-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-[color:var(--color-text-light)]">
+              {isMac ? tCmd("shortcutKey") : tCmd("shortcutKeyAlt")}
+            </kbd>
+            <kbd className="rounded border border-brand-200 bg-white px-1.5 py-0.5 font-mono text-[10px] text-[color:var(--color-text-light)]">
+              K
+            </kbd>
+          </span>
+        </button>
       </div>
 
       <nav

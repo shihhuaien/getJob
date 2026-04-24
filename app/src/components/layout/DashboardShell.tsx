@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, Briefcase } from "lucide-react";
+import { Menu, X, Briefcase, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import DashboardSidebar from "./DashboardSidebar";
+import CommandPalette, { openCommandPalette } from "@/components/ui/CommandPalette";
 
 export default function DashboardShell({
   children,
@@ -12,6 +13,7 @@ export default function DashboardShell({
   children: React.ReactNode;
 }) {
   const t = useTranslations("nav");
+  const tCmd = useTranslations("commandPalette");
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -36,14 +38,24 @@ export default function DashboardShell({
             Offery
           </span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label={t("toggleMenu")}
-          className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-xl text-[color:var(--color-text-light)] transition-colors hover:bg-brand-50 hover:text-[color:var(--color-text)]"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => openCommandPalette()}
+            aria-label={tCmd("openShortcut")}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-[color:var(--color-text-light)] transition-colors hover:bg-brand-50 hover:text-[color:var(--color-text)]"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={t("toggleMenu")}
+            className="-mr-1 inline-flex h-11 w-11 items-center justify-center rounded-xl text-[color:var(--color-text-light)] transition-colors hover:bg-brand-50 hover:text-[color:var(--color-text)]"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
       </header>
 
       <aside className="hidden h-full md:block">
@@ -85,6 +97,8 @@ export default function DashboardShell({
       >
         {children}
       </main>
+
+      <CommandPalette />
     </div>
   );
 }
