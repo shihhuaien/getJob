@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, ExternalLink, Trash2 } from "lucide-react";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
@@ -29,6 +30,7 @@ interface Props {
 export default function JobDetail({ job }: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
+  const tb = useTranslations("breadcrumb");
   const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -127,6 +129,14 @@ export default function JobDetail({ job }: Props) {
 
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/jobs", label: tb("jobs") },
+          { label: job.job_title },
+        ]}
+      />
+
       {/* 頂部導航 */}
       <div className="mb-6 flex items-center justify-between">
         <Link

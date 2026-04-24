@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
 import InterviewRunner from "@/components/interview/InterviewRunner";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type {
   InterviewAnswer,
   InterviewMode,
@@ -17,6 +18,7 @@ export default async function InterviewRunnerPage({
 }) {
   const { id } = await params;
   const t = await getTranslations("interview");
+  const tb = await getTranslations("breadcrumb");
   const supabase = await createClient();
   const {
     data: { user },
@@ -45,8 +47,18 @@ export default async function InterviewRunnerPage({
     ? session.job_applications[0]
     : session.job_applications;
 
+  const sessionLabel = `${job?.company_name ?? t("unknownCompany")} · ${job?.job_title ?? ""}`;
+
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/interview", label: tb("interview") },
+          { label: sessionLabel },
+        ]}
+      />
+
       <div className="mb-6">
         <Link
           href="/interview"

@@ -600,5 +600,27 @@
     "unsaved": "Unsaved changes",
     "failed": "Autosave failed",
     "beforeUnload": "You have unsaved changes. Leave anyway?"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content"
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "dashboard": "Overview",
+    "jobs": "Jobs",
+    "resume": "Resumes",
+    "coverLetter": "Cover Letters",
+    "interview": "AI Interview",
+    "interviewBank": "Question Bank",
+    "interviewReport": "Report",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "separator": "/"
+  },
+  "sidebarGroups": {
+    "applications": "Applications",
+    "materials": "Materials",
+    "interview": "Interview Prep",
+    "account": "Account"
   }
 }

@@ -600,5 +600,27 @@
     "unsaved": "有未儲存的變更",
     "failed": "自動儲存失敗",
     "beforeUnload": "有未儲存的變更，確定要離開嗎？"
+  },
+  "a11y": {
+    "skipToContent": "跳至主要內容"
+  },
+  "breadcrumb": {
+    "home": "首頁",
+    "dashboard": "總覽",
+    "jobs": "職缺追蹤",
+    "resume": "履歷管理",
+    "coverLetter": "求職信",
+    "interview": "AI 面試模擬",
+    "interviewBank": "個人題庫",
+    "interviewReport": "面試報告",
+    "analytics": "數據分析",
+    "settings": "設定",
+    "separator": "/"
+  },
+  "sidebarGroups": {
+    "applications": "申請管理",
+    "materials": "求職素材",
+    "interview": "面試準備",
+    "account": "帳戶"
   }
 }

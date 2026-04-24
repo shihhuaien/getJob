@@ -5,9 +5,11 @@ import { Link } from "@/i18n/navigation";
 import { BookOpen, ArrowLeft } from "lucide-react";
 import QuestionBankList from "@/components/interview/QuestionBankList";
 import EmptyState from "@/components/ui/EmptyState";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 
 export default async function InterviewBankPage() {
   const t = await getTranslations("interview");
+  const tb = await getTranslations("breadcrumb");
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,6 +27,14 @@ export default async function InterviewBankPage() {
 
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/interview", label: tb("interview") },
+          { label: tb("interviewBank") },
+        ]}
+      />
+
       <div className="mb-6">
         <Link
           href="/interview"

@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
 import InterviewReport from "@/components/interview/InterviewReport";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type {
   InterviewAnswer,
   InterviewQuestion,
@@ -17,6 +18,7 @@ export default async function InterviewReportPage({
 }) {
   const { id } = await params;
   const t = await getTranslations("interview");
+  const tb = await getTranslations("breadcrumb");
   const supabase = await createClient();
   const {
     data: { user },
@@ -55,8 +57,19 @@ export default async function InterviewReportPage({
     (savedRows ?? []).map((r) => r.question_text)
   );
 
+  const sessionLabel = `${job?.company_name ?? t("unknownCompany")} · ${job?.job_title ?? ""}`;
+
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/interview", label: tb("interview") },
+          { href: `/interview/${id}`, label: sessionLabel },
+          { label: tb("interviewReport") },
+        ]}
+      />
+
       <div className="mb-6">
         <Link
           href="/interview"

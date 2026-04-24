@@ -343,10 +343,15 @@ Dashboard 佈局：
 
 ### 9.1 Logo 使用規範
 
-- Logo 由 Lucide `Briefcase` 圖示 + 「Offery」文字組成
-- 最小尺寸：圖示 20px + 文字 16px
-- 安全區域：Logo 四周至少留 Logo 高度的 50% 空白
-- 禁止行為：拉伸、旋轉、加邊框、改色（允許白色反轉版）
+- Logo 由自繪符號（鼠尾草綠 + 赤陶色）+「Offery」字標組成
+- 資產（`public/brand/`）：
+  - `logo-mark.svg`：彩色主版本（淺色背景使用）
+  - `logo-mark-white.svg`：反白版（深色背景、PWA splash、深色 email signature）
+  - `logo-mark-mono.svg`：單色版，`fill="currentColor"`（單色輸出、傳真、專利申請等）
+  - `logo-lockup.svg`：符號 + 字標橫向組合（外部素材、名片、頁首大範圍使用）
+- Clear space（安全區）：Logo 四周至少留**符號高度 × 0.25** 的空白
+- 最小使用尺寸：符號 20px、lockup 寬度 120px
+- 禁止行為：拉伸、旋轉、加邊框、任意改色（反白/單色須使用上述指定變體）
 
 ### 9.2 深色模式（未來規劃）
 

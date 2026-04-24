@@ -10,6 +10,7 @@ import { createClient } from "@/lib/supabase/client";
 import { resumeUpdateSchema } from "@/lib/validations";
 import { useAutosave } from "@/hooks/useAutosave";
 import AutosaveIndicator from "@/components/ui/AutosaveIndicator";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type { Database } from "@/types/database";
 import type {
   ResumeContent,
@@ -53,6 +54,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
   const router = useRouter();
   const t = useTranslations("resume");
   const tc = useTranslations("common");
+  const tb = useTranslations("breadcrumb");
   const [title, setTitle] = useState(resume.title);
   const [targetJobTitle, setTargetJobTitle] = useState(
     resume.target_job_title || ""
@@ -243,6 +245,14 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
 
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/resume", label: tb("resume") },
+          { label: title || resume.title },
+        ]}
+      />
+
       {/* 頂部導航 */}
       <div className="mb-6 flex items-center justify-between">
         <Link

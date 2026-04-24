@@ -75,7 +75,11 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4 focus:outline-none"
+      >
         <div className="w-full max-w-md text-center">
           <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
           <h1 className="mt-4 text-2xl font-bold text-text">
@@ -91,12 +95,16 @@ export default function RegisterPage() {
             {t("backToLogin")}
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4 focus:outline-none"
+    >
       <div className="w-full max-w-md">
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
@@ -247,6 +255,6 @@ export default function RegisterPage() {
           </form>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

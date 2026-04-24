@@ -12,7 +12,7 @@ type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement> &
   BaseFieldProps;
 
 const fieldBase =
-  "w-full rounded-xl bg-[var(--color-bg)] px-4 py-2.5 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:outline-none focus:shadow-neu-pressed disabled:opacity-50 disabled:cursor-not-allowed";
+  "w-full rounded-xl bg-[var(--color-bg)] px-4 py-2.5 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:outline-none focus:shadow-neu-pressed focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-bg)] disabled:opacity-50 disabled:cursor-not-allowed";
 const fieldError = "ring-1 ring-error focus:ring-error";
 
 function Label({ htmlFor, children }: { htmlFor: string; children: string }) {

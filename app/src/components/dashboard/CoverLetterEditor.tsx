@@ -9,6 +9,7 @@ import { createClient } from "@/lib/supabase/client";
 import { coverLetterUpdateSchema } from "@/lib/validations";
 import { useAutosave } from "@/hooks/useAutosave";
 import AutosaveIndicator from "@/components/ui/AutosaveIndicator";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import type { Database } from "@/types/database";
 
 type CoverLetter = Database["public"]["Tables"]["cover_letters"]["Row"];
@@ -21,6 +22,7 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
   const router = useRouter();
   const t = useTranslations("coverLetter");
   const tc = useTranslations("common");
+  const tb = useTranslations("breadcrumb");
   const [title, setTitle] = useState(coverLetter.title);
   const [content, setContent] = useState(coverLetter.content);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -81,6 +83,14 @@ export default function CoverLetterEditor({ coverLetter }: Props) {
 
   return (
     <div>
+      <Breadcrumb
+        className="mb-3"
+        items={[
+          { href: "/cover-letter", label: tb("coverLetter") },
+          { label: title || coverLetter.title },
+        ]}
+      />
+
       {/* 頂部導航 */}
       <div className="mb-6 flex items-center justify-between">
         <Link

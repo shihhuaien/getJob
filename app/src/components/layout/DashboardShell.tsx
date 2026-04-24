@@ -78,7 +78,11 @@ export default function DashboardShell({
         </div>
       </div>
 
-      <main className="flex-1 overflow-y-auto bg-[var(--color-bg)] p-4 sm:p-6 lg:p-8">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 overflow-y-auto bg-[var(--color-bg)] p-4 focus:outline-none sm:p-6 lg:p-8"
+      >
         {children}
       </main>
     </div>

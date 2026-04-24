@@ -16,7 +16,11 @@ export default async function PrivacyPage({
   return (
     <>
       <Navbar />
-      <main className="flex-1 bg-[var(--color-bg)] py-16 sm:py-20">
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex-1 bg-[var(--color-bg)] py-16 focus:outline-none sm:py-20"
+      >
         <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <header className="mb-8">
             <h1 className="text-4xl font-bold tracking-tight text-text">

@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-23
+**最後更新**：2026-04-24
 **收費模式**：免費 + 訂閱制（Stripe，US$9.99/月）
 
 ---
@@ -160,11 +160,9 @@
 ### v3.0
 
 - [x] Chrome 擴充套件（一鍵從 104/CakeResume/LinkedIn 儲存職缺）
-- [ ] Chrome 擴充套件測試（載入未封裝擴充、API 金鑰設定、104/CakeResume/LinkedIn 實機擷取驗證）
 - [x] AI 面試模擬練習（根據職缺產生題目）— Gemini 2.0 Flash，含 Persona/題型選擇、追問模式、STAR 提示、語音輸入、多維度評分報告、黃金回答重塑、雷達圖成長軌跡、個人題庫、看板狀態觸發 Banner
 - [ ] AI 語音面試錄音測試（實機多瀏覽器／多麥克風驗證）
 - [ ] AI 面試題目語音朗讀（TTS）— Web Speech API 中文 voice 品質不佳，需改用雲端 TTS（ElevenLabs / Google Cloud TTS / Azure Neural TTS）
-- [ ] 薪資情報整合
 - [x] 多語言支援（English）
 
 ---
@@ -192,13 +190,18 @@
 
 - [ ] 防止儲存職缺、求職信和履歷等功能重複儲存的問題
 - [ ] 在設定中，新增一個選項，讓使用者自訂 AI 產出內容為英文或是中文（只控制 prompt 中的語言，不改變系統語系）
-- [ ]
-- [ ]
-- [ ]
+- [ ] 移除 Chrome 擴充套件功能
+- [ ] 模擬面試從八題改成五題
+- [ ] 模擬面試最後一題完成送出時，題目倒數計時要暫停
+- [ ] 導入 Joyride 新手教學
+- [ ] google 登入與 email 登入完整測試
+- [ ] Supabase 的 Edge Functions 加上 Rate Limiting 避免惡意攻擊
 
 ## 行銷
 
 - [ ] 建立行銷計劃與代辦事項
+- [ ] 建立社群
+- [ ] 更新 landing page
 
 ## UI/UX 審查批次
 
@@ -219,6 +222,14 @@
 - [x] 進度徽章 `MilestoneBadge`（4 項：追蹤首份職缺 / 建立履歷 / 產生求職信 / 完成一場面試）
 - [x] AI 面試 prep 資訊區塊（時長 / 麥克風 / 隱私）＋ 情境 Tooltip（`InfoTooltip`，套用於 Persona / 追問模式）
 - [x] Resume / Cover Letter Autosave（`useAutosave` hook + `AutosaveIndicator`，5s debounce、beforeunload 未儲存提示）
+
+### ✅ 批次 5：資訊架構與進階無障礙（2026-04-24）
+
+- [x] 側邊欄分組（`DashboardSidebar` 拆成 申請管理 / 求職素材 / 面試準備 / 帳戶，採 `<ul>` + `aria-labelledby`）
+- [x] `<Breadcrumb>` 元件，套用於 jobs/[id]、resume/[id]、cover-letter/[id]、interview/[id]、interview/[id]/report、interview/bank
+- [x] Input / Textarea focus-visible ring（與 Button 一致：`ring-2 ring-brand-500 ring-offset-2`）
+- [x] `<SkipToContent>` 連結（locale layout 首個節點），各頁面 `<main id="main-content">`
+- [x] Logo 多版本資產：`logo-mark-white.svg`、`logo-mark-mono.svg`、`logo-lockup.svg`，同步更新 `BRAND_GUIDELINES.md` 9.1 Clear-space / 最小尺寸
 
 ---
 
