@@ -3,6 +3,9 @@ import { Noto_Sans_TC, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { routing } from "@/i18n/routing";
 import { Toaster } from "@/components/ui/Toaster";
 import SkipToContent from "@/components/ui/SkipToContent";
@@ -19,7 +22,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.thdg.site";
 
 export async function generateMetadata({
   params,
@@ -76,6 +79,9 @@ export async function generateMetadata({
         "max-video-preview": -1,
       },
     },
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
   };
 }
 
@@ -105,6 +111,11 @@ export default async function LocaleLayout({
           {children}
           <Toaster />
         </NextIntlClientProvider>
+        <Analytics />
+        <SpeedInsights />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );

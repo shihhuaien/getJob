@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.thdg.site";
 
 const publicRoutes = [
   { path: "/", priority: 1.0, changeFrequency: "weekly" as const },
@@ -18,11 +18,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     routing.locales.map((locale) => {
       const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
       const trimmed = route.path === "/" ? "" : route.path;
+      const zhUrl = `${SITE_URL}${trimmed || "/"}`;
+      const enUrl = `${SITE_URL}/en${trimmed}`;
       return {
         url: `${SITE_URL}${prefix}${trimmed || (prefix ? "" : "/")}`,
         lastModified: now,
         changeFrequency: route.changeFrequency,
         priority: route.priority,
+        alternates: {
+          languages: {
+            "zh-TW": zhUrl,
+            en: enUrl,
+            "x-default": zhUrl,
+          },
+        },
       };
     }),
   );

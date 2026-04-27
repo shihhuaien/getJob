@@ -196,7 +196,7 @@
 - [x] 修正錯誤：模擬面試最後一題完成送出時，題目倒數計時要暫停
 - [ ] 導入 Joyride 新手教學
 - [ ] google 登入與 email 登入完整測試
-- [ ] Supabase 的 Edge Functions 加上 Rate Limiting 避免惡意攻擊
+- [x] Supabase 的 Edge Functions 加上 Rate Limiting 避免惡意攻擊(supabase 內建，不需要程式處理)
 
 ## 行銷
 

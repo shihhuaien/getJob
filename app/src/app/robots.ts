@@ -1,6 +1,16 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.app";
+const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.thdg.site";
+
+const PROTECTED_PATHS = [
+  "/dashboard",
+  "/jobs",
+  "/resume",
+  "/cover-letter",
+  "/settings",
+  "/analytics",
+  "/interview",
+];
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -10,13 +20,8 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/api/",
-          "/dashboard",
-          "/jobs",
-          "/resume",
-          "/cover-letter",
-          "/settings",
-          "/analytics",
-          "/interview",
+          ...PROTECTED_PATHS,
+          ...PROTECTED_PATHS.map((p) => `/en${p}`),
         ],
       },
     ],
