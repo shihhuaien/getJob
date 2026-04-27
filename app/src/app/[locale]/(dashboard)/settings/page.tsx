@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getStripe } from "@/lib/stripe";
-import UpgradeButton from "@/components/dashboard/UpgradeButton";
+import UpgradePlanPicker from "@/components/dashboard/UpgradePlanPicker";
 import SwitchToAnnualButton from "@/components/dashboard/SwitchToAnnualButton";
 import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
 import ResumeSubscriptionButton from "@/components/dashboard/ResumeSubscriptionButton";
@@ -71,54 +71,62 @@ export default async function SettingsPage() {
         <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-text">{t("subscription")}</h2>
           <div className="mt-4">
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-medium text-text">
-                    {profile?.subscription_tier === "pro"
-                      ? t("proPlan")
-                      : t("freePlan")}
-                  </p>
-                  {isYearly && (
-                    <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
-                      {t("yearlyBadge")}
-                    </span>
-                  )}
-                  {isMonthly && (
-                    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
-                      {t("monthlyBadge")}
-                    </span>
+            {profile?.subscription_tier === "pro" ? (
+              <>
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-text">
+                        {t("proPlan")}
+                      </p>
+                      {isYearly && (
+                        <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
+                          {t("yearlyBadge")}
+                        </span>
+                      )}
+                      {isMonthly && (
+                        <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
+                          {t("monthlyBadge")}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 text-xs text-text-light">
+                      {cancelAtPeriodEnd && periodEndDate
+                        ? t("cancelScheduled", { date: periodEndDate })
+                        : periodEndDate
+                          ? t("nextBillingDate", { date: periodEndDate })
+                          : t("proActive")}
+                    </p>
+                  </div>
+                  {cancelAtPeriodEnd ? (
+                    <ResumeSubscriptionButton />
+                  ) : (
+                    <CancelSubscriptionButton />
                   )}
                 </div>
-                <p className="mt-0.5 text-xs text-text-light">
-                  {cancelAtPeriodEnd && periodEndDate
-                    ? t("cancelScheduled", { date: periodEndDate })
-                    : profile?.subscription_tier === "pro"
-                      ? periodEndDate
-                        ? t("nextBillingDate", { date: periodEndDate })
-                        : t("proActive")
-                      : t("freeUpgrade")}
-                </p>
-              </div>
-              {profile?.subscription_tier === "pro" ? (
-                cancelAtPeriodEnd ? (
-                  <ResumeSubscriptionButton />
-                ) : (
-                  <CancelSubscriptionButton />
-                )
-              ) : (
-                <UpgradeButton />
-              )}
-            </div>
 
-            {/* 月繳用戶可切換到年繳（未排定取消時） */}
-            {profile?.subscription_tier === "pro" &&
-              isMonthly &&
-              !cancelAtPeriodEnd && (
-                <div className="mt-4 border-t border-brand-100 pt-4">
-                  <SwitchToAnnualButton />
+                {/* 月繳用戶可切換到年繳（未排定取消時） */}
+                {isMonthly && !cancelAtPeriodEnd && (
+                  <div className="mt-4 border-t border-brand-100 pt-4">
+                    <SwitchToAnnualButton />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div>
+                  <p className="text-sm font-medium text-text">
+                    {t("freePlan")}
+                  </p>
+                  <p className="mt-0.5 text-xs text-text-light">
+                    {t("freeUpgrade")}
+                  </p>
                 </div>
-              )}
+                <div className="mt-4">
+                  <UpgradePlanPicker />
+                </div>
+              </>
+            )}
           </div>
         </div>
 
