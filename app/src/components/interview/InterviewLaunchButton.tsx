@@ -63,10 +63,14 @@ export default function InterviewLaunchButton({
       </button>
       {open && (
         <StartInterviewModal
-          jobId={jobId}
-          jobTitle={jobTitle}
-          companyName={companyName}
-          hasDescription={hasDescription}
+          jobs={[
+            {
+              id: jobId,
+              job_title: jobTitle,
+              company_name: companyName,
+              hasDescription,
+            },
+          ]}
           resumes={resumes}
           onClose={() => setOpen(false)}
         />

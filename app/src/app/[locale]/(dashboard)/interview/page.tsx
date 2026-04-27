@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Mic, BookOpen, Sparkles, ArrowRight } from "lucide-react";
 import InterviewSessionCard from "@/components/interview/InterviewSessionCard";
+import NewInterviewButton from "@/components/interview/NewInterviewButton";
 import RadarChart from "@/components/interview/RadarChart";
 import EmptyState from "@/components/ui/EmptyState";
 import type { InterviewReport, Scorecard } from "@/types/interview";
@@ -67,18 +68,21 @@ export default async function InterviewPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-start justify-between gap-4">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-text vt-page-title">{t("title")}</h1>
           <p className="mt-1 text-sm text-text-light">{t("subtitle")}</p>
         </div>
-        <Link
-          href="/interview/bank"
-          className="inline-flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
-        >
-          <BookOpen className="h-4 w-4" />
-          {t("bankLink")}
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          {isPro && <NewInterviewButton />}
+          <Link
+            href="/interview/bank"
+            className="inline-flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            {t("bankLink")}
+          </Link>
+        </div>
       </div>
 
       {!isPro && (

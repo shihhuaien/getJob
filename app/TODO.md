@@ -192,7 +192,8 @@
 - [x] 在設定中，新增一個選項，讓使用者自訂 AI 產出內容為英文或是中文（只控制 prompt 中的語言，不改變系統語系）
 - [x] 前端隱藏 Chrome 擴充套件功能（保留後端 `/api/tokens` 與 `verifyRequest` Bearer 認證路徑，避免現有擴充使用者斷線）
 - [x] 模擬面試從八題改成五題
-- [ ] 模擬面試最後一題完成送出時，題目倒數計時要暫停
+- [x] 新增功能：AI 面試模擬中新增一個按鈕，讓使用這可以在這個頁面直接建立新的 AI 模擬面試
+- [x] 修正錯誤：模擬面試最後一題完成送出時，題目倒數計時要暫停
 - [ ] 導入 Joyride 新手教學
 - [ ] google 登入與 email 登入完整測試
 - [ ] Supabase 的 Edge Functions 加上 Rate Limiting 避免惡意攻擊
@@ -201,6 +202,7 @@
 
 - [ ] 建立行銷計劃與代辦事項
 - [ ] 建立社群
+- [ ] 新增 年繳優惠方案（原價 6.5 折）
 - [ ] 更新 landing page
 
 ## UI/UX 審查批次
@@ -253,7 +255,7 @@
   - API 層回傳 409 + `existing_id`：求職信／履歷 pre-check 避免浪費 AI token
   - 前端 UX：409 時自動跳轉至既有版本；其餘顯示本地化 toast（`common.duplicateJob/CoverLetter/Resume`）
 - [x] AI 產出語言設定（只影響 prompt，不動介面語系）
-  - `supabase/migrations/00008_ai_output_language.sql`：`profiles.ai_output_language TEXT`（CHECK NULL｜zh-TW｜en）
+  - `supabase/migrations/00008_ai_output_language.sql`：`profiles.ai_output_language TEXT`（CHECK NULL ｜ zh-TW ｜ en）
   - `profileUpdateSchema` 改 partial + 新增 `ai_output_language`；`/api/profile` PATCH 支援 partial 更新
   - Settings 新區塊 `AiLanguageForm`（radio：跟隨介面 / 繁中 / English，即時儲存 + toast）
   - 接入 7+ 個 AI 呼叫點（資源順序：`profile.ai_output_language ?? body.locale`）

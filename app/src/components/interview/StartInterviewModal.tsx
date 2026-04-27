@@ -16,11 +16,15 @@ interface ResumeOption {
   title: string;
 }
 
-interface Props {
-  jobId: string;
-  jobTitle: string;
-  companyName: string;
+interface JobOption {
+  id: string;
+  job_title: string;
+  company_name: string;
   hasDescription: boolean;
+}
+
+interface Props {
+  jobs: JobOption[];
   resumes: ResumeOption[];
   onClose: () => void;
 }
@@ -34,10 +38,7 @@ const TYPES: InterviewType[] = [
 ];
 
 export default function StartInterviewModal({
-  jobId,
-  jobTitle,
-  companyName,
-  hasDescription,
+  jobs,
   resumes,
   onClose,
 }: Props) {
@@ -46,6 +47,7 @@ export default function StartInterviewModal({
   const tc = useTranslations("common");
   const locale = useLocale();
 
+  const [jobId, setJobId] = useState(jobs[0]?.id ?? "");
   const [resumeId, setResumeId] = useState(resumes[0]?.id ?? "");
   const [persona, setPersona] = useState<Persona>("hr_friendly");
   const [interviewType, setInterviewType] = useState<InterviewType>("mixed");
@@ -65,7 +67,12 @@ export default function StartInterviewModal({
     setVoiceSupported(Boolean(w.SpeechRecognition || w.webkitSpeechRecognition));
   }, []);
 
-  const canStart = hasDescription && resumeId && !isLoading;
+  const selectedJob = jobs.find((j) => j.id === jobId) ?? jobs[0];
+  const hasDescription = Boolean(selectedJob?.hasDescription);
+  const jobTitle = selectedJob?.job_title ?? "";
+  const companyName = selectedJob?.company_name ?? "";
+  const showJobPicker = jobs.length > 1;
+  const canStart = hasDescription && resumeId && jobId && !isLoading;
 
   const handleStart = async () => {
     setError(null);
@@ -116,9 +123,33 @@ export default function StartInterviewModal({
         </div>
 
         <div className="space-y-5 p-6">
-          <p className="text-sm text-text-light">
-            {t("startSubtitle", { company: companyName, title: jobTitle })}
-          </p>
+          {selectedJob ? (
+            <p className="text-sm text-text-light">
+              {t("startSubtitle", { company: companyName, title: jobTitle })}
+            </p>
+          ) : (
+            <p className="text-sm text-red-600">{t("noJobsForInterview")}</p>
+          )}
+
+          {showJobPicker && (
+            <div>
+              <label className="block text-sm font-medium text-text">
+                {t("selectJob")}
+              </label>
+              <select
+                value={jobId}
+                onChange={(e) => setJobId(e.target.value)}
+                className="mt-2 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              >
+                {jobs.map((j) => (
+                  <option key={j.id} value={j.id} disabled={!j.hasDescription}>
+                    {j.company_name} — {j.job_title}
+                    {j.hasDescription ? "" : ` (${t("jobMissingDescription")})`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="rounded-lg bg-brand-50 p-4">
             <p className="text-xs font-semibold text-brand-700">

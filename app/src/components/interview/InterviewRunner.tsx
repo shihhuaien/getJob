@@ -237,6 +237,12 @@ export default function InterviewRunner({
           <CountdownTimer
             key={current.id}
             durationSec={current.expected_duration_sec}
+            paused={
+              isLast &&
+              (isSubmitting ||
+                isCompleting ||
+                pendingAdvance === "complete")
+            }
           />
         </div>
         <div className="h-1.5 w-full rounded-full bg-brand-100">

@@ -5,18 +5,19 @@ import { Clock } from "lucide-react";
 
 interface Props {
   durationSec: number;
+  paused?: boolean;
 }
 
-export default function CountdownTimer({ durationSec }: Props) {
+export default function CountdownTimer({ durationSec, paused = false }: Props) {
   const [remaining, setRemaining] = useState(durationSec);
 
   useEffect(() => {
-    if (remaining <= 0) return;
+    if (remaining <= 0 || paused) return;
     const t = setInterval(() => {
       setRemaining((r) => (r > 0 ? r - 1 : 0));
     }, 1000);
     return () => clearInterval(t);
-  }, [remaining]);
+  }, [remaining, paused]);
 
   const mm = Math.floor(remaining / 60)
     .toString()

@@ -133,10 +133,14 @@ export default function InterviewTriggerBanner({
 
       {modalOpen && (
         <StartInterviewModal
-          jobId={jobId}
-          jobTitle={jobTitle}
-          companyName={companyName}
-          hasDescription={hasDescription}
+          jobs={[
+            {
+              id: jobId,
+              job_title: jobTitle,
+              company_name: companyName,
+              hasDescription,
+            },
+          ]}
           resumes={resumes}
           onClose={() => setModalOpen(false)}
         />
