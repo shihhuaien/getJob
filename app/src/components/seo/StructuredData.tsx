@@ -6,8 +6,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.thdg.site";
 
 const DESCRIPTIONS: Record<Locale, string> = {
   "zh-TW":
-    "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 58%。",
-  en: "AI-powered job search tool. Track applications, optimize resumes, prepare for interviews — boost your job search efficiency by 58%.",
+    "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 68%。",
+  en: "AI-powered job search tool. Track applications, optimize resumes, prepare for interviews — boost your job search efficiency by 68%.",
 };
 
 type Props = {
@@ -59,6 +59,18 @@ export default function StructuredData({ locale }: Props) {
           price: "9.99",
           priceCurrency: "USD",
           billingDuration: "P1M",
+        },
+      },
+      {
+        "@type": "Offer",
+        name: "Pro Yearly",
+        price: "77.88",
+        priceCurrency: "USD",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: "77.88",
+          priceCurrency: "USD",
+          billingDuration: "P1Y",
         },
       },
     ],

@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 
-export async function POST() {
+const checkoutSchema = z.object({
+  plan: z.enum(["monthly", "yearly"]).default("monthly"),
+});
+
+export async function POST(request: Request) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -10,6 +15,29 @@ export async function POST() {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // 容忍空 body：UpgradeButton 預設不送 body 時退回 monthly
+  let payload: unknown = {};
+  try {
+    payload = await request.json();
+  } catch {
+    payload = {};
+  }
+  const parsed = checkoutSchema.safeParse(payload);
+  if (!parsed.success) {
+    return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+  }
+  const { plan } = parsed.data;
+  const priceId =
+    plan === "yearly"
+      ? process.env.STRIPE_PRO_YEARLY_PRICE_ID
+      : process.env.STRIPE_PRO_PRICE_ID;
+  if (!priceId) {
+    return NextResponse.json(
+      { error: "Price not configured" },
+      { status: 500 }
+    );
   }
 
   try {
@@ -40,7 +68,7 @@ export async function POST() {
       mode: "subscription",
       line_items: [
         {
-          price: process.env.STRIPE_PRO_PRICE_ID!,
+          price: priceId,
           quantity: 1,
         },
       ],

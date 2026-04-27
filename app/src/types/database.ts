@@ -43,6 +43,9 @@ export interface Database {
           avatar_url: string | null;
           subscription_tier: "free" | "pro";
           stripe_customer_id: string | null;
+          stripe_subscription_id: string | null;
+          plan_period: "monthly" | "yearly" | null;
+          current_period_end: string | null;
           onboarding_completed_at: string | null;
           target_role: string | null;
           job_search_status:
@@ -62,6 +65,9 @@ export interface Database {
           avatar_url?: string | null;
           subscription_tier?: "free" | "pro";
           stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          plan_period?: "monthly" | "yearly" | null;
+          current_period_end?: string | null;
           onboarding_completed_at?: string | null;
           target_role?: string | null;
           job_search_status?:
@@ -81,6 +87,9 @@ export interface Database {
           avatar_url?: string | null;
           subscription_tier?: "free" | "pro";
           stripe_customer_id?: string | null;
+          stripe_subscription_id?: string | null;
+          plan_period?: "monthly" | "yearly" | null;
+          current_period_end?: string | null;
           onboarding_completed_at?: string | null;
           target_role?: string | null;
           job_search_status?:
@@ -345,6 +354,7 @@ export interface Database {
     Functions: Record<string, never>;
     Enums: {
       subscription_tier: "free" | "pro";
+      plan_period: "monthly" | "yearly";
       application_status:
         | "saved"
         | "applied"

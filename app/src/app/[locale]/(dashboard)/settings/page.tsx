@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getStripe } from "@/lib/stripe";
 import UpgradeButton from "@/components/dashboard/UpgradeButton";
+import SwitchToAnnualButton from "@/components/dashboard/SwitchToAnnualButton";
 import CancelSubscriptionButton from "@/components/dashboard/CancelSubscriptionButton";
 import ResumeSubscriptionButton from "@/components/dashboard/ResumeSubscriptionButton";
 import DeleteAccountButton from "@/components/dashboard/DeleteAccountButton";
@@ -23,9 +24,8 @@ export default async function SettingsPage() {
     .eq("id", user.id)
     .single();
 
-  // 查詢 Stripe 訂閱狀態（是否已排定取消）
+  // 取消狀態仍需打 Stripe（cancel_at_period_end 未存於 DB）
   let cancelAtPeriodEnd = false;
-  let periodEndDate: string | null = null;
 
   if (profile?.stripe_customer_id && profile.subscription_tier === "pro") {
     try {
@@ -35,18 +35,18 @@ export default async function SettingsPage() {
         limit: 1,
       });
       if (subscriptions.data.length > 0) {
-        const sub = subscriptions.data[0];
-        cancelAtPeriodEnd = sub.cancel_at_period_end;
-        if (sub.cancel_at_period_end && sub.cancel_at) {
-          periodEndDate = new Date(
-            sub.cancel_at * 1000
-          ).toLocaleDateString("zh-TW");
-        }
+        cancelAtPeriodEnd = subscriptions.data[0].cancel_at_period_end;
       }
     } catch {
       // Stripe 查詢失敗不影響頁面顯示
     }
   }
+
+  const periodEndDate = profile?.current_period_end
+    ? new Date(profile.current_period_end).toLocaleDateString("zh-TW")
+    : null;
+  const isYearly = profile?.plan_period === "yearly";
+  const isMonthly = profile?.plan_period === "monthly";
 
   return (
     <div>
@@ -71,18 +71,32 @@ export default async function SettingsPage() {
         <div className="rounded-2xl bg-white p-6 shadow-neu">
           <h2 className="text-lg font-semibold text-text">{t("subscription")}</h2>
           <div className="mt-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm font-medium text-text">
-                  {profile?.subscription_tier === "pro"
-                    ? t("proPlan")
-                    : t("freePlan")}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-text">
+                    {profile?.subscription_tier === "pro"
+                      ? t("proPlan")
+                      : t("freePlan")}
+                  </p>
+                  {isYearly && (
+                    <span className="rounded-full bg-brand-100 px-2 py-0.5 text-xs font-medium text-brand-700">
+                      {t("yearlyBadge")}
+                    </span>
+                  )}
+                  {isMonthly && (
+                    <span className="rounded-full bg-brand-50 px-2 py-0.5 text-xs font-medium text-brand-600">
+                      {t("monthlyBadge")}
+                    </span>
+                  )}
+                </div>
                 <p className="mt-0.5 text-xs text-text-light">
                   {cancelAtPeriodEnd && periodEndDate
                     ? t("cancelScheduled", { date: periodEndDate })
                     : profile?.subscription_tier === "pro"
-                      ? t("proActive")
+                      ? periodEndDate
+                        ? t("nextBillingDate", { date: periodEndDate })
+                        : t("proActive")
                       : t("freeUpgrade")}
                 </p>
               </div>
@@ -96,6 +110,15 @@ export default async function SettingsPage() {
                 <UpgradeButton />
               )}
             </div>
+
+            {/* 月繳用戶可切換到年繳（未排定取消時） */}
+            {profile?.subscription_tier === "pro" &&
+              isMonthly &&
+              !cancelAtPeriodEnd && (
+                <div className="mt-4 border-t border-brand-100 pt-4">
+                  <SwitchToAnnualButton />
+                </div>
+              )}
           </div>
         </div>
 

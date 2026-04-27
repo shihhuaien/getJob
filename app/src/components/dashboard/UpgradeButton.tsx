@@ -4,7 +4,17 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 
-export default function UpgradeButton() {
+type Plan = "monthly" | "yearly";
+
+type UpgradeButtonProps = {
+  plan?: Plan;
+  label?: string;
+};
+
+export default function UpgradeButton({
+  plan = "monthly",
+  label,
+}: UpgradeButtonProps) {
   const t = useTranslations("settings");
   const tc = useTranslations("common");
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +24,11 @@ export default function UpgradeButton() {
     setIsLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/stripe/checkout", { method: "POST" });
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || tc("saveFailed"));
       if (data.url) {
@@ -29,7 +43,7 @@ export default function UpgradeButton() {
   return (
     <div>
       <Button onClick={handleUpgrade} loading={isLoading} variant="primary">
-        {t("upgradePro")}
+        {label ?? t("upgradePro")}
       </Button>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
     </div>
