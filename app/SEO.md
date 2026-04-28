@@ -58,13 +58,14 @@
 
 ### 5. JSON-LD 結構化資料（`src/components/seo/StructuredData.tsx`）
 
-落地頁 `[locale]/page.tsx` 注入三組 schema：
+落地頁 `[locale]/page.tsx` 注入四組 schema：
 
 | Schema | 重點欄位 |
 |---|---|
 | **Organization** | `name`、`url`、`logo: ${SITE_URL}/brand/logo-mark.png` |
 | **WebSite** | `name`、`url`、`inLanguage: ["zh-TW", "en"]` |
-| **SoftwareApplication** | `applicationCategory: "BusinessApplication"`、`operatingSystem: "Web"`、`offers: [Free $0, Pro $9.99/月]` |
+| **SoftwareApplication** | `applicationCategory: "BusinessApplication"`、`operatingSystem: "Web"`、`offers: [Free $0, Pro $9.99/月, Pro Yearly $77.88/年]` |
+| **FAQPage** | 由 `FAQ_KEYS` 對照 `messages/{locale}.json` 的 `landing` 命名空間動態產生 Q/A 列表 |
 
 **刻意不加**：
 - `aggregateRating` / `review` — 沒有真實使用者評論不可虛構，Google 會懲罰
@@ -98,6 +99,7 @@
 
 - 預設語系 `zh-TW` 不加前綴（`/`、`/login`...）
 - 次要語系 `en` 加前綴（`/en`、`/en/login`...）
+- `src/i18n/routing.ts` 明確設 `localePrefix: "as-needed"`，否則 next-intl 預設 `"always"` 會把 `/` 重導到 `/zh-TW`、與 sitemap canonical 失準
 - 由 `next-intl` middleware 處理路由
 - Sitemap 與 Metadata 均明確宣告 hreflang 對應
 
@@ -203,9 +205,8 @@
 
 - [ ] **多語 Open Graph 圖**：建立 `src/app/[locale]/opengraph-image.tsx`，依 `params.locale` 切換中英文文案。優先級：等英文流量 > 10% 後再做
 - [ ] **內容 SEO（Blog / Resources）**：開 `/blog` 子目錄，發 SEO 導向的求職主題長文章（如「2026 年履歷 ATS 通過率提升指南」），衝長尾關鍵字流量
-- [ ] **FAQPage Schema**：在落地頁或 Pricing 區段加 FAQ section + `FAQPage` JSON-LD，可拿 rich results 中的折疊式 FAQ
 - [ ] **Breadcrumb Schema**：當 dashboard 內頁開放公開存取時（目前禁止索引）再考慮
-- [ ] **結構化資料維護**：若推出企業方案、年付價格，更新 `SoftwareApplication.offers`
+- [ ] **結構化資料維護**：若推出企業方案，更新 `SoftwareApplication.offers`（目前已含 Free / Pro 月付 / Pro 年付）
 - [ ] **效能優化**：依 PageSpeed CrUX 報告（4 週後出現）針對 LCP / INP 落點調整
 - [ ] **反向連結**：列入行銷層工作，技術面僅需確保 robots/sitemap 開放抓取
 
