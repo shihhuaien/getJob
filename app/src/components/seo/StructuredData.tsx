@@ -1,22 +1,20 @@
+import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { FAQ_KEYS } from "@/components/landing/faqKeys";
 
 type Locale = (typeof routing.locales)[number];
 
 const SITE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://offery.thdg.site";
 
-const DESCRIPTIONS: Record<Locale, string> = {
-  "zh-TW":
-    "AI 驅動的求職工具，幫助你追蹤職缺、優化履歷、準備面試，讓求職效率提升 68%。",
-  en: "AI-powered job search tool. Track applications, optimize resumes, prepare for interviews — boost your job search efficiency by 68%.",
-};
-
 type Props = {
   locale: Locale;
 };
 
-export default function StructuredData({ locale }: Props) {
-  const description = DESCRIPTIONS[locale];
+export default async function StructuredData({ locale }: Props) {
   const url = locale === "zh-TW" ? SITE_URL : `${SITE_URL}/en`;
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
+  const t = await getTranslations({ locale, namespace: "landing" });
+  const description = tMeta("description");
 
   const organization = {
     "@context": "https://schema.org",
@@ -76,6 +74,19 @@ export default function StructuredData({ locale }: Props) {
     ],
   };
 
+  const faqPage = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ_KEYS.map((item) => ({
+      "@type": "Question",
+      name: t(item.qKey),
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: t(item.aKey),
+      },
+    })),
+  };
+
   return (
     <>
       <script
@@ -89,6 +100,10 @@ export default function StructuredData({ locale }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(application) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPage) }}
       />
     </>
   );
