@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import { useState } from "react";
-import { Briefcase } from "lucide-react";
+import { AlertCircle, Briefcase, MailCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useTranslations } from "next-intl";
 
@@ -78,22 +78,35 @@ export default function RegisterPage() {
       <main
         id="main-content"
         tabIndex={-1}
-        className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4 focus:outline-none"
+        className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[color:var(--color-bg)] px-4 py-12 focus:outline-none"
       >
-        <div className="w-full max-w-md text-center">
-          <Briefcase className="mx-auto h-12 w-12 text-brand-600" />
-          <h1 className="mt-4 text-2xl font-bold text-text">
-            {t("confirmEmail")}
-          </h1>
-          <p className="mt-2 text-text-light">
-            {t("confirmEmailDesc", { email })}
-          </p>
-          <Link
-            href="/login"
-            className="mt-6 inline-block text-sm font-medium text-brand-600 hover:text-brand-500"
-          >
-            {t("backToLogin")}
-          </Link>
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-32 -top-24 h-80 w-80 rounded-full bg-brand-100/70 blur-3xl" />
+          <div className="absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-[#D97D54]/15 blur-3xl" />
+        </div>
+
+        <div className="relative z-10 w-full max-w-md">
+          <div className="rounded-2xl bg-white p-9 text-center shadow-neu">
+            <span className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-brand-50 shadow-neu-inset">
+              <MailCheck
+                className="h-6 w-6 text-brand-600"
+                strokeWidth={2}
+                aria-hidden="true"
+              />
+            </span>
+            <h1 className="mt-6 text-2xl font-bold tracking-tight text-text">
+              {t("confirmEmail")}
+            </h1>
+            <p className="mt-3 text-sm leading-relaxed text-text-light">
+              {t("confirmEmailDesc", { email })}
+            </p>
+            <Link
+              href="/login"
+              className="mt-7 inline-flex items-center justify-center text-sm font-medium text-brand-600 underline-offset-4 transition-colors hover:text-brand-700 hover:underline"
+            >
+              {t("backToLogin")}
+            </Link>
+          </div>
         </div>
       </main>
     );
@@ -103,34 +116,47 @@ export default function RegisterPage() {
     <main
       id="main-content"
       tabIndex={-1}
-      className="flex min-h-screen items-center justify-center bg-[color:var(--color-bg)] px-4 focus:outline-none"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[color:var(--color-bg)] px-4 py-12 focus:outline-none"
     >
-      <div className="w-full max-w-md">
+      {/* 環境氛圍：暈染光斑，營造沈穩溫暖的氛圍 */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute -left-32 -top-24 h-80 w-80 rounded-full bg-brand-100/70 blur-3xl" />
+        <div className="absolute -bottom-32 -right-24 h-80 w-80 rounded-full bg-[#D97D54]/15 blur-3xl" />
+      </div>
+
+      <div className="relative z-10 w-full max-w-md">
         <div className="text-center">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <Briefcase className="h-8 w-8 text-brand-600" />
-            <span className="text-2xl font-bold text-text">Offery</span>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 transition-opacity duration-fast hover:opacity-80"
+          >
+            <span className="grid h-11 w-11 place-items-center rounded-2xl bg-white shadow-neu">
+              <Briefcase className="h-5 w-5 text-brand-600" strokeWidth={2} />
+            </span>
+            <span className="text-2xl font-bold tracking-tight text-text">
+              Offery
+            </span>
           </Link>
-          <h1 className="mt-6 text-2xl font-bold text-text">
+          <h1 className="mt-8 text-3xl font-bold tracking-tight text-text">
             {t("registerTitle")}
           </h1>
-          <p className="mt-2 text-sm text-text-light">
+          <p className="mt-2.5 text-sm text-text-light">
             {t("hasAccount")}{" "}
             <Link
               href="/login"
-              className="font-medium text-brand-600 hover:text-brand-500"
+              className="font-medium text-brand-600 underline-offset-4 transition-colors hover:text-brand-700 hover:underline"
             >
               {t("loginLink")}
             </Link>
           </p>
         </div>
 
-        <div className="mt-8 rounded-xl bg-white p-8 shadow-sm ring-1 ring-brand-100">
+        <div className="mt-10 rounded-2xl bg-white p-8 shadow-neu sm:p-9">
           <button
             onClick={handleGoogleLogin}
-            className="flex w-full items-center justify-center gap-3 rounded-lg border border-brand-200 bg-white px-4 py-2.5 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"
+            className="group flex w-full items-center justify-center gap-3 rounded-xl bg-[var(--color-bg)] px-4 py-3 text-sm font-medium text-text shadow-neu-inset transition-all duration-base ease-out hover:-translate-y-0.5 hover:bg-white hover:shadow-neu active:translate-y-0 active:shadow-neu-pressed motion-reduce:transform-none"
           >
-            <svg className="h-5 w-5" viewBox="0 0 24 24">
+            <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
                 fill="#4285F4"
@@ -151,26 +177,35 @@ export default function RegisterPage() {
             {t("googleRegister")}
           </button>
 
-          <div className="relative my-6">
+          <div className="relative my-7">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-brand-100" />
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-text-light">{t("orEmail")}</span>
+            <div className="relative flex justify-center">
+              <span className="bg-white px-3 text-xs font-medium uppercase tracking-[0.12em] text-text-light">
+                {t("orEmail")}
+              </span>
             </div>
           </div>
 
-          <form onSubmit={handleRegister} className="space-y-4">
+          <form onSubmit={handleRegister} className="space-y-5">
             {error && (
-              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
-                {error}
+              <div
+                role="alert"
+                className="flex items-start gap-2.5 rounded-xl bg-red-50 px-3.5 py-3 text-sm text-red-700 ring-1 ring-red-100"
+              >
+                <AlertCircle
+                  className="mt-0.5 h-4 w-4 flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="leading-relaxed">{error}</span>
               </div>
             )}
 
             <div>
               <label
                 htmlFor="fullName"
-                className="block text-sm font-medium text-text"
+                className="mb-1.5 block text-sm font-medium text-text"
               >
                 {t("name")}
               </label>
@@ -180,15 +215,16 @@ export default function RegisterPage() {
                 required
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block w-full rounded-xl bg-[var(--color-bg)] px-4 py-3 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:shadow-neu-pressed focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white"
                 placeholder={t("namePlaceholder")}
+                autoComplete="name"
               />
             </div>
 
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-text"
+                className="mb-1.5 block text-sm font-medium text-text"
               >
                 {t("email")}
               </label>
@@ -204,11 +240,12 @@ export default function RegisterPage() {
                 onBlur={(e) => setEmailError(validateEmail(e.target.value))}
                 aria-invalid={Boolean(emailError)}
                 aria-describedby={emailError ? "email-error" : undefined}
-                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block w-full rounded-xl bg-[var(--color-bg)] px-4 py-3 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:shadow-neu-pressed focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-error"
                 placeholder="you@example.com"
+                autoComplete="email"
               />
               {emailError && (
-                <p id="email-error" className="mt-1 text-xs text-error">
+                <p id="email-error" className="mt-1.5 text-xs text-error">
                   {emailError}
                 </p>
               )}
@@ -217,7 +254,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-text"
+                className="mb-1.5 block text-sm font-medium text-text"
               >
                 {t("password")}
               </label>
@@ -235,12 +272,17 @@ export default function RegisterPage() {
                 onBlur={(e) => setPasswordError(validatePassword(e.target.value))}
                 aria-invalid={Boolean(passwordError)}
                 aria-describedby={passwordError ? "password-error" : undefined}
-                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2.5 text-sm shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                className="block w-full rounded-xl bg-[var(--color-bg)] px-4 py-3 text-sm text-text placeholder:text-text-placeholder shadow-neu-inset transition-shadow duration-fast ease-out focus:shadow-neu-pressed focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white aria-[invalid=true]:ring-1 aria-[invalid=true]:ring-error"
                 placeholder={t("passwordHint")}
+                autoComplete="new-password"
               />
-              {passwordError && (
-                <p id="password-error" className="mt-1 text-xs text-error">
+              {passwordError ? (
+                <p id="password-error" className="mt-1.5 text-xs text-error">
                   {passwordError}
+                </p>
+              ) : (
+                <p className="mt-1.5 text-xs text-text-light">
+                  {t("passwordHint")}
                 </p>
               )}
             </div>
@@ -248,8 +290,33 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 transition-colors"
+              className="mt-1 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white shadow-neu transition-all duration-base ease-out hover:-translate-y-0.5 hover:bg-brand-700 hover:shadow-neu-hover active:translate-y-0 active:shadow-neu-pressed disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:bg-brand-600 disabled:hover:shadow-neu motion-reduce:transform-none"
             >
+              {loading && (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="animate-spin"
+                  aria-hidden="true"
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    className="opacity-30"
+                  />
+                  <path
+                    d="M4 12a8 8 0 018-8"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
               {loading ? t("registering") : t("register")}
             </button>
           </form>
