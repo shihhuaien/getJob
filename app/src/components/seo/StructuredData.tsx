@@ -52,24 +52,12 @@ export default async function StructuredData({ locale }: Props) {
         name: "Pro",
         price: "9.99",
         priceCurrency: "USD",
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: "9.99",
-          priceCurrency: "USD",
-          billingDuration: "P1M",
-        },
       },
       {
         "@type": "Offer",
         name: "Pro Yearly",
         price: "77.88",
         priceCurrency: "USD",
-        priceSpecification: {
-          "@type": "UnitPriceSpecification",
-          price: "77.88",
-          priceCurrency: "USD",
-          billingDuration: "P1Y",
-        },
       },
     ],
   };
