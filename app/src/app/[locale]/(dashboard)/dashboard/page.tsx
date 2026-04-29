@@ -12,6 +12,7 @@ import {
 import OnboardingModal from "@/components/dashboard/OnboardingModal";
 import NextStepCards from "@/components/dashboard/NextStepCards";
 import MilestoneBadge from "@/components/dashboard/MilestoneBadge";
+import BlogRecommendations from "@/components/dashboard/BlogRecommendations";
 
 export default async function DashboardPage() {
   const t = await getTranslations("dashboard");
@@ -59,10 +60,18 @@ export default async function DashboardPage() {
     .eq("user_id", user.id)
     .eq("status", "completed");
 
+  // 用於部落格情境化推薦：status='applied' 的職缺數
+  const { count: appliedCount } = await supabase
+    .from("job_applications")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", user.id)
+    .eq("status", "applied");
+
   const hasJob = (jobCount ?? 0) > 0;
   const hasResume = (resumeCount ?? 0) > 0;
   const hasCoverLetter = (coverLetterCount ?? 0) > 0;
   const hasCompletedInterview = (completedInterviewCount ?? 0) > 0;
+  const hasInterview = (interviewCount ?? 0) > 0;
 
   // 最近活動：最近更新的職缺
   const { data: recentJobs } = await supabase
@@ -229,6 +238,15 @@ export default async function DashboardPage() {
         hasJob={hasJob}
         hasResume={hasResume}
         hasInterview={hasCompletedInterview}
+      />
+
+      <BlogRecommendations
+        state={{
+          hasResume,
+          hasJob,
+          hasInterview,
+          appliedWithoutInterview: appliedCount ?? 0,
+        }}
       />
 
       <MilestoneBadge

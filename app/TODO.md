@@ -1,6 +1,6 @@
 # TODO：Offery 待辦事項
 
-**最後更新**：2026-04-24
+**最後更新**：2026-04-29
 **收費模式**：免費 + 訂閱制（Stripe，US$9.99/月）
 
 ---
@@ -148,6 +148,7 @@
 - [x] 求職數據分析圖表（投遞轉換率、面試成功率、時間軸）
 - [x] Dashboard 最近活動列表（取代佔位文字）
 - [x] 履歷刪除功能
+- [x] 求職指南（Blog Hub）— Dashboard 情境化推薦區塊 + `/blog` 列表 + `/blog/[slug]` 文章頁；詳見 [`BLOG.md`](./BLOG.md)
 
 ### v2.0
 
@@ -204,6 +205,7 @@
 - [ ] 建立社群
 - [x] 新增 年繳優惠方案（原價 6.5 折）
 - [x] 更新 landing page
+- [ ]目前文章還沒有 hero image，未來想做更精緻的卡片視覺可加 /public/blog/hero/\*.webp
 
 ## UI/UX 審查批次
 
@@ -244,6 +246,19 @@
   - `>=xl` 維持 5 欄 grid；`<xl` 改為 `flex snap-x snap-mandatory`，欄寬 78vw → 60vw → 340px
   - 卡片顯示相對時間「更新於 X 分鐘前」（`src/lib/relative-time.ts` 新增 helper，絕對時間保留於 tooltip）
   - 新增翻譯：`commandPalette`、`relativeTime`、`jobsBoard`（zh-TW + en）
+
+### ✅ 批次 8：求職指南（Blog Hub）（2026-04-29）
+
+- [x] Dashboard 新增「為你而選的求職指南」區塊（情境化推薦 3 篇，依 pipeline 狀態切換副標題與內容）
+  - `src/components/dashboard/BlogRecommendations.tsx`：server component，呼叫 `pickArticles(state, articles, 3)`
+  - `dashboard/page.tsx` 新增 `appliedCount` 查詢以餵入 `appliedWithoutInterview` 訊號
+- [x] 公開部落格路由 `/[locale]/blog`（列表頁，含分類 tab）與 `/[locale]/blog/[slug]`（文章頁，含 Article JSON-LD、`generateMetadata`、延伸閱讀）
+- [x] 內容資料層（純函式 + 型別安全）：`src/lib/blog/{types,recommend,articles,categories}.ts`
+- [x] 5 篇 evergreen 文章 × zh-TW 完整 + en stub：履歷開頭、ATS 關鍵字、求職開局、行為面試、談薪
+- [x] UI 元件：`ArticleCard`、`ArticleHero`、`ArticleProse`、`ArticleCTA`、`CategoryTab`
+- [x] i18n：新增 `blog` namespace（zh-TW + en），含分類標籤、四種情境化副標題、CTA、閱讀時間格式
+- [x] sitemap：補上 `/blog` 與每篇文章 × 兩語系（含 hreflang alternates）
+- [x] 設計決策：採 TSX 內容模組（沿用 `src/content/legal/*.tsx` 模式），不引入 MDX/`@next/mdx` 依賴；理由與完整 PRD 見 [`BLOG.md`](./BLOG.md) §8
 
 ### ✅ 批次 7：QA 收尾（2026-04-24）
 

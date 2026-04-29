@@ -174,6 +174,16 @@
 - ✅ 多維度評分報告 + 雷達圖成長軌跡
 - ✅ 個人題庫（Bookmark）
 
+#### 求職指南（Blog Hub）
+
+- **目的**：在 Dashboard 卡關時提供下一步該想什麼的內容；為長期 SEO 與功能引流奠基
+- ✅ Dashboard 區塊：情境化推薦 3 篇（依使用者 pipeline 狀態切換副標題與文章）
+- ✅ `/blog` 列表頁（分類 tab：履歷 / 面試 / 求職策略 / 薪資與職涯）
+- ✅ `/blog/[slug]` 文章閱讀頁（含分類 tag、閱讀時間、文末工具 CTA、延伸閱讀、Article JSON-LD）
+- ✅ 5 篇 evergreen 文章種子（zh-TW 完整 + en stub）
+- ✅ 內容採 TSX 模組（與 `src/content/legal/*` 同模式），未來再評估升級至 MDX
+- 詳細 PRD：見 `BLOG.md`
+
 #### 法律 / 合規
 
 - ✅ 隱私權政策頁（`/privacy`，依 PDPA §3 權利條列）

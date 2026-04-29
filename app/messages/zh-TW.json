@@ -473,7 +473,7 @@
     "selectJobPlaceholder": "請選擇職缺",
     "startAnalysis": "開始分析",
     "analyzing": "AI 正在分析你的履歷與職缺匹配度...",
-    "analyzingNote": "這可能需要幾秒鐘",
+    "analyzingNote": "這可能需要幾分鐘",
     "analyzingPhases": [
       "讀取你的履歷內容…",
       "載入目標職缺的描述…",
@@ -905,5 +905,27 @@
   "jobsBoard": {
     "lastUpdated": "更新於 {time}",
     "scrollHint": "左右滑動以查看全部欄位"
+  },
+  "blog": {
+    "indexTitle": "求職指南",
+    "indexDescription": "從履歷、面試到談薪，整理你在求職路上每個階段最實用的方法與心法。",
+    "dashboardSectionTitle": "為你而選的求職指南",
+    "viewAll": "查看全部文章",
+    "readMore": "閱讀",
+    "readingMinutes": "{n} 分鐘",
+    "updatedOn": "更新於 {date}",
+    "ctaButton": "現在就試試",
+    "relatedTitle": "延伸閱讀",
+    "emptyState": "這個分類還沒有文章，先看看其他分類吧。",
+    "categoryAll": "全部",
+    "categoryResume": "履歷",
+    "categoryInterview": "面試",
+    "categoryJobSearch": "求職策略",
+    "categoryCareer": "薪資與職涯",
+    "intentNoResume": "先打好基礎，從第一份履歷開始",
+    "intentNoJob": "不知道從哪找起？這幾招幫你開局",
+    "intentHasInterview": "有面試了！這幾篇幫你做最後準備",
+    "intentAppliedWithoutInterview": "投了一陣子還沒回音？換個方式試試",
+    "intentDefault": "根據你目前的進度推薦"
   }
 }

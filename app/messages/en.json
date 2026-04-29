@@ -473,7 +473,7 @@
     "selectJobPlaceholder": "Select a job",
     "startAnalysis": "Start Analysis",
     "analyzing": "AI is analyzing your resume against the job...",
-    "analyzingNote": "This may take a few seconds",
+    "analyzingNote": "This may take a few minutes",
     "analyzingPhases": [
       "Loading your resume content…",
       "Pulling in the target job description…",
@@ -905,5 +905,27 @@
   "jobsBoard": {
     "lastUpdated": "Updated {time}",
     "scrollHint": "Swipe to see all columns"
+  },
+  "blog": {
+    "indexTitle": "Job Search Playbook",
+    "indexDescription": "Practical tactics for every stage of your job search—resume, interview, salary, and beyond.",
+    "dashboardSectionTitle": "Hand-picked for your job search",
+    "viewAll": "View all articles",
+    "readMore": "Read",
+    "readingMinutes": "{n} min read",
+    "updatedOn": "Updated {date}",
+    "ctaButton": "Try it now",
+    "relatedTitle": "Keep reading",
+    "emptyState": "No articles in this category yet—check the others.",
+    "categoryAll": "All",
+    "categoryResume": "Resume",
+    "categoryInterview": "Interview",
+    "categoryJobSearch": "Job Search",
+    "categoryCareer": "Career & Salary",
+    "intentNoResume": "Start with the basics—your first resume",
+    "intentNoJob": "Not sure where to start? These openings help",
+    "intentHasInterview": "You have an interview—make the final hours count",
+    "intentAppliedWithoutInterview": "Applying but no replies? Try a different angle",
+    "intentDefault": "Picked based on where you are right now"
   }
 }
