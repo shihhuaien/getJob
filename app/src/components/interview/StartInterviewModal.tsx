@@ -56,6 +56,19 @@ export default function StartInterviewModal({
   const [drillDown, setDrillDown] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [phaseIdx, setPhaseIdx] = useState(0);
+
+  const generatingQuestionsPhases = t.raw("generatingQuestionsPhases") as string[];
+  const generatingQuestionsLabel =
+    generatingQuestionsPhases[phaseIdx % generatingQuestionsPhases.length];
+
+  useEffect(() => {
+    if (!isLoading) return;
+    const interval = setInterval(() => {
+      setPhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isLoading]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -337,7 +350,7 @@ export default function StartInterviewModal({
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  {t("generatingQuestions")}
+                  {generatingQuestionsLabel}
                 </>
               ) : (
                 <>

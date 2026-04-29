@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Plus, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
@@ -45,6 +45,18 @@ export default function CreateCoverLetterButton({
   const [selectedResumeId, setSelectedResumeId] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [streamingText, setStreamingText] = useState("");
+  const [phaseIdx, setPhaseIdx] = useState(0);
+
+  const aiGeneratingPhases = t.raw("aiGeneratingPhases") as string[];
+  const aiGeneratingLabel = aiGeneratingPhases[phaseIdx % aiGeneratingPhases.length];
+
+  useEffect(() => {
+    if (!isGenerating) return;
+    const interval = setInterval(() => {
+      setPhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   const resetState = () => {
     setTitle("");
@@ -346,7 +358,7 @@ export default function CreateCoverLetterButton({
                     leftIcon={<Sparkles className="h-4 w-4" />}
                     className="w-full"
                   >
-                    {isGenerating ? t("aiGenerating") : t("aiGenerateBtn")}
+                    {isGenerating ? aiGeneratingLabel : t("aiGenerateBtn")}
                   </Button>
                 </div>
               )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Plus, Sparkles, Upload, FileText } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
@@ -29,7 +29,19 @@ export default function CreateResumeButton({
   // PDF 上傳相關
   const [pdfFile, setPdfFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [phaseIdx, setPhaseIdx] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const aiParsingPhases = t.raw("aiParsingPhases") as string[];
+  const aiParsingLabel = aiParsingPhases[phaseIdx % aiParsingPhases.length];
+
+  useEffect(() => {
+    if (!isUploading) return;
+    const interval = setInterval(() => {
+      setPhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isUploading]);
 
   const resetState = () => {
     setTitle("");
@@ -284,7 +296,7 @@ export default function CreateResumeButton({
                     leftIcon={<Sparkles className="h-4 w-4" />}
                     className="mt-3 w-full"
                   >
-                    {isUploading ? t("aiParsing") : t("uploadAndParse")}
+                    {isUploading ? aiParsingLabel : t("uploadAndParse")}
                   </Button>
                 </div>
               )}

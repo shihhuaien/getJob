@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
@@ -95,6 +95,30 @@ export default function ResumeOptimizeModal({
   const [error, setError] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<AtsAnalysis | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [analyzePhaseIdx, setAnalyzePhaseIdx] = useState(0);
+  const [generatePhaseIdx, setGeneratePhaseIdx] = useState(0);
+
+  const analyzingPhases = t.raw("analyzingPhases") as string[];
+  const analyzingLabel = analyzingPhases[analyzePhaseIdx % analyzingPhases.length];
+
+  const generatingPhases = t.raw("generatingPhases") as string[];
+  const generatingLabel = generatingPhases[generatePhaseIdx % generatingPhases.length];
+
+  useEffect(() => {
+    if (step !== "loading") return;
+    const interval = setInterval(() => {
+      setAnalyzePhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [step]);
+
+  useEffect(() => {
+    if (!isGenerating) return;
+    const interval = setInterval(() => {
+      setGeneratePhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isGenerating]);
 
   const handleGenerate = async () => {
     if (!selectedJobId) return;
@@ -243,7 +267,7 @@ export default function ResumeOptimizeModal({
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
               <p className="mt-3 text-sm text-text-light">
-                {t("analyzing")}
+                {analyzingLabel}
               </p>
               <p className="mt-1 text-xs text-text-placeholder">
                 {t("analyzingNote")}
@@ -360,7 +384,7 @@ export default function ResumeOptimizeModal({
                   {isGenerating ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      {t("generating")}
+                      {generatingLabel}
                     </>
                   ) : (
                     <>

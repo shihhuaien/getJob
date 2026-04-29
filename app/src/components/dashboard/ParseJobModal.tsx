@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Sparkles, X, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { Database } from "@/types/database";
@@ -37,6 +37,18 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ParsedResult | null>(null);
   const [jobUrl, setJobUrl] = useState("");
+  const [phaseIdx, setPhaseIdx] = useState(0);
+
+  const parsingPhases = t.raw("parsingPhases") as string[];
+  const parsingLabel = parsingPhases[phaseIdx % parsingPhases.length];
+
+  useEffect(() => {
+    if (step !== "loading") return;
+    const interval = setInterval(() => {
+      setPhaseIdx((i) => i + 1);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [step]);
 
   const handleParse = async () => {
     setError(null);
@@ -150,7 +162,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
           {step === "loading" && (
             <div className="flex flex-col items-center justify-center py-12">
               <Loader2 className="h-8 w-8 animate-spin text-brand-600" />
-              <p className="mt-3 text-sm text-text-light">{t("parsing")}</p>
+              <p className="mt-3 text-sm text-text-light">{parsingLabel}</p>
             </div>
           )}
 
