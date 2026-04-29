@@ -199,6 +199,31 @@
 - `alt` 屬性含「圖片／icon」等冗詞
 - 標題層級不依 h1 → h2 → h3 遞減
 
+### C.2 第二次量測（2026-04-29 部署後）
+
+`display: swap` + 字型 mono preload off + 三項 a11y 修正部署後重測。
+
+| 類別 / 指標 | Mobile (Δ) | Desktop (Δ) |
+|---|---|---|
+| Performance | 70 (+10) ✅ | 96 (+6) ✅ |
+| Accessibility | 92 (0) ⚠️ | 95 (0) ⚠️ |
+| Best Practices | 96 (0) | 96 (0) |
+| SEO | 100 (0) | 100 (0) |
+| First Contentful Paint | 3.3s (-2.1s) ✅ | 0.4s (-0.6s) ✅ |
+| Largest Contentful Paint | 4.9s (-4.4s) ✅ | 1.3s (-0.5s) ✅ |
+| Total Blocking Time | 160ms (+70ms) ⚠️ | 70ms (+60ms) ⚠️ |
+| Cumulative Layout Shift | 0 | 0 |
+| Speed Index | 5.2s (-0.7s) | 1.0s (-0.2s) |
+| 轉譯封鎖預估省下 | 750ms（原 6,160ms）🎯 | 220ms（原 930ms） |
+
+**關鍵發現**：
+- `display: swap` 是高 ROI 改動，Mobile LCP 直接砍半；轉譯封鎖救回 5.4s
+- A11y 分數未動是因為 Lighthouse audit 二元判定：每個 audit 還剩其他元素 fail
+  - 標題順序 audit 還有未發現的跳級點
+  - 對比度 audit 仍有 5 處 `text-text-light/{40,60,70}` 失敗
+  - ARIA `aria-hidden` 含 focusable descendant 尚未處理
+- TBT 小幅退步推測為 swap 觸發的二次 reflow，屬可接受折衷
+
 ### D. SEO 變更後的標準動作
 
 修改任何 metadata、sitemap、robots、結構化資料後：
