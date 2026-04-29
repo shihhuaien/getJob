@@ -168,6 +168,37 @@
 | **第 4 週** | PageSpeed 開始有 CrUX 真實使用者數據 |
 | **第 4–8 週** | 品牌字「Offery」應穩定排名前段 |
 
+### C.1 Lab 基準（2026-04-28 首次量測）
+
+部署當天記錄一次 Lighthouse Lab 數據，作為未來退化比對基準。
+首頁 `https://offery.thdg.site/`，Lighthouse 13.0.1。
+
+| 類別 / 指標 | Mobile | Desktop |
+|---|---|---|
+| Performance | 60 ⚠️ | 90 ✅ |
+| Accessibility | 92 | 95 |
+| Best Practices | 96 | 96 |
+| SEO | 100 | 100 |
+| First Contentful Paint | 5.4s | 1.0s |
+| Largest Contentful Paint | 9.3s ⚠️ | 1.8s ✅ |
+| Total Blocking Time | 90ms | 10ms |
+| Cumulative Layout Shift | 0 ✅ | 0 ✅ |
+| Speed Index | 5.9s | 1.2s |
+
+> Mobile 以 Moto G Power + 慢速 4G 節流模擬，分數偏低為已知模型限制；
+> Core Web Vitals 真實使用者數據要等 4 週後 CrUX 回填，屆時以 GSC「網站使用體驗核心指標」為準。
+
+**Mobile 主要瓶頸（可逐項排優化）**：
+- 轉譯封鎖要求（CSS／字型）— 預估可省 6.16s
+- 未使用 JS 92 KiB、未使用 CSS 35 KiB
+- 舊版 JavaScript polyfill 14 KiB（target 未排除現代瀏覽器）
+- 強制自動重排（forced reflow）
+
+**A11y 共同 warning**：
+- 部分前景／背景對比度不足
+- `alt` 屬性含「圖片／icon」等冗詞
+- 標題層級不依 h1 → h2 → h3 遞減
+
 ### D. SEO 變更後的標準動作
 
 修改任何 metadata、sitemap、robots、結構化資料後：
