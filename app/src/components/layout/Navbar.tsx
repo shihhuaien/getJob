@@ -23,7 +23,7 @@ export default function Navbar() {
         >
           <Image
             src="/brand/logo-mark.svg"
-            alt="Offery"
+            alt=""
             width={28}
             height={32}
             priority
@@ -103,7 +103,7 @@ export default function Navbar() {
             >
               <Image
                 src="/brand/logo-mark.svg"
-                alt="Offery"
+                alt=""
                 width={26}
                 height={30}
               />

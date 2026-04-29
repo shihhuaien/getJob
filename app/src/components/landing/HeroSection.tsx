@@ -80,7 +80,7 @@ export default function HeroSection() {
                   </span>
                 ))}
               </div>
-              <p className="mt-3 text-xs text-text-light/80">{t("heroNote")}</p>
+              <p className="mt-3 text-xs text-text-light">{t("heroNote")}</p>
             </FadeInUp>
           </div>
 

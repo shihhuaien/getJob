@@ -78,9 +78,9 @@ export default function UseCases() {
 
               {/* Problem */}
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-text-light/80">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-text-light/80">
                   {t(c.problemLabelKey)}
-                </h4>
+                </h3>
                 <p className="mt-2 text-sm leading-7 text-text">
                   {t(c.problemKey)}
                 </p>
@@ -91,9 +91,9 @@ export default function UseCases() {
 
               {/* Solution */}
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-brand-600">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600">
                   {t(c.solutionLabelKey)}
-                </h4>
+                </h3>
                 <p className="mt-2 text-sm leading-7 text-text">
                   {t(c.solutionKey)}
                 </p>
