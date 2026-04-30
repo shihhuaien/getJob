@@ -254,7 +254,11 @@
   - `dashboard/page.tsx` 新增 `appliedCount` 查詢以餵入 `appliedWithoutInterview` 訊號
 - [x] 公開部落格路由 `/[locale]/blog`（列表頁，含分類 tab）與 `/[locale]/blog/[slug]`（文章頁，含 Article JSON-LD、`generateMetadata`、延伸閱讀）
 - [x] 內容資料層（純函式 + 型別安全）：`src/lib/blog/{types,recommend,articles,categories}.ts`
-- [x] 5 篇 evergreen 文章 × zh-TW 完整 + en stub：履歷開頭、ATS 關鍵字、求職開局、行為面試、談薪
+- [x] 15 篇 evergreen 文章 × zh-TW 完整 + en stub
+  - 履歷（5）：開頭結構、ATS 關鍵字、量化成就、空窗期敘事、客製檢查清單
+  - 面試（4）：行為題 STAR、最後 5 分鐘提問、技術面試兩週節奏、視訊面試三件事
+  - 求職策略（4）：開局五招、LinkedIn 三層結構、Cold message 模板、Referral 禮貌動線
+  - 薪資與職涯（2）：談薪三步驟、多 offer 三維度權重
 - [x] UI 元件：`ArticleCard`、`ArticleHero`、`ArticleProse`、`ArticleCTA`、`CategoryTab`
 - [x] i18n：新增 `blog` namespace（zh-TW + en），含分類標籤、四種情境化副標題、CTA、閱讀時間格式
 - [x] sitemap：補上 `/blog` 與每篇文章 × 兩語系（含 hreflang alternates）
