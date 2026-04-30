@@ -22,6 +22,16 @@ import * as LinkedInProfileOptimizationZh from "@/content/blog/zh-TW/linkedin-pr
 import * as ColdMessageTemplatesZh from "@/content/blog/zh-TW/cold-message-templates";
 import * as ReferralEtiquetteZh from "@/content/blog/zh-TW/referral-etiquette";
 import * as MultipleOffersDecisionZh from "@/content/blog/zh-TW/multiple-offers-decision";
+import * as ResumeCareerNarrativeZh from "@/content/blog/zh-TW/resume-career-narrative";
+import * as ResumeJobHoppingZh from "@/content/blog/zh-TW/resume-job-hopping";
+import * as InterviewWhatTheyEvaluateZh from "@/content/blog/zh-TW/interview-what-they-evaluate";
+import * as InterviewReadingSilenceZh from "@/content/blog/zh-TW/interview-reading-silence";
+import * as HiddenJobMarketZh from "@/content/blog/zh-TW/hidden-job-market";
+import * as BridgeJobPivotZh from "@/content/blog/zh-TW/bridge-job-pivot";
+import * as StayOrLeaveSignalsZh from "@/content/blog/zh-TW/stay-or-leave-signals";
+import * as FirstDecadeRhythmZh from "@/content/blog/zh-TW/first-decade-rhythm";
+import * as PromotionStuckPathsZh from "@/content/blog/zh-TW/promotion-stuck-paths";
+import * as CareerInflectionPointsZh from "@/content/blog/zh-TW/career-inflection-points";
 
 // ─── en 文章 ───
 import * as ResumeOpeningHooksEn from "@/content/blog/en/resume-opening-hooks";
@@ -39,6 +49,16 @@ import * as LinkedInProfileOptimizationEn from "@/content/blog/en/linkedin-profi
 import * as ColdMessageTemplatesEn from "@/content/blog/en/cold-message-templates";
 import * as ReferralEtiquetteEn from "@/content/blog/en/referral-etiquette";
 import * as MultipleOffersDecisionEn from "@/content/blog/en/multiple-offers-decision";
+import * as ResumeCareerNarrativeEn from "@/content/blog/en/resume-career-narrative";
+import * as ResumeJobHoppingEn from "@/content/blog/en/resume-job-hopping";
+import * as InterviewWhatTheyEvaluateEn from "@/content/blog/en/interview-what-they-evaluate";
+import * as InterviewReadingSilenceEn from "@/content/blog/en/interview-reading-silence";
+import * as HiddenJobMarketEn from "@/content/blog/en/hidden-job-market";
+import * as BridgeJobPivotEn from "@/content/blog/en/bridge-job-pivot";
+import * as StayOrLeaveSignalsEn from "@/content/blog/en/stay-or-leave-signals";
+import * as FirstDecadeRhythmEn from "@/content/blog/en/first-decade-rhythm";
+import * as PromotionStuckPathsEn from "@/content/blog/en/promotion-stuck-paths";
+import * as CareerInflectionPointsEn from "@/content/blog/en/career-inflection-points";
 
 interface ArticleModule {
   meta: ArticleMeta;
@@ -65,6 +85,16 @@ const ZH_TW_ARTICLES: Article[] = [
   toArticle(ColdMessageTemplatesZh, "zh-TW"),
   toArticle(ReferralEtiquetteZh, "zh-TW"),
   toArticle(MultipleOffersDecisionZh, "zh-TW"),
+  toArticle(ResumeCareerNarrativeZh, "zh-TW"),
+  toArticle(ResumeJobHoppingZh, "zh-TW"),
+  toArticle(InterviewWhatTheyEvaluateZh, "zh-TW"),
+  toArticle(InterviewReadingSilenceZh, "zh-TW"),
+  toArticle(HiddenJobMarketZh, "zh-TW"),
+  toArticle(BridgeJobPivotZh, "zh-TW"),
+  toArticle(StayOrLeaveSignalsZh, "zh-TW"),
+  toArticle(FirstDecadeRhythmZh, "zh-TW"),
+  toArticle(PromotionStuckPathsZh, "zh-TW"),
+  toArticle(CareerInflectionPointsZh, "zh-TW"),
 ];
 
 const EN_ARTICLES: Article[] = [
@@ -83,6 +113,16 @@ const EN_ARTICLES: Article[] = [
   toArticle(ColdMessageTemplatesEn, "en"),
   toArticle(ReferralEtiquetteEn, "en"),
   toArticle(MultipleOffersDecisionEn, "en"),
+  toArticle(ResumeCareerNarrativeEn, "en"),
+  toArticle(ResumeJobHoppingEn, "en"),
+  toArticle(InterviewWhatTheyEvaluateEn, "en"),
+  toArticle(InterviewReadingSilenceEn, "en"),
+  toArticle(HiddenJobMarketEn, "en"),
+  toArticle(BridgeJobPivotEn, "en"),
+  toArticle(StayOrLeaveSignalsEn, "en"),
+  toArticle(FirstDecadeRhythmEn, "en"),
+  toArticle(PromotionStuckPathsEn, "en"),
+  toArticle(CareerInflectionPointsEn, "en"),
 ];
 
 const ARTICLES_BY_LOCALE: Record<ArticleLocale, Article[]> = {
