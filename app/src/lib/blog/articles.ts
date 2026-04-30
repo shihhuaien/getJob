@@ -32,6 +32,16 @@ import * as StayOrLeaveSignalsZh from "@/content/blog/zh-TW/stay-or-leave-signal
 import * as FirstDecadeRhythmZh from "@/content/blog/zh-TW/first-decade-rhythm";
 import * as PromotionStuckPathsZh from "@/content/blog/zh-TW/promotion-stuck-paths";
 import * as CareerInflectionPointsZh from "@/content/blog/zh-TW/career-inflection-points";
+import * as Resume30SecondScanZh from "@/content/blog/zh-TW/resume-30-second-scan";
+import * as ResumeFormatRecruitersPreferZh from "@/content/blog/zh-TW/resume-format-recruiters-prefer";
+import * as InterviewFirstQuestionPurposeZh from "@/content/blog/zh-TW/interview-first-question-purpose";
+import * as InterviewSoundingRehearsedZh from "@/content/blog/zh-TW/interview-sounding-rehearsed";
+import * as InterviewDebriefDecisionZh from "@/content/blog/zh-TW/interview-debrief-decision";
+import * as InterviewPanelDecisionMakerZh from "@/content/blog/zh-TW/interview-panel-decision-maker";
+import * as InterviewCultureFitTruthZh from "@/content/blog/zh-TW/interview-culture-fit-truth";
+import * as InterviewHiddenDisqualifiersZh from "@/content/blog/zh-TW/interview-hidden-disqualifiers";
+import * as Application7DaysSilenceZh from "@/content/blog/zh-TW/application-7-days-silence";
+import * as SeniorityVsYearsZh from "@/content/blog/zh-TW/seniority-vs-years";
 
 // ─── en 文章 ───
 import * as ResumeOpeningHooksEn from "@/content/blog/en/resume-opening-hooks";
@@ -59,6 +69,16 @@ import * as StayOrLeaveSignalsEn from "@/content/blog/en/stay-or-leave-signals";
 import * as FirstDecadeRhythmEn from "@/content/blog/en/first-decade-rhythm";
 import * as PromotionStuckPathsEn from "@/content/blog/en/promotion-stuck-paths";
 import * as CareerInflectionPointsEn from "@/content/blog/en/career-inflection-points";
+import * as Resume30SecondScanEn from "@/content/blog/en/resume-30-second-scan";
+import * as ResumeFormatRecruitersPreferEn from "@/content/blog/en/resume-format-recruiters-prefer";
+import * as InterviewFirstQuestionPurposeEn from "@/content/blog/en/interview-first-question-purpose";
+import * as InterviewSoundingRehearsedEn from "@/content/blog/en/interview-sounding-rehearsed";
+import * as InterviewDebriefDecisionEn from "@/content/blog/en/interview-debrief-decision";
+import * as InterviewPanelDecisionMakerEn from "@/content/blog/en/interview-panel-decision-maker";
+import * as InterviewCultureFitTruthEn from "@/content/blog/en/interview-culture-fit-truth";
+import * as InterviewHiddenDisqualifiersEn from "@/content/blog/en/interview-hidden-disqualifiers";
+import * as Application7DaysSilenceEn from "@/content/blog/en/application-7-days-silence";
+import * as SeniorityVsYearsEn from "@/content/blog/en/seniority-vs-years";
 
 interface ArticleModule {
   meta: ArticleMeta;
@@ -95,6 +115,16 @@ const ZH_TW_ARTICLES: Article[] = [
   toArticle(FirstDecadeRhythmZh, "zh-TW"),
   toArticle(PromotionStuckPathsZh, "zh-TW"),
   toArticle(CareerInflectionPointsZh, "zh-TW"),
+  toArticle(Resume30SecondScanZh, "zh-TW"),
+  toArticle(ResumeFormatRecruitersPreferZh, "zh-TW"),
+  toArticle(InterviewFirstQuestionPurposeZh, "zh-TW"),
+  toArticle(InterviewSoundingRehearsedZh, "zh-TW"),
+  toArticle(InterviewDebriefDecisionZh, "zh-TW"),
+  toArticle(InterviewPanelDecisionMakerZh, "zh-TW"),
+  toArticle(InterviewCultureFitTruthZh, "zh-TW"),
+  toArticle(InterviewHiddenDisqualifiersZh, "zh-TW"),
+  toArticle(Application7DaysSilenceZh, "zh-TW"),
+  toArticle(SeniorityVsYearsZh, "zh-TW"),
 ];
 
 const EN_ARTICLES: Article[] = [
@@ -123,6 +153,16 @@ const EN_ARTICLES: Article[] = [
   toArticle(FirstDecadeRhythmEn, "en"),
   toArticle(PromotionStuckPathsEn, "en"),
   toArticle(CareerInflectionPointsEn, "en"),
+  toArticle(Resume30SecondScanEn, "en"),
+  toArticle(ResumeFormatRecruitersPreferEn, "en"),
+  toArticle(InterviewFirstQuestionPurposeEn, "en"),
+  toArticle(InterviewSoundingRehearsedEn, "en"),
+  toArticle(InterviewDebriefDecisionEn, "en"),
+  toArticle(InterviewPanelDecisionMakerEn, "en"),
+  toArticle(InterviewCultureFitTruthEn, "en"),
+  toArticle(InterviewHiddenDisqualifiersEn, "en"),
+  toArticle(Application7DaysSilenceEn, "en"),
+  toArticle(SeniorityVsYearsEn, "en"),
 ];
 
 const ARTICLES_BY_LOCALE: Record<ArticleLocale, Article[]> = {

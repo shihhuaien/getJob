@@ -254,12 +254,12 @@
   - `dashboard/page.tsx` 新增 `appliedCount` 查詢以餵入 `appliedWithoutInterview` 訊號
 - [x] 公開部落格路由 `/[locale]/blog`（列表頁，含分類 tab）與 `/[locale]/blog/[slug]`（文章頁，含 Article JSON-LD、`generateMetadata`、延伸閱讀）
 - [x] 內容資料層（純函式 + 型別安全）：`src/lib/blog/{types,recommend,articles,categories}.ts`
-- [x] 25 篇 evergreen 文章 × zh-TW 完整 + en stub
-  - 履歷（7）：開頭結構、ATS 關鍵字、量化成就、空窗期敘事、客製檢查清單、職涯敘事框架、跳槽頻繁說法
-  - 面試（6）：行為題 STAR、最後 5 分鐘提問、技術兩週節奏、視訊三件事、面試官隱性指標、讀懂沉默微訊號
-  - 求職策略（6）：開局五招、LinkedIn 三層結構、Cold message 模板、Referral 禮貌動線、隱藏職缺市場、橋樑工作跨領域
-  - 薪資與職涯（6）：談薪三步驟、多 offer 三維度權重、留走訊號、前 10 年節奏、升遷卡關三路徑、30/35/40 三道牆
-  - 風格分布：戰術型 15 篇（前兩批，how-to 為主）+ 顧問視角 10 篇（策略 / 心法 / 長期職涯）
+- [x] 35 篇 evergreen 文章 × zh-TW 完整 + en stub
+  - 履歷（9）：開頭結構、ATS、量化、空窗、客製、敘事、跳槽、30 秒掃描真相、PDF/Word/LinkedIn 格式偏好
+  - 面試（12）：STAR、最後 5 問、技術節奏、視訊、隱性指標、讀沉默、自我介紹隱藏目的、背稿訊號、debrief 真相、panel 否決權、culture fit 真相、隱性扣分點
+  - 求職策略（7）：開局、LinkedIn、Cold msg、Referral、隱藏市場、橋樑工作、投遞 7 天無回音
+  - 薪資與職涯（7）：談薪、多 offer、留走、節奏、升遷三路徑、三道牆、年資 vs 資深
+  - 風格分布：戰術型 15 篇（how-to）+ 顧問視角 10 篇（策略 / 心法）+ 面試官桌邊真相 10 篇（內部流程揭露）
 - [x] UI 元件：`ArticleCard`、`ArticleHero`、`ArticleProse`、`ArticleCTA`、`CategoryTab`
 - [x] i18n：新增 `blog` namespace（zh-TW + en），含分類標籤、四種情境化副標題、CTA、閱讀時間格式
 - [x] sitemap：補上 `/blog` 與每篇文章 × 兩語系（含 hreflang alternates）
