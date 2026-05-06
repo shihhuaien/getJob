@@ -904,7 +904,9 @@
   },
   "jobsBoard": {
     "lastUpdated": "更新於 {time}",
-    "scrollHint": "左右滑動以查看全部欄位"
+    "scrollHint": "左右滑動以查看全部欄位",
+    "starJob": "標記重點職缺",
+    "unstarJob": "取消標記"
   },
   "blog": {
     "indexTitle": "求職指南",

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Plus, Building2, ExternalLink, Search, X, Sparkles, Briefcase } from "lucide-react";
+import { Plus, Building2, ExternalLink, Search, X, Sparkles, Briefcase, Star } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 import {
   DndContext,
@@ -45,7 +45,13 @@ const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }
 ];
 
 // 可排序的職缺卡片
-function SortableJobCard({ job }: { job: JobApplication }) {
+function SortableJobCard({
+  job,
+  onToggleStar,
+}: {
+  job: JobApplication;
+  onToggleStar: (id: string, starred: boolean) => void;
+}) {
   const tRel = useTranslations("relativeTime");
   const tBoard = useTranslations("jobsBoard");
   const {
@@ -79,7 +85,6 @@ function SortableJobCard({ job }: { job: JobApplication }) {
           href={`/jobs/${job.id}`}
           className="min-w-0 hover:opacity-75 transition-opacity"
           onClick={(e) => {
-            // 拖曳中不觸發導航
             if (isDragging) e.preventDefault();
           }}
         >
@@ -97,17 +102,36 @@ function SortableJobCard({ job }: { job: JobApplication }) {
             {tBoard("lastUpdated", { time: relative })}
           </p>
         </Link>
-        {job.job_url && isValidHttpUrl(job.job_url) && (
-          <a
-            href={job.job_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-shrink-0 text-text-placeholder hover:text-text-light"
-            onClick={(e) => e.stopPropagation()}
+        <div className="ml-2 flex flex-col items-center gap-1 flex-shrink-0">
+          <button
+            onPointerDown={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleStar(job.id, !job.starred);
+            }}
+            className="text-text-placeholder hover:text-[#D97D54] transition-colors"
+            aria-label={job.starred ? tBoard("unstarJob") : tBoard("starJob")}
+            title={job.starred ? tBoard("unstarJob") : tBoard("starJob")}
           >
-            <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        )}
+            <Star
+              className="h-3.5 w-3.5"
+              fill={job.starred ? "#D97D54" : "none"}
+              stroke={job.starred ? "#D97D54" : "currentColor"}
+            />
+          </button>
+          {job.job_url && isValidHttpUrl(job.job_url) && (
+            <a
+              href={job.job_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-text-placeholder hover:text-text-light"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -137,12 +161,14 @@ function DroppableColumn({
   isOver,
   label,
   noJobsText,
+  onToggleStar,
 }: {
   col: (typeof statusColumns)[number];
   jobs: JobApplication[];
   isOver: boolean;
   label: string;
   noJobsText: string;
+  onToggleStar: (id: string, starred: boolean) => void;
 }) {
   const { setNodeRef } = useDroppable({ id: col.key });
 
@@ -167,7 +193,7 @@ function DroppableColumn({
       >
         <div className="space-y-2 min-h-[40px]">
           {jobs.map((job) => (
-            <SortableJobCard key={job.id} job={job} />
+            <SortableJobCard key={job.id} job={job} onToggleStar={onToggleStar} />
           ))}
           {jobs.length === 0 && !isOver && (
             <p className="py-4 text-center text-xs text-text-placeholder">{noJobsText}</p>
@@ -268,6 +294,17 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleToggleStar = async (id: string, starred: boolean) => {
+    setJobs((prev) =>
+      prev.map((j) => (j.id === id ? { ...j, starred } : j))
+    );
+    const supabase = createClient();
+    await supabase
+      .from("job_applications")
+      .update({ starred })
+      .eq("id", id);
   };
 
   // 批次更新 position 到 DB
@@ -571,6 +608,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
                       isOver={overColumnId === col.key}
                       label={t(col.labelKey)}
                       noJobsText={t("noJobs")}
+                      onToggleStar={handleToggleStar}
                     />
                   </div>
                 );

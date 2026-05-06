@@ -147,6 +147,7 @@ export interface Database {
           applied_at: string | null;
           resume_id: string | null;
           position: number;
+          starred: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -164,6 +165,7 @@ export interface Database {
           applied_at?: string | null;
           resume_id?: string | null;
           position?: number;
+          starred?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -181,6 +183,7 @@ export interface Database {
           applied_at?: string | null;
           resume_id?: string | null;
           position?: number;
+          starred?: boolean;
           created_at?: string;
           updated_at?: string;
         };

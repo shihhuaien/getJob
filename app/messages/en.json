@@ -904,7 +904,9 @@
   },
   "jobsBoard": {
     "lastUpdated": "Updated {time}",
-    "scrollHint": "Swipe to see all columns"
+    "scrollHint": "Swipe to see all columns",
+    "starJob": "Star this job",
+    "unstarJob": "Unstar this job"
   },
   "blog": {
     "indexTitle": "Job Search Playbook",

@@ -1,0 +1,2 @@
+ALTER TABLE job_applications
+ADD COLUMN starred BOOLEAN NOT NULL DEFAULT FALSE;
