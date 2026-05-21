@@ -140,7 +140,7 @@ export interface Database {
           job_title: string;
           job_url: string | null;
           job_description: string | null;
-          status: "saved" | "applied" | "interview" | "offer" | "rejected";
+          status: "saved" | "applied" | "interview" | "offer" | "rejected" | "closed";
           salary_min: number | null;
           salary_max: number | null;
           notes: string | null;
@@ -158,7 +158,7 @@ export interface Database {
           job_title: string;
           job_url?: string | null;
           job_description?: string | null;
-          status?: "saved" | "applied" | "interview" | "offer" | "rejected";
+          status?: "saved" | "applied" | "interview" | "offer" | "rejected" | "closed";
           salary_min?: number | null;
           salary_max?: number | null;
           notes?: string | null;
@@ -176,7 +176,7 @@ export interface Database {
           job_title?: string;
           job_url?: string | null;
           job_description?: string | null;
-          status?: "saved" | "applied" | "interview" | "offer" | "rejected";
+          status?: "saved" | "applied" | "interview" | "offer" | "rejected" | "closed";
           salary_min?: number | null;
           salary_max?: number | null;
           notes?: string | null;
@@ -363,7 +363,8 @@ export interface Database {
         | "applied"
         | "interview"
         | "offer"
-        | "rejected";
+        | "rejected"
+        | "closed";
       interview_persona: "hr_friendly" | "tech_strict" | "ceo_business";
       interview_type: "behavioral" | "technical" | "case_study" | "mixed";
       interview_mode: "text" | "voice";

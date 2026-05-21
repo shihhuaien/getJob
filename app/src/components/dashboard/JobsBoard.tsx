@@ -42,6 +42,7 @@ const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }
   { key: "interview", labelKey: "interview", color: "bg-yellow-100 text-yellow-700" },
   { key: "offer", labelKey: "offer", color: "bg-green-100 text-green-700" },
   { key: "rejected", labelKey: "rejected", color: "bg-red-100 text-red-700" },
+  { key: "closed", labelKey: "closed", color: "bg-gray-100 text-gray-600" },
 ];
 
 // 可排序的職缺卡片
@@ -591,7 +592,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
           </p>
           {/* <xl：水平滑動 + snap；>=xl：5 欄 grid */}
           <div className="-mx-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
-            <div className="flex snap-x snap-mandatory gap-4 xl:grid xl:grid-cols-5 xl:snap-none">
+            <div className="flex snap-x snap-mandatory gap-4 xl:grid xl:grid-cols-6 xl:snap-none">
               {statusColumns.map((col, index) => {
                 const columnJobs = filteredJobs.filter(
                   (job) => job.status === col.key

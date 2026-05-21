@@ -21,6 +21,7 @@ const statusKeys: { key: ApplicationStatus; labelKey: string }[] = [
   { key: "interview", labelKey: "interview" },
   { key: "offer", labelKey: "offer" },
   { key: "rejected", labelKey: "rejected" },
+  { key: "closed", labelKey: "closed" },
 ];
 
 interface Props {

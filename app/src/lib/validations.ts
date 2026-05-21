@@ -183,7 +183,7 @@ export const jobCreateApiSchema = z.object({
   salary_max: z.number().int().min(0).max(99999999).nullable().optional(),
   notes: z.string().max(5000).optional().or(z.literal("")),
   status: z
-    .enum(["saved", "applied", "interview", "offer", "rejected"])
+    .enum(["saved", "applied", "interview", "offer", "rejected", "closed"])
     .optional()
     .default("saved"),
 });

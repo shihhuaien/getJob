@@ -387,7 +387,8 @@
     "saveJob": "儲存職缺",
     "parseFailed": "解析失敗",
     "parseFailedRetry": "解析失敗，請稍後再試",
-    "inputRequired": "請輸入職缺內容"
+    "inputRequired": "請輸入職缺內容",
+    "closed": "已關閉"
   },
   "resume": {
     "title": "履歷管理",

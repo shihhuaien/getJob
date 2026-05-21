@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { BarChart3 } from "lucide-react";
 import EmptyState from "@/components/ui/EmptyState";
 
-type ApplicationStatus = "saved" | "applied" | "interview" | "offer" | "rejected";
+type ApplicationStatus = "saved" | "applied" | "interview" | "offer" | "rejected" | "closed";
 
 function getWeekLabel(date: Date): string {
   const month = date.getMonth() + 1;
@@ -44,6 +44,7 @@ export default async function AnalyticsPage() {
     interview: { label: tJobs("interview"), color: "bg-yellow-500", bgColor: "bg-yellow-100" },
     offer: { label: tJobs("offer"), color: "bg-green-500", bgColor: "bg-green-100" },
     rejected: { label: tJobs("rejected"), color: "bg-red-500", bgColor: "bg-red-100" },
+    closed: { label: tJobs("closed"), color: "bg-gray-400", bgColor: "bg-gray-100" },
   };
 
   // ── 狀態分佈 ──
@@ -53,6 +54,7 @@ export default async function AnalyticsPage() {
     interview: 0,
     offer: 0,
     rejected: 0,
+    closed: 0,
   };
   for (const job of allJobs) {
     statusCounts[job.status as ApplicationStatus]++;

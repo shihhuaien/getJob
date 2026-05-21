@@ -387,7 +387,8 @@
     "saveJob": "Save Job",
     "parseFailed": "Parse failed",
     "parseFailedRetry": "Parse failed. Please try again.",
-    "inputRequired": "Please enter job content"
+    "inputRequired": "Please enter job content",
+    "closed": "Closed"
   },
   "resume": {
     "title": "Resume Management",
