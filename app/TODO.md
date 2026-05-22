@@ -200,9 +200,10 @@
 - [x] Supabase 的 Edge Functions 加上 Rate Limiting 避免惡意攻擊(supabase 內建，不需要程式處理)
 
 ## 新 feature
-- [ ] 在https://offery.thdg.site/en/jobs 新增一個status:職缺關閉
+- [x] 在https://offery.thdg.site/en/jobs 新增一個status:職缺關閉
 - [ ] 在AI處理的步驟中，加入自訂提示詞，以微調AI的處理。ex. 生成cover的地方，可以讓使用者輸入一段文字（例如：請限制在150字以內），以微調AI的輸出，適用範圍在所有AI交互的功能中。
 - [ ] AI output language的設定目前是在Settings中，我希望改到每個AI交互的對話匡中，讓使用者可以快速調整期待的輸出語言設定。原先在Settings中的AI output language可以移除。
+- [ ] 讓工作經驗、學經歷可以托拉換排序，類似職缺管理列表的UX做法
 
 ## 行銷
 
