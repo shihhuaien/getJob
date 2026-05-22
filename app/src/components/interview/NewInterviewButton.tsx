@@ -18,7 +18,7 @@ interface JobOption {
   hasDescription: boolean;
 }
 
-export default function NewInterviewButton() {
+export default function NewInterviewButton({ aiOutputLanguage = null }: { aiOutputLanguage?: string | null }) {
   const t = useTranslations("interview");
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -104,6 +104,7 @@ export default function NewInterviewButton() {
           jobs={jobs}
           resumes={resumes}
           onClose={() => setOpen(false)}
+          initialAiLanguage={aiOutputLanguage}
         />
       )}
     </>

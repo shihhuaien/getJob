@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       .select("ai_output_language")
       .eq("id", auth.userId)
       .single();
-    const locale = profile?.ai_output_language ?? body.locale;
+    const locale = (typeof body.locale === "string" ? body.locale : undefined) ?? profile?.ai_output_language ?? "zh-TW";
 
     const parsed = await parseJobDescription(validation.data.text, locale);
     return NextResponse.json({ data: parsed });

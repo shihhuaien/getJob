@@ -72,7 +72,7 @@ export async function POST(request: Request) {
     }
 
     const resumeContent = resumeResult.data.content as unknown as ResumeContent;
-    const locale = profile?.ai_output_language ?? body.locale;
+    const locale = (typeof body.locale === "string" ? body.locale : undefined) ?? profile?.ai_output_language ?? "zh-TW";
     const analysis = await analyzeResume(
       resumeContent,
       jobResult.data.job_description,

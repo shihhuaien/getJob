@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { Plus, Sparkles, Upload, FileText } from "lucide-react";
+import { Plus, Sparkles, Upload, FileText, ChevronDown } from "lucide-react";
+import AiLanguageSelector from "./AiLanguageSelector";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
 import { useRouter } from "@/i18n/navigation";
@@ -10,12 +11,16 @@ import { Button } from "@/components/ui/Button";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
+type AiLang = "zh-TW" | "en" | null;
+
 export default function CreateResumeButton({
   userId,
   isPro = false,
+  initialAiLanguage = null,
 }: {
   userId: string;
   isPro?: boolean;
+  initialAiLanguage?: AiLang;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -31,6 +36,8 @@ export default function CreateResumeButton({
   const [isUploading, setIsUploading] = useState(false);
   const [phaseIdx, setPhaseIdx] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const aiParsingPhases = t.raw("aiParsingPhases") as string[];
   const aiParsingLabel = aiParsingPhases[phaseIdx % aiParsingPhases.length];
@@ -135,7 +142,7 @@ export default function CreateResumeButton({
       const res = await fetch("/api/resume/parse-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdf_base64: base64, title: resumeTitle, locale }),
+        body: JSON.stringify({ pdf_base64: base64, title: resumeTitle, locale: aiLanguage ?? locale }),
       });
 
       const data = await res.json();
@@ -285,6 +292,24 @@ export default function CreateResumeButton({
                       {t("selectPdf")}
                     </button>
                   )}
+
+                  {/* 進階設定 */}
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvanced((v) => !v)}
+                      disabled={isUploading || isSubmitting}
+                      className="flex items-center gap-1 text-xs text-text-light hover:text-text transition-colors disabled:opacity-50"
+                    >
+                      <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                      {tc("advancedSettings")}
+                    </button>
+                    {showAdvanced && (
+                      <div className="mt-2">
+                        <AiLanguageSelector value={aiLanguage} onChange={setAiLanguage} disabled={isUploading || isSubmitting} />
+                      </div>
+                    )}
+                  </div>
 
                   {/* 上傳按鈕 */}
                   <Button

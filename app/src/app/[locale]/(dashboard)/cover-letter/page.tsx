@@ -25,7 +25,7 @@ export default async function CoverLetterPage() {
         .order("updated_at", { ascending: false }),
       supabase
         .from("profiles")
-        .select("subscription_tier")
+        .select("subscription_tier, ai_output_language")
         .eq("id", user.id)
         .single(),
       supabase
@@ -62,7 +62,7 @@ export default async function CoverLetterPage() {
             {t("subtitle")}
           </p>
         </div>
-        <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} />
+        <CreateCoverLetterButton userId={user.id} isPro={isPro} resumes={resumes} jobs={jobs} initialAiLanguage={profileResult.data?.ai_output_language ?? null} />
       </div>
 
       {coverLetters && coverLetters.length > 0 ? (
@@ -103,6 +103,7 @@ export default async function CoverLetterPage() {
               isPro={isPro}
               resumes={resumes}
               jobs={jobs}
+              initialAiLanguage={profileResult.data?.ai_output_language ?? null}
             />
           }
         />

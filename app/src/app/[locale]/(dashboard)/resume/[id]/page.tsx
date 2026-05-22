@@ -25,7 +25,7 @@ export default async function ResumeEditorPage({
       .single(),
     supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single(),
     supabase
@@ -50,6 +50,7 @@ export default async function ResumeEditorPage({
       resume={resumeResult.data}
       isPro={isPro}
       jobs={jobs}
+      aiOutputLanguage={profileResult.data?.ai_output_language ?? null}
     />
   );
 }

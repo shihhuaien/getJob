@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     }
 
     const { pdf_base64, title } = validation.data;
-    const locale = profile?.ai_output_language ?? body.locale;
+    const locale = (typeof body.locale === "string" ? body.locale : undefined) ?? profile?.ai_output_language ?? "zh-TW";
 
     const content = await parseResumePdf(pdf_base64, locale);
 

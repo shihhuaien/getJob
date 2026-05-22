@@ -35,7 +35,11 @@
     "duplicateResume": "A resume with this title already exists. Please rename or delete the existing one.",
     "advancedSettings": "Advanced settings",
     "extraInstructions": "Custom AI instructions",
-    "extraInstructionsPlaceholder": "Optional. E.g. \"Keep it under 150 words\" or \"Emphasize Python skills\". Max 500 characters."
+    "extraInstructionsPlaceholder": "Optional. E.g. \"Keep it under 150 words\" or \"Emphasize Python skills\". Max 500 characters.",
+    "aiLanguage": "AI output language",
+    "aiLanguageAuto": "Auto",
+    "aiLanguageZh": "Chinese",
+    "aiLanguageEn": "English"
   },
   "legal": {
     "privacyTitle": "Privacy Policy",
@@ -620,12 +624,6 @@
     "resumeSub": "Resume Subscription",
     "cancelConfirm": "Are you sure you want to cancel? You'll still have access to Pro features until the end of your billing period.",
     "confirmCancel": "Confirm Cancel",
-    "aiLanguage": "AI output language",
-    "aiLanguageDesc": "Controls the language used in AI-generated content (resume optimization, cover letters, interviews). Does not affect the UI language.",
-    "aiLanguageFollowLocale": "Follow UI language",
-    "aiLanguageZh": "Traditional Chinese",
-    "aiLanguageEn": "English",
-    "aiLanguageSaved": "AI output language updated",
     "apiKeys": "API Keys",
     "apiKeysDesc": "Connect your Chrome extension to your account",
     "keyGenerated": "Key generated. Copy it now — it won't be shown again.",

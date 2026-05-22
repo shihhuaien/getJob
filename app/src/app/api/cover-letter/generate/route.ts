@@ -93,7 +93,7 @@ export async function POST(request: Request) {
     const resumeContent = resumeResult.data
       .content as unknown as ResumeContent;
     const { job_description, company_name, job_title } = jobResult.data;
-    const locale = profile?.ai_output_language ?? body.locale;
+    const locale = (typeof body.locale === "string" ? body.locale : undefined) ?? profile?.ai_output_language ?? "zh-TW";
 
     const titleText = locale === "en"
       ? `Cover Letter for ${company_name}`

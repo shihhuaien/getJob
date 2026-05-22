@@ -42,9 +42,9 @@ export async function POST(request: Request) {
     const { job_id, resume_id, persona, interview_type, mode, drill_down_enabled, extra_instructions } =
       validation.data;
     const requestLocale = typeof body.locale === "string" ? body.locale : "zh-TW";
-    // AI 產出語言偏好優先於介面語系；未設定時跟隨介面語系。此處解析一次後存入 session，
-    // 供後續 hint/answer/complete 沿用（避免中途切換造成同一場面試中英混雜）
-    const locale = profile?.ai_output_language ?? requestLocale;
+    // 對話框傳入的明確語言最優先；其次是 profile 偏好；最後是介面語系
+    // 解析一次後存入 session，供後續 hint/answer/complete 沿用（避免中途切換造成同一場面試中英混雜）
+    const locale = requestLocale ?? profile?.ai_output_language ?? "zh-TW";
 
     const [resumeResult, jobResult] = await Promise.all([
       supabase

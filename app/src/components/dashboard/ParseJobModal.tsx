@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, X, Loader2 } from "lucide-react";
+import { Sparkles, X, Loader2, ChevronDown } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import AiLanguageSelector from "./AiLanguageSelector";
 import type { Database } from "@/types/database";
 
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -15,8 +16,11 @@ interface ParsedResult {
   job_description: string;
 }
 
+type AiLang = "zh-TW" | "en" | null;
+
 interface Props {
   onClose: () => void;
+  initialAiLanguage?: AiLang;
   onSave: (job: {
     company_name: string;
     job_title: string;
@@ -28,7 +32,7 @@ interface Props {
   }) => void;
 }
 
-export default function ParseJobModal({ onClose, onSave }: Props) {
+export default function ParseJobModal({ onClose, onSave, initialAiLanguage = null }: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
   const locale = useLocale();
@@ -38,6 +42,8 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
   const [result, setResult] = useState<ParsedResult | null>(null);
   const [jobUrl, setJobUrl] = useState("");
   const [phaseIdx, setPhaseIdx] = useState(0);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const parsingPhases = t.raw("parsingPhases") as string[];
   const parsingLabel = parsingPhases[phaseIdx % parsingPhases.length];
@@ -63,7 +69,7 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
       const res = await fetch("/api/jobs/parse", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: rawText, locale }),
+        body: JSON.stringify({ text: rawText, locale: aiLanguage ?? locale }),
       });
 
       const data = await res.json();
@@ -140,6 +146,21 @@ export default function ParseJobModal({ onClose, onSave }: Props) {
               />
               <div className="mt-1 text-right text-xs text-text-placeholder">
                 {t("parseCharCount", { count: rawText.length })}
+              </div>
+              <div className="mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced((v) => !v)}
+                  className="flex items-center gap-1 text-xs text-text-light hover:text-text transition-colors"
+                >
+                  <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                  {tc("advancedSettings")}
+                </button>
+                {showAdvanced && (
+                  <div className="mt-2">
+                    <AiLanguageSelector value={aiLanguage} onChange={setAiLanguage} />
+                  </div>
+                )}
               </div>
               <div className="mt-4 flex justify-end gap-3">
                 <button

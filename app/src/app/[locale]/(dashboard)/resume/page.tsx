@@ -23,7 +23,7 @@ export default async function ResumePage() {
       .order("updated_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single(),
   ]);
@@ -40,7 +40,7 @@ export default async function ResumePage() {
             {t("subtitle")}
           </p>
         </div>
-        <CreateResumeButton userId={user.id} isPro={isPro} />
+        <CreateResumeButton userId={user.id} isPro={isPro} initialAiLanguage={profileResult.data?.ai_output_language ?? null} />
       </div>
 
       {resumes && resumes.length > 0 ? (

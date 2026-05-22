@@ -95,9 +95,10 @@ interface Props {
   resume: Resume;
   isPro?: boolean;
   jobs?: JobOption[];
+  aiOutputLanguage?: string | null;
 }
 
-export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props) {
+export default function ResumeEditor({ resume, isPro = false, jobs = [], aiOutputLanguage = null }: Props) {
   const router = useRouter();
   const t = useTranslations("resume");
   const tc = useTranslations("common");
@@ -789,6 +790,7 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
           resumeId={resume.id}
           jobs={jobs}
           onClose={() => setShowOptimize(false)}
+          initialAiLanguage={aiOutputLanguage}
         />
       )}
     </div>

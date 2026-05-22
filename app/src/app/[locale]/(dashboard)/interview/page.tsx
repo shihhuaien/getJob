@@ -48,7 +48,7 @@ export default async function InterviewPage() {
       .limit(50),
     supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single(),
   ]);
@@ -74,7 +74,7 @@ export default async function InterviewPage() {
           <p className="mt-1 text-sm text-text-light">{t("subtitle")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {isPro && <NewInterviewButton />}
+          {isPro && <NewInterviewButton aiOutputLanguage={profileResult.data?.ai_output_language ?? null} />}
           <Link
             href="/interview/bank"
             className="inline-flex items-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm font-medium text-text hover:bg-[color:var(--color-bg)] transition-colors"

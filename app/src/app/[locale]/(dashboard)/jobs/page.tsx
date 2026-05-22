@@ -21,7 +21,7 @@ export default async function JobsPage() {
       .order("updated_at", { ascending: false }),
     supabase
       .from("profiles")
-      .select("subscription_tier")
+      .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single(),
   ]);
@@ -39,7 +39,7 @@ export default async function JobsPage() {
         </div>
       </div>
 
-      <JobsBoard initialJobs={jobsResult.data ?? []} userId={user.id} isPro={isPro} />
+      <JobsBoard initialJobs={jobsResult.data ?? []} userId={user.id} isPro={isPro} aiOutputLanguage={profileResult.data?.ai_output_language ?? null} />
     </div>
   );
 }

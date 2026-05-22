@@ -28,6 +28,7 @@ export default function InterviewLaunchButton({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [resumes, setResumes] = useState<ResumeOption[]>([]);
+  const [aiOutputLanguage, setAiOutputLanguage] = useState<string | null>(null);
 
   const handleOpen = async () => {
     setLoading(true);
@@ -37,12 +38,20 @@ export default function InterviewLaunchButton({
       setLoading(false);
       return;
     }
-    const { data } = await supabase
-      .from("resumes")
-      .select("id, title")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false });
-    setResumes(data ?? []);
+    const [resumesRes, profileRes] = await Promise.all([
+      supabase
+        .from("resumes")
+        .select("id, title")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("ai_output_language")
+        .eq("id", user.id)
+        .single(),
+    ]);
+    setResumes(resumesRes.data ?? []);
+    setAiOutputLanguage(profileRes.data?.ai_output_language ?? null);
     setOpen(true);
     setLoading(false);
   };
@@ -73,6 +82,7 @@ export default function InterviewLaunchButton({
           ]}
           resumes={resumes}
           onClose={() => setOpen(false)}
+          initialAiLanguage={aiOutputLanguage}
         />
       )}
     </>

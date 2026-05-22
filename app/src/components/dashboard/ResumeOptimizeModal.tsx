@@ -5,6 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle, ChevronDown } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/optimize-resume";
+import AiLanguageSelector from "./AiLanguageSelector";
 
 interface JobOption {
   id: string;
@@ -13,10 +14,13 @@ interface JobOption {
   has_description: boolean;
 }
 
+type AiLang = "zh-TW" | "en" | null;
+
 interface Props {
   resumeId: string;
   jobs: JobOption[];
   onClose: () => void;
+  initialAiLanguage?: AiLang;
 }
 
 function ScoreRing({ score }: { score: number }) {
@@ -85,6 +89,7 @@ export default function ResumeOptimizeModal({
   resumeId,
   jobs,
   onClose,
+  initialAiLanguage = null,
 }: Props) {
   const router = useRouter();
   const t = useTranslations("resume");
@@ -99,6 +104,7 @@ export default function ResumeOptimizeModal({
   const [generatePhaseIdx, setGeneratePhaseIdx] = useState(0);
   const [extraInstructions, setExtraInstructions] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
 
   const analyzingPhases = t.raw("analyzingPhases") as string[];
   const analyzingLabel = analyzingPhases[analyzePhaseIdx % analyzingPhases.length];
@@ -134,7 +140,7 @@ export default function ResumeOptimizeModal({
         body: JSON.stringify({
           resume_id: resumeId,
           job_id: selectedJobId,
-          locale,
+          locale: aiLanguage ?? locale,
           extra_instructions: extraInstructions.trim() || undefined,
         }),
       });
@@ -174,7 +180,7 @@ export default function ResumeOptimizeModal({
       const res = await fetch("/api/resume/optimize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId, locale }),
+        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId, locale: aiLanguage ?? locale }),
       });
 
       const data = await res.json();
@@ -386,22 +392,25 @@ export default function ResumeOptimizeModal({
                   {tc("advancedSettings")}
                 </button>
                 {showAdvanced && (
-                  <div className="mt-2">
-                    <label className="block text-xs font-medium text-text-light">
-                      {tc("extraInstructions")}
-                    </label>
-                    <textarea
-                      value={extraInstructions}
-                      onChange={(e) => setExtraInstructions(e.target.value)}
-                      maxLength={500}
-                      rows={3}
-                      disabled={isGenerating}
-                      placeholder={tc("extraInstructionsPlaceholder")}
-                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
-                    />
-                    <p className="mt-0.5 text-right text-xs text-text-placeholder">
-                      {extraInstructions.length} / 500
-                    </p>
+                  <div className="mt-2 space-y-3">
+                    <div>
+                      <label className="block text-xs font-medium text-text-light">
+                        {tc("extraInstructions")}
+                      </label>
+                      <textarea
+                        value={extraInstructions}
+                        onChange={(e) => setExtraInstructions(e.target.value)}
+                        maxLength={500}
+                        rows={3}
+                        disabled={isGenerating}
+                        placeholder={tc("extraInstructionsPlaceholder")}
+                        className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                      />
+                      <p className="mt-0.5 text-right text-xs text-text-placeholder">
+                        {extraInstructions.length} / 500
+                      </p>
+                    </div>
+                    <AiLanguageSelector value={aiLanguage} onChange={setAiLanguage} disabled={isGenerating} />
                   </div>
                 )}
               </div>

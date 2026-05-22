@@ -5,6 +5,7 @@ import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Sparkles, X, Loader2, Mic, Keyboard, Clock, Lock, ChevronDown } from "lucide-react";
 import InfoTooltip from "@/components/ui/InfoTooltip";
+import AiLanguageSelector from "@/components/dashboard/AiLanguageSelector";
 import type {
   InterviewType,
   Persona,
@@ -23,10 +24,13 @@ interface JobOption {
   hasDescription: boolean;
 }
 
+type AiLang = "zh-TW" | "en" | null;
+
 interface Props {
   jobs: JobOption[];
   resumes: ResumeOption[];
   onClose: () => void;
+  initialAiLanguage?: AiLang;
 }
 
 const PERSONAS: Persona[] = ["hr_friendly", "tech_strict", "ceo_business"];
@@ -41,6 +45,7 @@ export default function StartInterviewModal({
   jobs,
   resumes,
   onClose,
+  initialAiLanguage = null,
 }: Props) {
   const router = useRouter();
   const t = useTranslations("interview");
@@ -59,6 +64,7 @@ export default function StartInterviewModal({
   const [phaseIdx, setPhaseIdx] = useState(0);
   const [extraInstructions, setExtraInstructions] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
 
   const generatingQuestionsPhases = t.raw("generatingQuestionsPhases") as string[];
   const generatingQuestionsLabel =
@@ -103,7 +109,7 @@ export default function StartInterviewModal({
           interview_type: interviewType,
           mode,
           drill_down_enabled: drillDown,
-          locale,
+          locale: aiLanguage ?? locale,
           extra_instructions: extraInstructions.trim() || undefined,
         }),
       });
@@ -349,22 +355,25 @@ export default function StartInterviewModal({
               {tc("advancedSettings")}
             </button>
             {showAdvanced && (
-              <div className="mt-2">
-                <label className="block text-xs font-medium text-text-light">
-                  {tc("extraInstructions")}
-                </label>
-                <textarea
-                  value={extraInstructions}
-                  onChange={(e) => setExtraInstructions(e.target.value)}
-                  maxLength={500}
-                  rows={3}
-                  disabled={isLoading}
-                  placeholder={tc("extraInstructionsPlaceholder")}
-                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
-                />
-                <p className="mt-0.5 text-right text-xs text-text-placeholder">
-                  {extraInstructions.length} / 500
-                </p>
+              <div className="mt-2 space-y-3">
+                <div>
+                  <label className="block text-xs font-medium text-text-light">
+                    {tc("extraInstructions")}
+                  </label>
+                  <textarea
+                    value={extraInstructions}
+                    onChange={(e) => setExtraInstructions(e.target.value)}
+                    maxLength={500}
+                    rows={3}
+                    disabled={isLoading}
+                    placeholder={tc("extraInstructionsPlaceholder")}
+                    className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                  />
+                  <p className="mt-0.5 text-right text-xs text-text-placeholder">
+                    {extraInstructions.length} / 500
+                  </p>
+                </div>
+                <AiLanguageSelector value={aiLanguage} onChange={setAiLanguage} disabled={isLoading} />
               </div>
             )}
           </div>

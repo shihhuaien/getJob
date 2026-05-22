@@ -55,6 +55,7 @@ export default function InterviewTriggerBanner({
   const [modalOpen, setModalOpen] = useState(false);
   const [loadingResumes, setLoadingResumes] = useState(false);
   const [resumes, setResumes] = useState<ResumeOption[]>([]);
+  const [aiOutputLanguage, setAiOutputLanguage] = useState<string | null>(null);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -73,12 +74,20 @@ export default function InterviewTriggerBanner({
       setLoadingResumes(false);
       return;
     }
-    const { data } = await supabase
-      .from("resumes")
-      .select("id, title")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false });
-    setResumes(data ?? []);
+    const [resumesRes, profileRes] = await Promise.all([
+      supabase
+        .from("resumes")
+        .select("id, title")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("ai_output_language")
+        .eq("id", user.id)
+        .single(),
+    ]);
+    setResumes(resumesRes.data ?? []);
+    setAiOutputLanguage(profileRes.data?.ai_output_language ?? null);
     setModalOpen(true);
     setLoadingResumes(false);
   };
@@ -143,6 +152,7 @@ export default function InterviewTriggerBanner({
           ]}
           resumes={resumes}
           onClose={() => setModalOpen(false)}
+          initialAiLanguage={aiOutputLanguage}
         />
       )}
     </>

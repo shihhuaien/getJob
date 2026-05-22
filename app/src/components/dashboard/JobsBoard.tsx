@@ -209,9 +209,10 @@ interface Props {
   initialJobs: JobApplication[];
   userId: string;
   isPro?: boolean;
+  aiOutputLanguage?: string | null;
 }
 
-export default function JobsBoard({ initialJobs, userId, isPro = false }: Props) {
+export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutputLanguage = null }: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
   const tBoard = useTranslations("jobsBoard");
@@ -625,6 +626,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false }: Props)
       {showParseModal && (
         <ParseJobModal
           onClose={() => setShowParseModal(false)}
+          initialAiLanguage={aiOutputLanguage}
           onSave={async (parsed) => {
             const supabase = createClient();
             const { data, error } = await supabase
