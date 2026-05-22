@@ -3,7 +3,23 @@
 import { useCallback, useMemo, useState } from "react";
 import { useRouter, Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, X, Eye, Sparkles, GripVertical } from "lucide-react";
+import {
+  DndContext,
+  PointerSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  arrayMove,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
 import ResumeOptimizeModal from "./ResumeOptimizeModal";
 import { createClient } from "@/lib/supabase/client";
@@ -21,6 +37,37 @@ import type {
 import { emptyResumeContent } from "@/types/resume";
 
 type Resume = Database["public"]["Tables"]["resumes"]["Row"];
+
+function SortableCard({
+  id,
+  children,
+}: {
+  id: string;
+  children: (dragHandle: React.ReactNode) => React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+  const dragHandle = (
+    <button
+      type="button"
+      className="cursor-grab touch-none text-text-placeholder hover:text-text-light transition-colors active:cursor-grabbing"
+      {...attributes}
+      {...listeners}
+    >
+      <GripVertical className="h-4 w-4" />
+    </button>
+  );
+  return (
+    <div ref={setNodeRef} style={style}>
+      {children(dragHandle)}
+    </div>
+  );
+}
 
 function generateId() {
   return crypto.randomUUID();
@@ -106,6 +153,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
     data: formData,
     onSave: persist,
   });
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+  );
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -216,6 +268,24 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       ...content,
       experience: content.experience.filter((exp) => exp.id !== id),
     });
+  };
+
+  const reorderEducation = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = content.education.findIndex((e) => e.id === active.id);
+      const newIndex = content.education.findIndex((e) => e.id === over.id);
+      setContent({ ...content, education: arrayMove(content.education, oldIndex, newIndex) });
+    }
+  };
+
+  const reorderExperience = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = content.experience.findIndex((e) => e.id === active.id);
+      const newIndex = content.experience.findIndex((e) => e.id === over.id);
+      setContent({ ...content, experience: arrayMove(content.experience, oldIndex, newIndex) });
+    }
   };
 
   // 技能
@@ -437,15 +507,24 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       {/* 學歷 */}
       {activeTab === "education" && (
         <div className="space-y-4">
-          {content.education.map((edu) => (
+          <DndContext sensors={sensors} onDragEnd={reorderEducation}>
+            <SortableContext
+              items={content.education.map((e) => e.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {content.education.map((edu) => (
+                <SortableCard key={edu.id} id={edu.id}>
+                  {(dragHandle) => (
             <div
-              key={edu.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
+                      className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
             >
               <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {dragHandle}
                 <h3 className="text-sm font-semibold text-text">
                   {edu.school || t("newEducation")}
                 </h3>
+                        </div>
                 <button
                   onClick={() => removeEducation(edu.id)}
                   className="text-text-placeholder hover:text-red-600 transition-colors"
@@ -525,7 +604,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 </div>
               </div>
             </div>
-          ))}
+                  )}
+                </SortableCard>
+              ))}
+            </SortableContext>
+          </DndContext>
           <button
             onClick={addEducation}
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-200 py-4 text-sm font-medium text-text-light hover:border-brand-500 hover:text-text transition-colors"
@@ -539,15 +622,24 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
       {/* 工作經歷 */}
       {activeTab === "experience" && (
         <div className="space-y-4">
-          {content.experience.map((exp) => (
+          <DndContext sensors={sensors} onDragEnd={reorderExperience}>
+            <SortableContext
+              items={content.experience.map((e) => e.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {content.experience.map((exp) => (
+                <SortableCard key={exp.id} id={exp.id}>
+                  {(dragHandle) => (
             <div
-              key={exp.id}
-              className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
+                      className="rounded-xl bg-white p-6 shadow-sm ring-1 ring-brand-100"
             >
               <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {dragHandle}
                 <h3 className="text-sm font-semibold text-text">
                   {exp.company || t("newExperience")}
                 </h3>
+                        </div>
                 <button
                   onClick={() => removeExperience(exp.id)}
                   className="text-text-placeholder hover:text-red-600 transition-colors"
@@ -626,7 +718,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [] }: Props
                 </div>
               </div>
             </div>
-          ))}
+                  )}
+                </SortableCard>
+              ))}
+            </SortableContext>
+          </DndContext>
           <button
             onClick={addExperience}
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-200 py-4 text-sm font-medium text-text-light hover:border-brand-500 hover:text-text transition-colors"
