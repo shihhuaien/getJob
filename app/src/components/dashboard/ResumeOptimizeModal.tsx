@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
+import { Sparkles, X, Loader2, CheckCircle2, AlertTriangle, XCircle, ChevronDown } from "lucide-react";
 import type { AtsAnalysis } from "@/lib/optimize-resume";
 
 interface JobOption {
@@ -97,6 +97,8 @@ export default function ResumeOptimizeModal({
   const [isGenerating, setIsGenerating] = useState(false);
   const [analyzePhaseIdx, setAnalyzePhaseIdx] = useState(0);
   const [generatePhaseIdx, setGeneratePhaseIdx] = useState(0);
+  const [extraInstructions, setExtraInstructions] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const analyzingPhases = t.raw("analyzingPhases") as string[];
   const analyzingLabel = analyzingPhases[analyzePhaseIdx % analyzingPhases.length];
@@ -129,7 +131,12 @@ export default function ResumeOptimizeModal({
       const res = await fetch("/api/resume/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ resume_id: resumeId, job_id: selectedJobId, locale }),
+        body: JSON.stringify({
+          resume_id: resumeId,
+          job_id: selectedJobId,
+          locale,
+          extra_instructions: extraInstructions.trim() || undefined,
+        }),
       });
 
       const data = await res.json();
@@ -366,6 +373,38 @@ export default function ResumeOptimizeModal({
               <p className="text-xs text-text-placeholder">
                 {tc("aiDisclaimer")}
               </p>
+
+              {/* 進階設定 */}
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowAdvanced((v) => !v)}
+                  disabled={isGenerating}
+                  className="flex items-center gap-1 text-xs text-text-light hover:text-text transition-colors disabled:opacity-50"
+                >
+                  <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                  {tc("advancedSettings")}
+                </button>
+                {showAdvanced && (
+                  <div className="mt-2">
+                    <label className="block text-xs font-medium text-text-light">
+                      {tc("extraInstructions")}
+                    </label>
+                    <textarea
+                      value={extraInstructions}
+                      onChange={(e) => setExtraInstructions(e.target.value)}
+                      maxLength={500}
+                      rows={3}
+                      disabled={isGenerating}
+                      placeholder={tc("extraInstructionsPlaceholder")}
+                      className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                    />
+                    <p className="mt-0.5 text-right text-xs text-text-placeholder">
+                      {extraInstructions.length} / 500
+                    </p>
+                  </div>
+                )}
+              </div>
 
               {/* 操作按鈕 */}
               <div className="flex justify-end gap-3">

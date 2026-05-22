@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Sparkles, X, Loader2, Mic, Keyboard, Clock, Lock } from "lucide-react";
+import { Sparkles, X, Loader2, Mic, Keyboard, Clock, Lock, ChevronDown } from "lucide-react";
 import InfoTooltip from "@/components/ui/InfoTooltip";
 import type {
   InterviewType,
@@ -57,6 +57,8 @@ export default function StartInterviewModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [phaseIdx, setPhaseIdx] = useState(0);
+  const [extraInstructions, setExtraInstructions] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const generatingQuestionsPhases = t.raw("generatingQuestionsPhases") as string[];
   const generatingQuestionsLabel =
@@ -102,6 +104,7 @@ export default function StartInterviewModal({
           mode,
           drill_down_enabled: drillDown,
           locale,
+          extra_instructions: extraInstructions.trim() || undefined,
         }),
       });
       const json = await res.json();
@@ -333,6 +336,38 @@ export default function StartInterviewModal({
           </div>
 
           <p className="text-xs text-text-placeholder">{tc("aiDisclaimer")}</p>
+
+          {/* 進階設定 */}
+          <div>
+            <button
+              type="button"
+              onClick={() => setShowAdvanced((v) => !v)}
+              disabled={isLoading}
+              className="flex items-center gap-1 text-xs text-text-light hover:text-text transition-colors disabled:opacity-50"
+            >
+              <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+              {tc("advancedSettings")}
+            </button>
+            {showAdvanced && (
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-text-light">
+                  {tc("extraInstructions")}
+                </label>
+                <textarea
+                  value={extraInstructions}
+                  onChange={(e) => setExtraInstructions(e.target.value)}
+                  maxLength={500}
+                  rows={3}
+                  disabled={isLoading}
+                  placeholder={tc("extraInstructionsPlaceholder")}
+                  className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                />
+                <p className="mt-0.5 text-right text-xs text-text-placeholder">
+                  {extraInstructions.length} / 500
+                </p>
+              </div>
+            )}
+          </div>
 
           <div className="flex justify-end gap-3">
             <button

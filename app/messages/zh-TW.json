@@ -32,7 +32,10 @@
     "fileReadError": "讀取檔案失敗",
     "duplicateJob": "你已儲存過相同網址的職缺",
     "duplicateCoverLetter": "你已為此職缺產生過求職信",
-    "duplicateResume": "已存在相同標題的履歷，請先改名或刪除舊版"
+    "duplicateResume": "已存在相同標題的履歷，請先改名或刪除舊版",
+    "advancedSettings": "進階設定",
+    "extraInstructions": "自訂 AI 指示",
+    "extraInstructionsPlaceholder": "選填。例如：「請限制在 150 字以內」或「請著重強調 Python 技能」（最多 500 字）"
   },
   "legal": {
     "privacyTitle": "隱私權政策",

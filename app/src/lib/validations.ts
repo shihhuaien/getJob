@@ -112,6 +112,7 @@ export const parseJobRequestSchema = z.object({
 export const optimizeResumeRequestSchema = z.object({
   resume_id: z.string().uuid("Invalid resume ID"),
   job_id: z.string().uuid("Invalid job ID"),
+  extra_instructions: z.string().max(500).optional(),
 });
 
 // ── AI Cover Letter Generation ──
@@ -119,6 +120,7 @@ export const optimizeResumeRequestSchema = z.object({
 export const generateCoverLetterSchema = z.object({
   job_id: z.string().uuid("Invalid job ID"),
   resume_id: z.string().uuid("Invalid resume ID"),
+  extra_instructions: z.string().max(500).optional(),
 });
 
 // ── PDF Resume Upload ──
@@ -140,6 +142,7 @@ export const createInterviewSessionSchema = z.object({
   interview_type: z.enum(["behavioral", "technical", "case_study", "mixed"]),
   mode: z.enum(["text", "voice"]).default("text"),
   drill_down_enabled: z.boolean().default(false),
+  extra_instructions: z.string().max(500).optional(),
 });
 
 export const submitInterviewAnswerSchema = z.object({

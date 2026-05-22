@@ -42,7 +42,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { resume_id, job_id } = validation.data;
+    const { resume_id, job_id, extra_instructions } = validation.data;
 
     // 平行查詢履歷與職缺
     const [resumeResult, jobResult] = await Promise.all([
@@ -111,7 +111,8 @@ export async function POST(request: Request) {
             job_description,
             company_name,
             job_title,
-            locale
+            locale,
+            extra_instructions
           )) {
             fullText += chunk;
             controller.enqueue(encoder.encode(chunk));

@@ -23,12 +23,19 @@ function getSystemPrompt(locale?: string) {
 - 直接輸出求職信純文字，不要加任何標題、格式標記或額外說明`;
 }
 
+function buildExtraBlock(extraInstructions?: string): string {
+  return extraInstructions?.trim()
+    ? `\n\n---\n額外指示：${extraInstructions.trim()}`
+    : "";
+}
+
 export async function generateCoverLetter(
   resumeContent: ResumeContent,
   jobDescription: string,
   companyName: string,
   jobTitle: string,
-  locale?: string
+  locale?: string,
+  extraInstructions?: string
 ): Promise<string> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
@@ -41,7 +48,7 @@ export async function generateCoverLetter(
     model.generateContent([
       { text: getSystemPrompt(locale) },
       {
-        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
+        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}${buildExtraBlock(extraInstructions)}`,
       },
     ]),
   );
@@ -54,7 +61,8 @@ export async function* generateCoverLetterStream(
   jobDescription: string,
   companyName: string,
   jobTitle: string,
-  locale?: string
+  locale?: string,
+  extraInstructions?: string
 ): AsyncGenerator<string, void, unknown> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
@@ -67,7 +75,7 @@ export async function* generateCoverLetterStream(
     model.generateContentStream([
       { text: getSystemPrompt(locale) },
       {
-        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}`,
+        text: `求職者履歷：\n${resumeText}\n\n---\n\n目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}${buildExtraBlock(extraInstructions)}`,
       },
     ]),
   );

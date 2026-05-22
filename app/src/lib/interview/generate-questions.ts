@@ -95,6 +95,12 @@ function getSystemPrompt(
 }`;
 }
 
+function buildExtraBlock(extraInstructions?: string): string {
+  return extraInstructions?.trim()
+    ? `\n\n---\n額外指示：${extraInstructions.trim()}`
+    : "";
+}
+
 export async function generateInterviewQuestions(
   resumeContent: ResumeContent,
   jobDescription: string,
@@ -102,7 +108,8 @@ export async function generateInterviewQuestions(
   jobTitle: string,
   persona: Persona,
   interviewType: InterviewType,
-  locale?: string
+  locale?: string,
+  extraInstructions?: string
 ): Promise<InterviewQuestion[]> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
@@ -118,7 +125,7 @@ export async function generateInterviewQuestions(
     model.generateContent([
       { text: getSystemPrompt(persona, interviewType, locale) },
       {
-        text: `目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}\n\n---\n\n求職者履歷：\n${resumeText}`,
+        text: `目標公司：${companyName}\n目標職位：${jobTitle}\n\n職缺描述：\n${jobDescription}\n\n---\n\n求職者履歷：\n${resumeText}${buildExtraBlock(extraInstructions)}`,
       },
     ]),
   );

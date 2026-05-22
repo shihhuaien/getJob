@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, Sparkles } from "lucide-react";
+import { Plus, Sparkles, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { titleSchema } from "@/lib/validations";
 import { useRouter } from "@/i18n/navigation";
@@ -46,6 +46,8 @@ export default function CreateCoverLetterButton({
   const [isGenerating, setIsGenerating] = useState(false);
   const [streamingText, setStreamingText] = useState("");
   const [phaseIdx, setPhaseIdx] = useState(0);
+  const [extraInstructions, setExtraInstructions] = useState("");
+  const [showAdvanced, setShowAdvanced] = useState(false);
 
   const aiGeneratingPhases = t.raw("aiGeneratingPhases") as string[];
   const aiGeneratingLabel = aiGeneratingPhases[phaseIdx % aiGeneratingPhases.length];
@@ -66,6 +68,8 @@ export default function CreateCoverLetterButton({
     setIsGenerating(false);
     setIsSubmitting(false);
     setStreamingText("");
+    setExtraInstructions("");
+    setShowAdvanced(false);
   };
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -119,6 +123,7 @@ export default function CreateCoverLetterButton({
           job_id: selectedJobId,
           resume_id: selectedResumeId,
           locale,
+          extra_instructions: extraInstructions.trim() || undefined,
         }),
       });
 
@@ -335,6 +340,38 @@ export default function CreateCoverLetterButton({
                   <p className="text-xs text-text-placeholder">
                     {tc("aiDisclaimer")}
                   </p>
+
+                  {/* 進階設定 */}
+                  <div>
+                    <button
+                      type="button"
+                      onClick={() => setShowAdvanced((v) => !v)}
+                      disabled={isGenerating || isSubmitting}
+                      className="flex items-center gap-1 text-xs text-text-light hover:text-text transition-colors disabled:opacity-50"
+                    >
+                      <ChevronDown className={`h-3 w-3 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />
+                      {tc("advancedSettings")}
+                    </button>
+                    {showAdvanced && (
+                      <div className="mt-2">
+                        <label className="block text-xs font-medium text-text-light">
+                          {tc("extraInstructions")}
+                        </label>
+                        <textarea
+                          value={extraInstructions}
+                          onChange={(e) => setExtraInstructions(e.target.value)}
+                          maxLength={500}
+                          rows={3}
+                          disabled={isGenerating || isSubmitting}
+                          placeholder={tc("extraInstructionsPlaceholder")}
+                          className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-xs resize-none focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 disabled:opacity-50"
+                        />
+                        <p className="mt-0.5 text-right text-xs text-text-placeholder">
+                          {extraInstructions.length} / 500
+                        </p>
+                      </div>
+                    )}
+                  </div>
 
                   {/* 串流預覽 */}
                   {isGenerating && streamingText && (

@@ -32,7 +32,10 @@
     "fileReadError": "Failed to read file",
     "duplicateJob": "You've already saved a job with this URL",
     "duplicateCoverLetter": "A cover letter already exists for this job",
-    "duplicateResume": "A resume with this title already exists. Please rename or delete the existing one."
+    "duplicateResume": "A resume with this title already exists. Please rename or delete the existing one.",
+    "advancedSettings": "Advanced settings",
+    "extraInstructions": "Custom AI instructions",
+    "extraInstructionsPlaceholder": "Optional. E.g. \"Keep it under 150 words\" or \"Emphasize Python skills\". Max 500 characters."
   },
   "legal": {
     "privacyTitle": "Privacy Policy",

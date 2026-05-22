@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const { job_id, resume_id, persona, interview_type, mode, drill_down_enabled } =
+    const { job_id, resume_id, persona, interview_type, mode, drill_down_enabled, extra_instructions } =
       validation.data;
     const requestLocale = typeof body.locale === "string" ? body.locale : "zh-TW";
     // AI 產出語言偏好優先於介面語系；未設定時跟隨介面語系。此處解析一次後存入 session，
@@ -84,7 +84,8 @@ export async function POST(request: Request) {
       job_title,
       persona,
       interview_type,
-      locale
+      locale,
+      extra_instructions
     );
 
     const { data: session, error: dbError } = await supabase

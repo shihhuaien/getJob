@@ -195,11 +195,18 @@ const optimizedResumeSchema = z.object({
   skills: z.array(z.string()).default([]),
 });
 
+function buildExtraBlock(extraInstructions?: string): string {
+  return extraInstructions?.trim()
+    ? `\n\n---\n額外指示：${extraInstructions.trim()}`
+    : "";
+}
+
 export async function generateOptimizedResume(
   resumeContent: ResumeContent,
   jobDescription: string,
   analysis: AtsAnalysis,
-  locale?: string
+  locale?: string,
+  extraInstructions?: string
 ): Promise<ResumeContent> {
   const genAI = getGemini();
   const model = genAI.getGenerativeModel({
@@ -213,7 +220,7 @@ export async function generateOptimizedResume(
     model.generateContent([
       { text: getGeneratePrompt(locale) },
       {
-        text: `原始履歷：\n${JSON.stringify(resumeContent, null, 2)}\n\n---\n\n目標職缺描述：\n${jobDescription}\n\n---\n\nATS 分析結果：\n${JSON.stringify(analysis, null, 2)}`,
+        text: `原始履歷：\n${JSON.stringify(resumeContent, null, 2)}\n\n---\n\n目標職缺描述：\n${jobDescription}\n\n---\n\nATS 分析結果：\n${JSON.stringify(analysis, null, 2)}${buildExtraBlock(extraInstructions)}`,
       },
     ]),
   );
