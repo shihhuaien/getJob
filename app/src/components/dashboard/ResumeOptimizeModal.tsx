@@ -20,7 +20,7 @@ interface Props {
   resumeId: string;
   jobs: JobOption[];
   onClose: () => void;
-  initialAiLanguage?: AiLang;
+  initialAiLanguage?: string | null;
 }
 
 function ScoreRing({ score }: { score: number }) {
@@ -104,7 +104,7 @@ export default function ResumeOptimizeModal({
   const [generatePhaseIdx, setGeneratePhaseIdx] = useState(0);
   const [extraInstructions, setExtraInstructions] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
 
   const analyzingPhases = t.raw("analyzingPhases") as string[];
   const analyzingLabel = analyzingPhases[analyzePhaseIdx % analyzingPhases.length];

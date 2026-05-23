@@ -20,7 +20,7 @@ type AiLang = "zh-TW" | "en" | null;
 
 interface Props {
   onClose: () => void;
-  initialAiLanguage?: AiLang;
+  initialAiLanguage?: string | null;
   onSave: (job: {
     company_name: string;
     job_title: string;
@@ -42,7 +42,7 @@ export default function ParseJobModal({ onClose, onSave, initialAiLanguage = nul
   const [result, setResult] = useState<ParsedResult | null>(null);
   const [jobUrl, setJobUrl] = useState("");
   const [phaseIdx, setPhaseIdx] = useState(0);
-  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const parsingPhases = t.raw("parsingPhases") as string[];

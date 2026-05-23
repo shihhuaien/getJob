@@ -30,7 +30,7 @@ interface Props {
   jobs: JobOption[];
   resumes: ResumeOption[];
   onClose: () => void;
-  initialAiLanguage?: AiLang;
+  initialAiLanguage?: string | null;
 }
 
 const PERSONAS: Persona[] = ["hr_friendly", "tech_strict", "ceo_business"];
@@ -64,7 +64,7 @@ export default function StartInterviewModal({
   const [phaseIdx, setPhaseIdx] = useState(0);
   const [extraInstructions, setExtraInstructions] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
 
   const generatingQuestionsPhases = t.raw("generatingQuestionsPhases") as string[];
   const generatingQuestionsLabel =

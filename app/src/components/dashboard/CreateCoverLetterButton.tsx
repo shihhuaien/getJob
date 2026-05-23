@@ -34,7 +34,7 @@ export default function CreateCoverLetterButton({
   isPro?: boolean;
   resumes?: ResumeOption[];
   jobs?: JobOption[];
-  initialAiLanguage?: AiLang;
+  initialAiLanguage?: string | null;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -53,7 +53,7 @@ export default function CreateCoverLetterButton({
   const [phaseIdx, setPhaseIdx] = useState(0);
   const [extraInstructions, setExtraInstructions] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
 
   const aiGeneratingPhases = t.raw("aiGeneratingPhases") as string[];
   const aiGeneratingLabel = aiGeneratingPhases[phaseIdx % aiGeneratingPhases.length];

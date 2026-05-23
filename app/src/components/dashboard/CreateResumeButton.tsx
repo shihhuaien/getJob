@@ -20,7 +20,7 @@ export default function CreateResumeButton({
 }: {
   userId: string;
   isPro?: boolean;
-  initialAiLanguage?: AiLang;
+  initialAiLanguage?: string | null;
 }) {
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState("");
@@ -36,7 +36,7 @@ export default function CreateResumeButton({
   const [isUploading, setIsUploading] = useState(false);
   const [phaseIdx, setPhaseIdx] = useState(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [aiLanguage, setAiLanguage] = useState<AiLang>(initialAiLanguage);
+  const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const aiParsingPhases = t.raw("aiParsingPhases") as string[];

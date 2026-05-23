@@ -80,7 +80,7 @@ export default async function ResumePage() {
           icon={FileText}
           title={t("noResumes")}
           description={t("noResumesDesc")}
-          action={<CreateResumeButton userId={user.id} isPro={isPro} />}
+          action={<CreateResumeButton userId={user.id} isPro={isPro} initialAiLanguage={profileResult.data?.ai_output_language ?? null} />}
         />
       )}
     </div>
