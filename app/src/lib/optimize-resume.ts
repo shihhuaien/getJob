@@ -164,11 +164,11 @@ ${lang}。
 
 const optimizedResumeSchema = z.object({
   personal: z.object({
-    name: z.string(),
-    email: z.string(),
-    phone: z.string(),
-    location: z.string(),
-    summary: z.string(),
+    name: z.string().default(""),
+    email: z.string().default(""),
+    phone: z.string().default(""),
+    location: z.string().default(""),
+    summary: z.string().default(""),
   }),
   education: z
     .array(
@@ -229,9 +229,15 @@ export async function generateOptimizedResume(
   const json = JSON.parse(responseText);
   const parsed = optimizedResumeSchema.parse(json);
 
-  // 保留原始 education/experience 的 id
+  // 保留原始 education/experience 的 id，以及 AI 不應修改的個人欄位
   return {
-    personal: parsed.personal,
+    personal: {
+      ...parsed.personal,
+      name: resumeContent.personal.name,
+      email: resumeContent.personal.email,
+      phone: resumeContent.personal.phone,
+      location: parsed.personal.location || resumeContent.personal.location,
+    },
     education: parsed.education.map((edu, i) => ({
       ...edu,
       id: resumeContent.education[i]?.id || crypto.randomUUID(),
