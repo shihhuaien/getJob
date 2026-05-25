@@ -197,16 +197,19 @@ export default function ResumePreview({ resume }: Props) {
                     <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("skills")}
                     </h2>
-                    <div className="mt-3 flex flex-wrap gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2 print:hidden">
                       {skills.map((skill) => (
                         <span
                           key={skill}
-                          className="rounded bg-brand-50 px-2.5 py-1 text-sm text-text print:border print:border-brand-200 print:bg-transparent"
+                          className="rounded bg-brand-50 px-2.5 py-1 text-sm text-text"
                         >
                           {skill}
                         </span>
                       ))}
                     </div>
+                    <p className="mt-3 hidden text-sm text-text print:block">
+                      {skills.join(", ")}
+                    </p>
                   </section>
                 )}
               </div>
