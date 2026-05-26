@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Download, Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
+import { ArrowLeft, Download, Mail, Phone, MapPin, Link2, Globe } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { Database } from "@/types/database";
@@ -105,7 +105,7 @@ export default function ResumePreview({ resume }: Props) {
                       )}
                       {personal.linkedin && (
                         <span className="inline-flex items-center gap-1">
-                          <Linkedin className="h-3.5 w-3.5" />
+                          <Link2 className="h-3.5 w-3.5" />
                           {personal.linkedin}
                         </span>
                       )}

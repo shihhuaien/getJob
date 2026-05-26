@@ -20,7 +20,7 @@ const atsAnalysisSchema = z.object({
   missing_keywords: z.array(z.string()),
   suggestions: z.array(
     z.object({
-      section: z.enum(["summary", "experience", "skills", "education", "general"]),
+      section: z.enum(["summary", "experience", "skills", "education", "general"]).catch("general"),
       suggestion: z.string(),
     })
   ),
