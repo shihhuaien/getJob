@@ -489,6 +489,30 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [], aiOutpu
                 placeholder={t("locationPlaceholder")}
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-text">
+                {t("linkedin")}
+              </label>
+              <input
+                type="url"
+                value={content.personal.linkedin ?? ""}
+                onChange={(e) => updatePersonal("linkedin", e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                placeholder={t("linkedinPlaceholder")}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-text">
+                {t("website")}
+              </label>
+              <input
+                type="url"
+                value={content.personal.website ?? ""}
+                onChange={(e) => updatePersonal("website", e.target.value)}
+                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                placeholder={t("websitePlaceholder")}
+              />
+            </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-text">
                 {t("summary")}

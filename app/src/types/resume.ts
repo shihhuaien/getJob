@@ -5,6 +5,8 @@ export interface ResumePersonal {
   email: string;
   phone: string;
   location: string;
+  linkedin: string;
+  website: string;
   summary: string;
 }
 
@@ -39,6 +41,8 @@ export const emptyResumeContent: ResumeContent = {
     email: "",
     phone: "",
     location: "",
+    linkedin: "",
+    website: "",
     summary: "",
   },
   education: [],

@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, Download, Mail, Phone, MapPin } from "lucide-react";
+import { ArrowLeft, Download, Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import type { Database } from "@/types/database";
@@ -19,7 +19,7 @@ function parseContent(content: unknown): ResumeContent {
 function formatDate(dateStr: string): string {
   if (!dateStr) return "";
   const [year, month] = dateStr.split("-");
-  return month ? `${year}/${month}` : year;
+  return month ? `${month}/${year}` : year;
 }
 
 interface Props {
@@ -36,7 +36,7 @@ export default function ResumePreview({ resume }: Props) {
   };
 
   const hasPersonalInfo =
-    personal.name || personal.email || personal.phone || personal.location;
+    personal.name || personal.email || personal.phone || personal.location || personal.linkedin || personal.website;
   const hasContent =
     hasPersonalInfo ||
     personal.summary ||
@@ -101,6 +101,18 @@ export default function ResumePreview({ resume }: Props) {
                         <span className="inline-flex items-center gap-1">
                           <MapPin className="h-3.5 w-3.5" />
                           {personal.location}
+                        </span>
+                      )}
+                      {personal.linkedin && (
+                        <span className="inline-flex items-center gap-1">
+                          <Linkedin className="h-3.5 w-3.5" />
+                          {personal.linkedin}
+                        </span>
+                      )}
+                      {personal.website && (
+                        <span className="inline-flex items-center gap-1">
+                          <Globe className="h-3.5 w-3.5" />
+                          {personal.website}
                         </span>
                       )}
                     </div>
