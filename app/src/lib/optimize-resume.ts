@@ -169,6 +169,8 @@ const optimizedResumeSchema = z.object({
     phone: z.string().default(""),
     location: z.string().default(""),
     summary: z.string().default(""),
+    linkedin: z.string().default(""),
+    website: z.string().default(""),
   }),
   education: z
     .array(
@@ -237,6 +239,8 @@ export async function generateOptimizedResume(
       email: resumeContent.personal.email,
       phone: resumeContent.personal.phone,
       location: parsed.personal.location || resumeContent.personal.location,
+      linkedin: resumeContent.personal.linkedin,
+      website: resumeContent.personal.website,
     },
     education: parsed.education.map((edu, i) => ({
       ...edu,
