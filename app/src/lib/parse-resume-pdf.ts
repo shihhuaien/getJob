@@ -9,6 +9,8 @@ const resumeResponseSchema = z.object({
     phone: z.string().default(""),
     location: z.string().default(""),
     summary: z.string().default(""),
+    linkedin: z.string().default(""),
+    website: z.string().default(""),
   }),
   education: z
     .array(
