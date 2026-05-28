@@ -27,6 +27,7 @@ import { resumeUpdateSchema } from "@/lib/validations";
 import { useAutosave } from "@/hooks/useAutosave";
 import AutosaveIndicator from "@/components/ui/AutosaveIndicator";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import RichTextEditor from "@/components/ui/RichTextEditor";
 import type { Database } from "@/types/database";
 import type {
   ResumeContent,
@@ -517,12 +518,11 @@ export default function ResumeEditor({ resume, isPro = false, jobs = [], aiOutpu
               <label className="block text-sm font-medium text-text">
                 {t("summary")}
               </label>
-              <textarea
+              <RichTextEditor
                 value={content.personal.summary}
-                onChange={(e) => updatePersonal("summary", e.target.value)}
-                rows={4}
-                className="mt-1 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500"
+                onChange={(html) => updatePersonal("summary", html)}
                 placeholder={t("summaryPlaceholder")}
+                className="block w-full"
               />
             </div>
           </div>

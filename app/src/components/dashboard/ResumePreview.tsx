@@ -3,6 +3,7 @@
 import { ArrowLeft, Download, Mail, Phone, MapPin, Link2, Globe } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import DOMPurify from "isomorphic-dompurify";
 import type { Database } from "@/types/database";
 import type { ResumeContent } from "@/types/resume";
 import { emptyResumeContent } from "@/types/resume";
@@ -124,9 +125,12 @@ export default function ResumePreview({ resume }: Props) {
                     <h2 className="border-b border-brand-200 pb-1 text-sm font-bold uppercase tracking-wider text-text">
                       {t("summary")}
                     </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-text whitespace-pre-wrap">
-                      {personal.summary}
-                    </p>
+                    <div
+                      className="resume-rich-content mt-3 text-sm leading-relaxed text-text"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(personal.summary),
+                      }}
+                    />
                   </section>
                 )}
 
