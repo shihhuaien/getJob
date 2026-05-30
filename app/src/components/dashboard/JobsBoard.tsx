@@ -14,10 +14,12 @@ import {
   useSensors,
   useDroppable,
   closestCorners,
+  pointerWithin,
   defaultDropAnimationSideEffects,
   type DragStartEvent,
   type DragEndEvent,
   type DragOverEvent,
+  type CollisionDetection,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -44,6 +46,21 @@ const statusColumns: { key: ApplicationStatus; labelKey: string; color: string }
   { key: "rejected", labelKey: "rejected", color: "bg-red-100 text-red-700" },
   { key: "closed", labelKey: "closed", color: "bg-gray-100 text-gray-600" },
 ];
+
+// pointerWithin 以游標即時座標偵測，避免 closestCorners 以原始卡片邊界框計算
+// 導致 Applied 欄卡片過多時角落覆蓋整個垂直範圍，使 interview/offer/rejected 永遠輸
+const collisionDetection: CollisionDetection = (args) => {
+  if (args.pointerCoordinates) {
+    const hits = pointerWithin(args).filter((c) => c.id !== args.active.id);
+    if (hits.length > 0) return hits;
+  }
+  return closestCorners({
+    ...args,
+    droppableContainers: args.droppableContainers.filter(
+      (c) => c.id !== args.active.id
+    ),
+  });
+};
 
 // 可排序的職缺卡片
 function SortableJobCard({
@@ -99,6 +116,7 @@ function SortableJobCard({
           <p
             className="mt-1.5 text-[11px] text-text-placeholder"
             title={new Date(job.updated_at).toLocaleString()}
+            suppressHydrationWarning
           >
             {tBoard("lastUpdated", { time: relative })}
           </p>
@@ -579,8 +597,9 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
         />
       ) : (
         <DndContext
+          id="jobs-board-dnd"
           sensors={sensors}
-          collisionDetection={closestCorners}
+          collisionDetection={collisionDetection}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
