@@ -87,6 +87,7 @@ export default async function DashboardPage() {
     interview: tJobs("interview"),
     offer: tJobs("offer"),
     rejected: tJobs("rejected"),
+    closed: tJobs("closed"),
   };
 
   const statusDotColors: Record<string, string> = {
@@ -95,6 +96,7 @@ export default async function DashboardPage() {
     interview: "text-yellow-500",
     offer: "text-green-500",
     rejected: "text-red-500",
+    closed: "text-gray-400",
   };
 
   function timeAgo(dateStr: string): string {

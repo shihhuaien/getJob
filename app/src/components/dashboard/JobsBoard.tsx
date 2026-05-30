@@ -591,9 +591,9 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
           >
             {tBoard("scrollHint")}
           </p>
-          {/* <xl：水平滑動 + snap；>=xl：5 欄 grid */}
+          {/* <xl：水平滑動；>=xl：6 欄 grid；拖曳時暫時停用 snap 以確保 auto-scroll 能抵達任意欄位 */}
           <div className="-mx-4 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
-            <div className="flex snap-x snap-mandatory gap-4 xl:grid xl:grid-cols-6 xl:snap-none">
+            <div className={`flex gap-4 xl:grid xl:grid-cols-6 xl:snap-none ${activeJob ? "" : "snap-x snap-mandatory"}`}>
               {statusColumns.map((col, index) => {
                 const columnJobs = filteredJobs.filter(
                   (job) => job.status === col.key
@@ -602,7 +602,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
                   <div
                     key={col.key}
                     style={{ "--i": index } as React.CSSProperties}
-                    className="stagger-item w-[78vw] max-w-[320px] flex-shrink-0 snap-start sm:w-[60vw] md:w-[340px] xl:w-auto xl:max-w-none"
+                    className={`stagger-item w-[78vw] max-w-[320px] flex-shrink-0 sm:w-[60vw] md:w-[340px] xl:w-auto xl:max-w-none ${activeJob ? "" : "snap-start"}`}
                   >
                     <DroppableColumn
                       col={col}
