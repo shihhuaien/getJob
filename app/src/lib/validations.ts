@@ -133,6 +133,14 @@ export const parseResumePdfSchema = z.object({
   title: titleSchema,
 });
 
+export const parseResumeTextSchema = z.object({
+  text: z
+    .string()
+    .min(50, "Please enter more resume content")
+    .max(20_000, "Text is too long (max 20,000 characters)"),
+  title: titleSchema,
+});
+
 // ── AI Interview ──
 
 export const createInterviewSessionSchema = z.object({

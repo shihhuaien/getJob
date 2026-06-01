@@ -39,6 +39,10 @@ export default function CreateResumeButton({
   const [aiLanguage, setAiLanguage] = useState<AiLang>((initialAiLanguage ?? null) as AiLang);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
+  // 貼上文字相關
+  const [activeTab, setActiveTab] = useState<"pdf" | "text">("pdf");
+  const [resumeText, setResumeText] = useState("");
+
   const aiParsingPhases = t.raw("aiParsingPhases") as string[];
   const aiParsingLabel = aiParsingPhases[phaseIdx % aiParsingPhases.length];
 
@@ -56,6 +60,7 @@ export default function CreateResumeButton({
     setPdfFile(null);
     setIsUploading(false);
     setIsSubmitting(false);
+    setResumeText("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -90,6 +95,50 @@ export default function CreateResumeButton({
       setError(code === "23505" ? tc("duplicateResume") : tc("createFailed"));
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleTextParse = async () => {
+    if (!resumeText.trim()) return;
+    setError(null);
+
+    if (!isPro) {
+      setError(tc("proRequired"));
+      return;
+    }
+
+    if (resumeText.trim().length < 50) {
+      setError(t("textTooShort"));
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const resumeTitle = title.trim() || t("textDefaultTitle");
+
+      const res = await fetch("/api/resume/parse-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: resumeText.trim(), title: resumeTitle, locale: aiLanguage ?? locale }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(
+          res.status === 409 ? tc("duplicateResume") : (data.error || t("textParseFailed"))
+        );
+        return;
+      }
+
+      resetState();
+      setShowForm(false);
+      router.push(`/resume/${data.data.id}`);
+    } catch {
+      setError(t("textParseFailedRetry"));
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -231,7 +280,7 @@ export default function CreateResumeButton({
               </div>
             </div>
 
-            {/* 方式二：PDF 上傳 */}
+            {/* 方式二：AI 解析（PDF 或文字） */}
             <div className="rounded-lg border border-dashed border-brand-200 p-4">
               <div className="flex items-center gap-2 text-sm font-medium text-text">
                 <Sparkles className="h-4 w-4 text-brand-600" />
@@ -242,9 +291,6 @@ export default function CreateResumeButton({
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-xs text-text-light">
-                {t("pdfDesc")}
-              </p>
 
               {!isPro ? (
                 <p className="mt-3 text-xs text-text-placeholder">
@@ -252,45 +298,123 @@ export default function CreateResumeButton({
                 </p>
               ) : (
                 <div className="mt-3">
-                  {/* 檔案選擇 */}
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".pdf,application/pdf"
-                    onChange={handleFileChange}
-                    className="hidden"
-                    disabled={isUploading || isSubmitting}
-                  />
-
-                  {pdfFile ? (
-                    <div className="flex items-center gap-2 rounded-lg bg-[color:var(--color-bg)] px-3 py-2">
-                      <FileText className="h-4 w-4 text-text-light" />
-                      <span className="flex-1 truncate text-sm text-text">
-                        {pdfFile.name}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setPdfFile(null);
-                          if (fileInputRef.current)
-                            fileInputRef.current.value = "";
-                        }}
-                        disabled={isUploading}
-                        className="text-xs text-text-placeholder hover:text-text-light"
-                      >
-                        {t("remove")}
-                      </button>
-                    </div>
-                  ) : (
+                  {/* Tab 切換 */}
+                  <div className="flex rounded-lg border border-brand-100 p-0.5 bg-[color:var(--color-bg)]">
                     <button
                       type="button"
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => setActiveTab("pdf")}
                       disabled={isUploading || isSubmitting}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm text-text-light hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
+                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${
+                        activeTab === "pdf"
+                          ? "bg-white text-text shadow-sm"
+                          : "text-text-light hover:text-text"
+                      }`}
                     >
-                      <Upload className="h-4 w-4" />
-                      {t("selectPdf")}
+                      <Upload className="h-3 w-3" />
+                      {t("tabPdf")}
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab("text")}
+                      disabled={isUploading || isSubmitting}
+                      className={`flex flex-1 items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors disabled:opacity-50 ${
+                        activeTab === "text"
+                          ? "bg-white text-text shadow-sm"
+                          : "text-text-light hover:text-text"
+                      }`}
+                    >
+                      <FileText className="h-3 w-3" />
+                      {t("tabText")}
+                    </button>
+                  </div>
+
+                  {activeTab === "pdf" ? (
+                    <div className="mt-3">
+                      <p className="text-xs text-text-light">{t("pdfDesc")}</p>
+
+                      {/* 檔案選擇 */}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        disabled={isUploading || isSubmitting}
+                      />
+
+                      <div className="mt-2">
+                        {pdfFile ? (
+                          <div className="flex items-center gap-2 rounded-lg bg-[color:var(--color-bg)] px-3 py-2">
+                            <FileText className="h-4 w-4 text-text-light" />
+                            <span className="flex-1 truncate text-sm text-text">
+                              {pdfFile.name}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setPdfFile(null);
+                                if (fileInputRef.current)
+                                  fileInputRef.current.value = "";
+                              }}
+                              disabled={isUploading}
+                              className="text-xs text-text-placeholder hover:text-text-light"
+                            >
+                              {t("remove")}
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading || isSubmitting}
+                            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-brand-200 px-3 py-2 text-sm text-text-light hover:bg-[color:var(--color-bg)] transition-colors disabled:opacity-50"
+                          >
+                            <Upload className="h-4 w-4" />
+                            {t("selectPdf")}
+                          </button>
+                        )}
+                      </div>
+
+                      <Button
+                        type="button"
+                        onClick={handlePdfUpload}
+                        disabled={!pdfFile || isSubmitting}
+                        loading={isUploading}
+                        variant="primary"
+                        leftIcon={<Sparkles className="h-4 w-4" />}
+                        className="mt-3 w-full"
+                      >
+                        {isUploading ? aiParsingLabel : t("uploadAndParse")}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="mt-3">
+                      <p className="text-xs text-text-light">{t("textDesc")}</p>
+
+                      <textarea
+                        value={resumeText}
+                        onChange={(e) => setResumeText(e.target.value)}
+                        placeholder={t("textPlaceholder")}
+                        disabled={isUploading || isSubmitting}
+                        rows={6}
+                        className="mt-2 block w-full rounded-lg border border-brand-200 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 resize-none disabled:opacity-50"
+                      />
+                      <p className="mt-1 text-right text-xs text-text-placeholder">
+                        {resumeText.length} / 20000
+                      </p>
+
+                      <Button
+                        type="button"
+                        onClick={handleTextParse}
+                        disabled={!resumeText.trim() || isSubmitting}
+                        loading={isUploading}
+                        variant="primary"
+                        leftIcon={<Sparkles className="h-4 w-4" />}
+                        className="mt-2 w-full"
+                      >
+                        {isUploading ? aiParsingLabel : t("pasteAndParse")}
+                      </Button>
+                    </div>
                   )}
 
                   {/* 進階設定 */}
@@ -310,19 +434,6 @@ export default function CreateResumeButton({
                       </div>
                     )}
                   </div>
-
-                  {/* 上傳按鈕 */}
-                  <Button
-                    type="button"
-                    onClick={handlePdfUpload}
-                    disabled={!pdfFile || isSubmitting}
-                    loading={isUploading}
-                    variant="primary"
-                    leftIcon={<Sparkles className="h-4 w-4" />}
-                    className="mt-3 w-full"
-                  >
-                    {isUploading ? aiParsingLabel : t("uploadAndParse")}
-                  </Button>
                 </div>
               )}
             </div>
