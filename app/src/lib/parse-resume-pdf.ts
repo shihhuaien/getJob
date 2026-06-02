@@ -30,7 +30,9 @@ const resumeResponseSchema = z.object({
         title: z.string().default(""),
         start_date: z.string().default(""),
         end_date: z.string().default(""),
-        description: z.string().default(""),
+        description: z
+          .union([z.string(), z.array(z.string()).transform((arr) => arr.join("\n"))])
+          .default(""),
       })
     )
     .default([]),
@@ -70,7 +72,7 @@ function getSystemPrompt(locale?: string, source: "pdf" | "text" = "pdf") {
       "title": "職位名稱",
       "start_date": "YYYY-MM",
       "end_date": "YYYY-MM（若為在職中則填空字串）",
-      "description": "工作內容描述（保留原文，條列式）"
+      "description": "工作內容描述（字串格式，多項目以換行分隔，不可回傳陣列）"
     }
   ],
   "skills": ["技能1", "技能2"]
