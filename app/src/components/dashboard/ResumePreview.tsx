@@ -23,6 +23,11 @@ function formatDate(dateStr: string): string {
   return month ? `${month}/${year}` : year;
 }
 
+function normalizeUrl(url: string): string {
+  if (!url) return url;
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+}
+
 interface Props {
   resume: Resume;
 }
@@ -105,16 +110,26 @@ export default function ResumePreview({ resume }: Props) {
                         </span>
                       )}
                       {personal.linkedin && (
-                        <span className="inline-flex items-center gap-1">
+                        <a
+                          href={normalizeUrl(personal.linkedin)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-brand-600 transition-colors print:no-underline"
+                        >
                           <Link2 className="h-3.5 w-3.5" />
                           {personal.linkedin}
-                        </span>
+                        </a>
                       )}
                       {personal.website && (
-                        <span className="inline-flex items-center gap-1">
+                        <a
+                          href={normalizeUrl(personal.website)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 hover:text-brand-600 transition-colors print:no-underline"
+                        >
                           <Globe className="h-3.5 w-3.5" />
                           {personal.website}
-                        </span>
+                        </a>
                       )}
                     </div>
                   </header>

@@ -84,7 +84,7 @@ function getSystemPrompt(locale?: string, source: "pdf" | "text" = "pdf") {
 - ${lang}
 - 日期格式一律為 YYYY-MM（例：2023-06），若只有年份則填 YYYY-01
 - 若資訊不明確或找不到，對應欄位填空字串或空陣列
-- linkedin 擷取包含 linkedin.com 的網址；website 擷取個人網站、GitHub、作品集等非 LinkedIn 網址
+- linkedin 僅填入單一 LinkedIn 網址（包含 linkedin.com 的完整 URL）；website 僅填入單一個人網站、GitHub 或作品集網址（非 LinkedIn）；兩欄位絕對不可合併或混填多個網址
 - experience 按時間由新到舊排列
 - skills 擷取所有提到的技術能力、工具、程式語言、軟技能
 - description 盡可能保留原文內容，包含量化成果
