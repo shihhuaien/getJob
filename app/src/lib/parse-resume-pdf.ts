@@ -2,6 +2,22 @@ import { z } from "zod";
 import { getGemini, withGeminiRetry } from "./gemini";
 import type { ResumeContent } from "@/types/resume";
 
+function stripLatexArtifacts(text: string): string {
+  return text.replace(/\$/g, "").trim();
+}
+
+function normalizeBulletDescription(desc: string): string {
+  if (!desc.trim()) return desc;
+  return desc
+    .split("\n")
+    .map((line) => {
+      const trimmed = line.trim();
+      if (!trimmed) return trimmed;
+      return trimmed.startsWith("•") ? trimmed : `• ${trimmed}`;
+    })
+    .join("\n");
+}
+
 const resumeResponseSchema = z.object({
   personal: z.object({
     name: z.string().default(""),
@@ -121,7 +137,15 @@ export async function parseResumePdf(
 
   // 為 education 和 experience 加上 UUID
   return {
-    personal: parsed.personal,
+    personal: {
+      name: stripLatexArtifacts(parsed.personal.name),
+      email: stripLatexArtifacts(parsed.personal.email),
+      phone: stripLatexArtifacts(parsed.personal.phone),
+      location: stripLatexArtifacts(parsed.personal.location),
+      summary: parsed.personal.summary,
+      linkedin: parsed.personal.linkedin,
+      website: parsed.personal.website,
+    },
     education: parsed.education.map((edu) => ({
       ...edu,
       id: crypto.randomUUID(),
@@ -129,6 +153,7 @@ export async function parseResumePdf(
     experience: parsed.experience.map((exp) => ({
       ...exp,
       id: crypto.randomUUID(),
+      description: normalizeBulletDescription(exp.description),
     })),
     skills: parsed.skills,
   };
@@ -158,7 +183,15 @@ export async function parseResumeText(
   const parsed = resumeResponseSchema.parse(json);
 
   return {
-    personal: parsed.personal,
+    personal: {
+      name: stripLatexArtifacts(parsed.personal.name),
+      email: stripLatexArtifacts(parsed.personal.email),
+      phone: stripLatexArtifacts(parsed.personal.phone),
+      location: stripLatexArtifacts(parsed.personal.location),
+      summary: parsed.personal.summary,
+      linkedin: parsed.personal.linkedin,
+      website: parsed.personal.website,
+    },
     education: parsed.education.map((edu) => ({
       ...edu,
       id: crypto.randomUUID(),
@@ -166,6 +199,7 @@ export async function parseResumeText(
     experience: parsed.experience.map((exp) => ({
       ...exp,
       id: crypto.randomUUID(),
+      description: normalizeBulletDescription(exp.description),
     })),
     skills: parsed.skills,
   };
