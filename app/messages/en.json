@@ -944,5 +944,26 @@
     "intentHasInterview": "You have an interview—make the final hours count",
     "intentAppliedWithoutInterview": "Applying but no replies? Try a different angle",
     "intentDefault": "Picked based on where you are right now"
+  },
+  "tags": {
+    "filterLabel": "Filter by tag",
+    "clearFilter": "Clear",
+    "manageTitle": "Manage Tags",
+    "newTagPlaceholder": "New tag name...",
+    "addTag": "Add",
+    "noTags": "No tags yet",
+    "noTagsHint": "Enter a name below to create your first tag",
+    "jobTags": "Tags",
+    "addJobTags": "+ Tag",
+    "overflow": "+{n}",
+    "renameTag": "Rename",
+    "deleteTag": "Delete tag",
+    "deleteTagConfirm": "Delete \"{name}\"? This will remove it from all jobs.",
+    "colorLabel": "Color",
+    "createFailed": "Failed to create tag",
+    "updateFailed": "Failed to update tag",
+    "deleteFailed": "Failed to delete tag",
+    "nameTooLong": "Tag name must be 30 characters or less",
+    "duplicateName": "A tag with this name already exists"
   }
 }

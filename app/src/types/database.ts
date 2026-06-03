@@ -188,6 +188,46 @@ export interface Database {
           updated_at?: string;
         };
       };
+      job_tags: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          color: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          color?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          color?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      job_application_tags: {
+        Row: {
+          job_id: string;
+          tag_id: string;
+        };
+        Insert: {
+          job_id: string;
+          tag_id: string;
+        };
+        Update: {
+          job_id?: string;
+          tag_id?: string;
+        };
+      };
       cover_letters: {
         Row: {
           id: string;

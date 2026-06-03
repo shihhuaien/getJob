@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Plus, Building2, ExternalLink, Search, X, Sparkles, Briefcase, Star } from "lucide-react";
@@ -33,7 +33,12 @@ import { createClient } from "@/lib/supabase/client";
 import { jobInsertSchema, isValidHttpUrl } from "@/lib/validations";
 import { formatRelativeTime } from "@/lib/relative-time";
 import ParseJobModal from "./ParseJobModal";
+import TagFilterBar from "./TagFilterBar";
+import TagManageModal from "./TagManageModal";
+import TagPill from "@/components/ui/TagPill";
+import { useJobsStore } from "@/store/jobs";
 import type { Database } from "@/types/database";
+import type { JobTag, TagColor } from "@/types/tags";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -72,6 +77,7 @@ function SortableJobCard({
 }) {
   const tRel = useTranslations("relativeTime");
   const tBoard = useTranslations("jobsBoard");
+  const { tags, jobTagMap } = useJobsStore();
   const {
     attributes,
     listeners,
@@ -87,6 +93,11 @@ function SortableJobCard({
   };
 
   const relative = formatRelativeTime(job.updated_at, tRel);
+
+  const jobTagIds = jobTagMap[job.id] ?? [];
+  const jobTags = tags.filter((t) => jobTagIds.includes(t.id));
+  const visibleTags = jobTags.slice(0, 2);
+  const overflowCount = jobTags.length - visibleTags.length;
 
   return (
     <div
@@ -113,6 +124,16 @@ function SortableJobCard({
             <Building2 className="h-3 w-3" />
             <span className="truncate">{job.company_name}</span>
           </div>
+          {jobTags.length > 0 && (
+            <div className="mt-1.5 flex items-center gap-1 flex-wrap">
+              {visibleTags.map((tag) => (
+                <TagPill key={tag.id} tag={tag} size="sm" />
+              ))}
+              {overflowCount > 0 && (
+                <span className="text-[10px] text-text-placeholder">+{overflowCount}</span>
+              )}
+            </div>
+          )}
           <p
             className="mt-1.5 text-[11px] text-text-placeholder"
             title={new Date(job.updated_at).toLocaleString()}
@@ -228,12 +249,22 @@ interface Props {
   userId: string;
   isPro?: boolean;
   aiOutputLanguage?: string | null;
+  initialTags?: JobTag[];
+  initialJobTagMap?: Record<string, string[]>;
 }
 
-export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutputLanguage = null }: Props) {
+export default function JobsBoard({
+  initialJobs,
+  userId,
+  isPro = false,
+  aiOutputLanguage = null,
+  initialTags = [],
+  initialJobTagMap = {},
+}: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
   const tBoard = useTranslations("jobsBoard");
+  const { setTags, setJobTagMap, tags, addTag, updateTag, removeTag } = useJobsStore();
   const [jobs, setJobs] = useState(initialJobs);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newJob, setNewJob] = useState({
@@ -246,9 +277,18 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
   const [formError, setFormError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<ApplicationStatus | "all">("all");
+  const [filterTagIds, setFilterTagIds] = useState<string[]>([]);
   const [activeJob, setActiveJob] = useState<JobApplication | null>(null);
   const [overColumnId, setOverColumnId] = useState<string | null>(null);
   const [showParseModal, setShowParseModal] = useState(false);
+  const [showTagManage, setShowTagManage] = useState(false);
+
+  // 初始化 Zustand store 標籤資料（只在首次掛載時執行）
+  useEffect(() => {
+    setTags(initialTags);
+    setJobTagMap(initialJobTagMap);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -256,6 +296,8 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  const { jobTagMap } = useJobsStore();
 
   const filteredJobs = jobs
     .filter((job) => {
@@ -265,7 +307,10 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
         job.company_name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus =
         statusFilter === "all" || job.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesTags =
+        filterTagIds.length === 0 ||
+        filterTagIds.some((tid) => (jobTagMap[job.id] ?? []).includes(tid));
+      return matchesSearch && matchesStatus && matchesTags;
     })
     .sort((a, b) => a.position - b.position);
 
@@ -313,6 +358,60 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
       toast.error(msg);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleCreateTag = async (name: string, color: TagColor) => {
+    const res = await fetch("/api/tags", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, color }),
+    });
+    if (res.ok) {
+      const { data } = await res.json();
+      addTag(data as JobTag);
+    } else {
+      const { error } = await res.json();
+      toast.error(error ?? tc("saveFailed"));
+    }
+  };
+
+  const handleRenameTag = async (id: string, name: string) => {
+    const prev = tags.find((t) => t.id === id);
+    updateTag(id, { name });
+    const res = await fetch(`/api/tags/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    if (!res.ok) {
+      if (prev) updateTag(id, { name: prev.name });
+      toast.error(tc("saveFailed"));
+    }
+  };
+
+  const handleRecolorTag = async (id: string, color: TagColor) => {
+    const prev = tags.find((t) => t.id === id);
+    updateTag(id, { color });
+    const res = await fetch(`/api/tags/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ color }),
+    });
+    if (!res.ok) {
+      if (prev) updateTag(id, { color: prev.color });
+      toast.error(tc("saveFailed"));
+    }
+  };
+
+  const handleDeleteTag = async (id: string) => {
+    const prev = tags.find((t) => t.id === id);
+    removeTag(id);
+    setFilterTagIds((ids) => ids.filter((tid) => tid !== id));
+    const res = await fetch(`/api/tags/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      if (prev) addTag(prev);
+      toast.error(tc("saveFailed"));
     }
   };
 
@@ -472,7 +571,7 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
       </div>
 
       {/* 搜尋與篩選 */}
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-placeholder" />
           <input
@@ -505,6 +604,21 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
             </option>
           ))}
         </select>
+      </div>
+
+      {/* 標籤篩選列 */}
+      <div className="mb-6">
+        <TagFilterBar
+          allTags={tags}
+          selectedTagIds={filterTagIds}
+          onToggleTag={(tagId) =>
+            setFilterTagIds((prev) =>
+              prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]
+            )
+          }
+          onClearAll={() => setFilterTagIds([])}
+          onManage={() => setShowTagManage(true)}
+        />
       </div>
 
       {showAddForm && (
@@ -640,6 +754,16 @@ export default function JobsBoard({ initialJobs, userId, isPro = false, aiOutput
             {activeJob ? <DragOverlayCard job={activeJob} /> : null}
           </DragOverlay>
         </DndContext>
+      )}
+
+      {showTagManage && (
+        <TagManageModal
+          tags={tags}
+          onRename={handleRenameTag}
+          onRecolor={handleRecolorTag}
+          onDelete={handleDeleteTag}
+          onClose={() => setShowTagManage(false)}
+        />
       )}
 
       {showParseModal && (

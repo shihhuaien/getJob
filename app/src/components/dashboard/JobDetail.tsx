@@ -9,8 +9,12 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { jobUpdateSchema, isValidHttpUrl } from "@/lib/validations";
 import type { Database } from "@/types/database";
+import type { JobTag, TagColor } from "@/types/tags";
 import InterviewLaunchButton from "@/components/interview/InterviewLaunchButton";
 import InterviewTriggerBanner from "@/components/interview/InterviewTriggerBanner";
+import TagPill from "@/components/ui/TagPill";
+import TagSelector from "./TagSelector";
+import { useJobsStore } from "@/store/jobs";
 
 type JobApplication = Database["public"]["Tables"]["job_applications"]["Row"];
 type ApplicationStatus = Database["public"]["Enums"]["application_status"];
@@ -26,17 +30,23 @@ const statusKeys: { key: ApplicationStatus; labelKey: string }[] = [
 
 interface Props {
   job: JobApplication;
+  initialTagIds?: string[];
+  allTags?: JobTag[];
 }
 
-export default function JobDetail({ job }: Props) {
+export default function JobDetail({ job, initialTagIds = [], allTags = [] }: Props) {
   const t = useTranslations("jobs");
   const tc = useTranslations("common");
   const tb = useTranslations("breadcrumb");
+  const tTags = useTranslations("tags");
   const router = useRouter();
+  const { addTag: addTagToStore, setJobTags } = useJobsStore();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [tagIds, setTagIds] = useState<string[]>(initialTagIds);
+  const [localTags, setLocalTags] = useState<JobTag[]>(allTags);
 
   const [form, setForm] = useState({
     company_name: job.company_name,
@@ -126,6 +136,50 @@ export default function JobDetail({ job }: Props) {
       applied_at: job.applied_at?.split("T")[0] || "",
     });
     setIsEditing(false);
+  };
+
+  const handleToggleTag = async (tagId: string) => {
+    const prev = tagIds;
+    const next = prev.includes(tagId)
+      ? prev.filter((id) => id !== tagId)
+      : [...prev, tagId];
+    setTagIds(next);
+    setJobTags(job.id, next);
+    const res = await fetch(`/api/jobs/${job.id}/tags`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tag_ids: next }),
+    });
+    if (!res.ok) {
+      setTagIds(prev);
+      setJobTags(job.id, prev);
+      toast.error(tc("saveFailed"));
+    }
+  };
+
+  const handleCreateTag = async (name: string, color: TagColor) => {
+    const res = await fetch("/api/tags", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, color }),
+    });
+    if (res.ok) {
+      const { data } = await res.json();
+      setLocalTags((prev) => [...prev, data as JobTag].sort((a, b) => a.name.localeCompare(b.name)));
+      addTagToStore(data as JobTag);
+      // 建立後自動選取
+      const next = [...tagIds, (data as JobTag).id];
+      setTagIds(next);
+      setJobTags(job.id, next);
+      await fetch(`/api/jobs/${job.id}/tags`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tag_ids: next }),
+      });
+    } else {
+      const { error } = await res.json();
+      toast.error(error ?? tc("saveFailed"));
+    }
   };
 
   return (
@@ -313,6 +367,32 @@ export default function JobDetail({ job }: Props) {
                 </p>
               )}
             </div>
+            {/* 標籤 */}
+            <div className="sm:col-span-2">
+              <label className="block text-sm font-medium text-text">
+                {tTags("jobTags")}
+              </label>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                {tagIds
+                  .map((id) => localTags.find((t) => t.id === id))
+                  .filter((t): t is JobTag => Boolean(t))
+                  .map((tag) => (
+                    <TagPill
+                      key={tag.id}
+                      tag={tag}
+                      size="md"
+                      onRemove={() => handleToggleTag(tag.id)}
+                    />
+                  ))}
+                <TagSelector
+                  allTags={localTags}
+                  selectedTagIds={tagIds}
+                  onToggleTag={handleToggleTag}
+                  onCreateTag={handleCreateTag}
+                />
+              </div>
+            </div>
+
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-text">
                 {t("jobUrl")}

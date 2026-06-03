@@ -172,6 +172,27 @@ export const questionBankUpdateSchema = z.object({
   user_notes: z.string().max(5000),
 });
 
+// ── Tags ──
+
+export const TAG_COLOR_VALUES = [
+  "sage", "terracotta", "blue", "yellow",
+  "purple", "orange", "teal", "pink",
+] as const;
+
+export const tagCreateSchema = z.object({
+  name: z.string().trim().min(1, "Tag name is required").max(30, "Tag name must be 30 characters or less"),
+  color: z.enum(TAG_COLOR_VALUES).default("sage"),
+});
+
+export const tagUpdateSchema = z.object({
+  name: z.string().trim().min(1, "Tag name is required").max(30, "Tag name must be 30 characters or less").optional(),
+  color: z.enum(TAG_COLOR_VALUES).optional(),
+});
+
+export const jobTagsUpdateSchema = z.object({
+  tag_ids: z.array(z.string().uuid()).max(20, "A job can have at most 20 tags"),
+});
+
 export const jobCreateApiSchema = z.object({
   company_name: z
     .string()

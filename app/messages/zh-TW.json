@@ -944,5 +944,26 @@
     "intentHasInterview": "有面試了！這幾篇幫你做最後準備",
     "intentAppliedWithoutInterview": "投了一陣子還沒回音？換個方式試試",
     "intentDefault": "根據你目前的進度推薦"
+  },
+  "tags": {
+    "filterLabel": "標籤篩選",
+    "clearFilter": "清除",
+    "manageTitle": "管理標籤",
+    "newTagPlaceholder": "新標籤名稱...",
+    "addTag": "新增",
+    "noTags": "尚無標籤",
+    "noTagsHint": "在下方輸入名稱建立第一個標籤",
+    "jobTags": "標籤",
+    "addJobTags": "+ 標籤",
+    "overflow": "+{n}",
+    "renameTag": "重新命名",
+    "deleteTag": "刪除標籤",
+    "deleteTagConfirm": "確定要刪除「{name}」？刪除後所有職缺上的此標籤都會一起移除。",
+    "colorLabel": "顏色",
+    "createFailed": "標籤建立失敗",
+    "updateFailed": "標籤更新失敗",
+    "deleteFailed": "標籤刪除失敗",
+    "nameTooLong": "標籤名稱最多 30 個字元",
+    "duplicateName": "已有同名標籤"
   }
 }

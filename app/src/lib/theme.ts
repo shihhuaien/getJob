@@ -80,6 +80,23 @@ export const shadows = {
     "inset 3px 3px 8px rgba(174, 174, 192, 0.25), inset -3px -3px 8px rgba(255, 255, 255, 0.6)",
 } as const;
 
+// ─── 標籤顏色 ───
+
+import type { TagColor } from "@/types/tags";
+
+export const TAG_COLORS: Record<TagColor, { bg: string; text: string; tw: string }> = {
+  sage:       { bg: "#E8F0EC", text: "#3E6651", tw: "bg-[#E8F0EC] text-[#3E6651]" },
+  terracotta: { bg: "#FAEAE2", text: "#B05630", tw: "bg-[#FAEAE2] text-[#B05630]" },
+  blue:       { bg: "#E5EEF7", text: "#2F618A", tw: "bg-[#E5EEF7] text-[#2F618A]" },
+  yellow:     { bg: "#FDF5E0", text: "#856B10", tw: "bg-[#FDF5E0] text-[#856B10]" },
+  purple:     { bg: "#EDE8F5", text: "#5C3E8A", tw: "bg-[#EDE8F5] text-[#5C3E8A]" },
+  orange:     { bg: "#FEF0E5", text: "#AE5520", tw: "bg-[#FEF0E5] text-[#AE5520]" },
+  teal:       { bg: "#E2F2F2", text: "#2A7070", tw: "bg-[#E2F2F2] text-[#2A7070]" },
+  pink:       { bg: "#F9E8EE", text: "#8C2F51", tw: "bg-[#F9E8EE] text-[#8C2F51]" },
+};
+
+export const TAG_COLOR_KEYS = Object.keys(TAG_COLORS) as TagColor[];
+
 // ─── 動畫 ───
 
 export const transitions = {

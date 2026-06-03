@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import JobsBoard from "@/components/dashboard/JobsBoard";
+import type { JobTag } from "@/types/tags";
 
 export default async function JobsPage() {
   const t = await getTranslations("jobs");
@@ -12,7 +13,7 @@ export default async function JobsPage() {
 
   if (!user) redirect("/login");
 
-  const [jobsResult, profileResult] = await Promise.all([
+  const [jobsResult, profileResult, tagsResult] = await Promise.all([
     supabase
       .from("job_applications")
       .select("*")
@@ -24,9 +25,28 @@ export default async function JobsPage() {
       .select("subscription_tier, ai_output_language")
       .eq("id", user.id)
       .single(),
+    supabase
+      .from("job_tags")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("name"),
   ]);
 
   const isPro = profileResult.data?.subscription_tier === "pro";
+  const jobIds = jobsResult.data?.map((j) => j.id) ?? [];
+
+  // 載入職缺標籤關聯
+  const jobTagMap: Record<string, string[]> = {};
+  if (jobIds.length > 0) {
+    const { data: junctionData } = await supabase
+      .from("job_application_tags")
+      .select("job_id, tag_id")
+      .in("job_id", jobIds);
+
+    for (const row of junctionData ?? []) {
+      (jobTagMap[row.job_id] ??= []).push(row.tag_id);
+    }
+  }
 
   return (
     <div>
@@ -39,7 +59,14 @@ export default async function JobsPage() {
         </div>
       </div>
 
-      <JobsBoard initialJobs={jobsResult.data ?? []} userId={user.id} isPro={isPro} aiOutputLanguage={profileResult.data?.ai_output_language ?? null} />
+      <JobsBoard
+        initialJobs={jobsResult.data ?? []}
+        userId={user.id}
+        isPro={isPro}
+        aiOutputLanguage={profileResult.data?.ai_output_language ?? null}
+        initialTags={(tagsResult.data ?? []) as JobTag[]}
+        initialJobTagMap={jobTagMap}
+      />
     </div>
   );
 }
