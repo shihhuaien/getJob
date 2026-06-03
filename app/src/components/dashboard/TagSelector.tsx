@@ -74,7 +74,7 @@ export function TagSelector({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full mt-1.5 z-50 w-56 rounded-xl bg-background-card shadow-neu-hover border border-gray-100 overflow-hidden">
+        <div className="absolute left-0 top-full mt-1.5 z-50 w-56 rounded-xl bg-white/95 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-gray-200 overflow-hidden">
           {/* 已有標籤列表 */}
           <div className="max-h-40 overflow-y-auto">
             {allTags.length === 0 ? (
@@ -87,7 +87,7 @@ export function TagSelector({
                     key={tag.id}
                     type="button"
                     onClick={() => onToggleTag(tag.id)}
-                    className="w-full flex items-center gap-2 px-3 py-2 hover:bg-brand-50 transition-colors duration-fast text-left"
+                    className="w-full flex items-center gap-2 px-3 py-2 hover:bg-gray-50 transition-colors duration-fast text-left"
                   >
                     <Check className={["w-3.5 h-3.5 shrink-0", selected ? "opacity-100 text-brand-600" : "opacity-0"].join(" ")} />
                     <TagPill tag={tag} size="md" />
@@ -98,7 +98,7 @@ export function TagSelector({
           </div>
 
           {/* 新增標籤區 */}
-          <div className="border-t border-gray-100 p-2 space-y-2">
+          <div className="border-t border-gray-200 bg-gray-50/80 p-2 space-y-2">
             <input
               ref={inputRef}
               type="text"
