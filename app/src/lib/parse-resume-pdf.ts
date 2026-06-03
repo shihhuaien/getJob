@@ -74,7 +74,7 @@ function getSystemPrompt(locale?: string, source: "pdf" | "text" = "pdf") {
       "title": "職位名稱",
       "start_date": "YYYY-MM",
       "end_date": "YYYY-MM（若為在職中則填空字串）",
-      "description": "工作內容描述（字串格式，多項目以換行分隔，不可回傳陣列）"
+      "description": "工作內容描述（每個項目以「• 」開頭，各項目之間以 \\n 分隔，不可回傳陣列）"
     }
   ],
   "skills": ["技能1", "技能2"]
@@ -87,7 +87,7 @@ function getSystemPrompt(locale?: string, source: "pdf" | "text" = "pdf") {
 - linkedin 僅填入單一 LinkedIn 網址（包含 linkedin.com 的完整 URL）；website 僅填入單一個人網站、GitHub 或作品集網址（非 LinkedIn）；兩欄位絕對不可合併或混填多個網址
 - experience 按時間由新到舊排列
 - skills 擷取所有提到的技術能力、工具、程式語言、軟技能
-- description 盡可能保留原文內容，包含量化成果
+- description 必須使用項目符號格式（每項以「• 」開頭，\n 分隔），盡可能保留原文內容，包含量化成果
 - 只回傳 JSON，不要包含其他文字`;
 }
 
