@@ -309,7 +309,7 @@ export default function JobsBoard({
         statusFilter === "all" || job.status === statusFilter;
       const matchesTags =
         filterTagIds.length === 0 ||
-        filterTagIds.some((tid) => (jobTagMap[job.id] ?? []).includes(tid));
+        filterTagIds.every((tid) => (jobTagMap[job.id] ?? []).includes(tid));
       return matchesSearch && matchesStatus && matchesTags;
     })
     .sort((a, b) => a.position - b.position);
